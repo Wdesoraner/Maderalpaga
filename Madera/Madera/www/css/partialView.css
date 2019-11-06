@@ -1,0 +1,46 @@
+﻿body {
+}
+
+img{
+    width:80%;
+    align-self : center;
+}
+
+span{
+    margin-right:10px;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li>ul>li {
+    list-style: none;
+    padding-left: 15px;
+}
+
+li:hover{
+    background-color:lightgray;
+    border:solid;
+    border-color:black;
+}
+
+.navBar{
+    border : solid;
+    border-color : grey;
+    height:100vh;
+    margin-left:1px;
+}
+
+a:hover{
+    color:black;
+}
+
+a {
+    color: black;
+}
+
+a:hover{
+    text-decoration:none;
+}
