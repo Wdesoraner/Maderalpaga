@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Formulaire de devis</title>
+
+    <link href="css/Bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="css/Bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/formQuotation.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="scripts/Bootstrap/jquery-3.0.0.js"></script>
+    <script src="scripts/Bootstrap/bootstrap.min.js"></script>
+    <script src="scripts/formQuotation.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row form-group">
+            <div class="col-12">
+                <ul class="nav nav-pills nav-justified thumbnail setup-panel">
+                    <li class="active w-25 text-center">
+                        <a href="#customer">
+                            <h4 class="list-group-item-heading">Informations client</h4>
+                        </a>
+                    </li>
+                    <li class="disabled w-25 text-center">
+                        <a href="#quotationInfos">
+                            <h4 class="list-group-item-heading">Informations devis</h4>
+                        </a>
+                    </li>
+                    <li class="disabled w-25 text-center">
+                        <a href="#collection">
+                            <h4 class="list-group-item-heading">Gamme</h4>
+                        </a>
+                    </li>
+                    <li class="disabled w-25 text-center">
+                        <a href="#summary">
+                            <h4 class="list-group-item-heading">Résumé</h4>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row setup-content" id="customer">
+            <div class="col-12">
+
+                <div class="input-group margin-bottom-sm w-25">
+                    <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+                    <input class="form-control" type="text" placeholder="Rechercher un client">
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-flex">
+                            <label class="w-25">Nom :</label> <input class="w-75" type="text" required />
+                        </div>
+                        <br />
+                        <div class="d-flex">
+                            <label class="w-25">Prénom :</label> <input class="w-75" type="text" required />
+                        </div>
+                        <br />
+                        <div class="d-flex">
+                            <label class="w-25">Société :</label> <input class="w-75" type="text" />
+                        </div>
+                        <br />
+                        <div class="d-flex">
+                            <label class="w-25">Email :</label> <input class="w-75" type="email" required />
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="d-flex">
+                            <label class="w-25">Adresse :</label> <input class="w-75" type="text" required />
+                        </div>
+                        <br />
+                        <div class="d-flex">
+                            <label class="w-25">Code Postal :</label> <input class="w-75" type="text" required />
+                        </div>
+                        <br />
+                        <div class="d-flex">
+                            <label class="w-25">Ville :</label> <input class="w-75" type="text" />
+                        </div>
+                        <br />
+                        <div class="d-flex">
+                            <label class="w-25">Téléphone :</label> <input class="w-75" type="tel" required />
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="well text-right">
+                    <button id="activate-quotationInfos" class="btn btn-primary btn-lg">Activate Step 2</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row setup-content" id="quotationInfos">
+            <div class="col-xs-12">
+                <div class="col-md-12 well">
+                    <button id="activate-collection" class="btn btn-primary btn-lg">Activate Step 3</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row setup-content" id="collection">
+            <div class="col-xs-12">
+                <div class="col-md-12 well">
+                    <button id="activate-summary" class="btn btn-primary btn-lg">Activate Step 4</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row setup-content" id="summary">
+            <div class="col-xs-12">
+                <div class="col-md-12 well">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
