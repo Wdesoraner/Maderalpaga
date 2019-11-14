@@ -16,7 +16,8 @@
 $('.next').click(function () {
 
     var nextId = $(this).parents('.tab-pane').next().attr("id");
-    $('[href=#' + nextId + ']').tab('show');
+    $('[href="#' + nextId + '"]').tab('show');
+
     return false;
 
 })
