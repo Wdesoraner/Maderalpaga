@@ -13,24 +13,23 @@
 
     <div class="container" id="myWizard">
 
-        <h3>Bootstrap Wizard</h3>
+        <h3>Formulaire de devis</h3>
 
         <hr>
 
         <div class="progress">
-            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="5" style="width: 20%;">
-                Step 1 of 5
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 20%;">
+                Étape 1 sur 4
             </div>
         </div>
 
         <div class="navbar">
             <div class="navbar-inner">
-                <ul class="nav nav-pills">
-                    <li class="active"><a href="#step1" data-toggle="tab" data-step="1">Step 1</a></li>
-                    <li><a href="#step2" data-toggle="tab" data-step="2">Step 2</a></li>
-                    <li><a href="#step3" data-toggle="tab" data-step="3">Step 3</a></li>
-                    <li><a href="#step4" data-toggle="tab" data-step="4">Step 4</a></li>
-                    <li><a href="#step5" data-toggle="tab" data-step="5">Step 5</a></li>
+                <ul class="nav nav-tabs">
+                    <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Client</a></li>
+                    <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Informations Devis</a></li>
+                    <li class="nav-items"><a href="#step3" data-toggle="tab" data-step="3" class="nav-link">Gamme</a></li>
+                    <li class="nav-items"><a href="#step4" data-toggle="tab" data-step="4" class="nav-link">Résumé</a></li>
                 </ul>
             </div>
         </div>
@@ -39,213 +38,406 @@
 
                 <div class="well">
 
-                    <label>Security Question 1</label>
-                    <select class="form-control input-lg">
-                        <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-                        <option value="Where did you first attend school?">Where did you first attend school?</option>
-                        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
-                        <option value="What is your favorite car model?">What is your favorite car model?</option>
-                    </select>
-                    <br>
-                    <label>Enter Response</label>
-                    <input class="form-control input-lg">
+                    <div class="input-group margin-bottom-sm w-25">
+                        <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+                        <input class="form-control" type="search" placeholder="Rechercher un client">
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex">
+                                <label class="w-25">Nom* :</label> <input id="customerName" name="customerName" class="w-75 form-control" type="text" required />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="w-75 form-control" type="text" required />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Société :</label> <input id="customerCompany" name="customerCompany" class="w-75 form-control" type="text" />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Email* :</label> <input id="customerMail" name="customerMail" class="w-75 form-control" type="email" required />
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="d-flex">
+                                <label class="w-25">Adresse* :</label> <input id="customerAddress" name="customerAddress" class="w-75 form-control" type="text" required />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Code Postal* :</label> <input id="customerPostal" name="customerPostal" class="w-75 form-control" type="text" required />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Ville* :</label> <input id="customerCity" name="customerCity" class="w-75 form-control" type="text" />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="w-75 form-control" type="tel" required />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
+                    <br />
 
                 </div>
 
-                <a class="btn btn-default btn-lg next" href="#">Continue</a>
+                <div class="well text-right">
+                    <button id="activate-collection" class="btn btn-success btn-lg next">Suivant</button>
+                </div>
+
             </div>
+
             <div class="tab-pane fade" id="step2">
                 <div class="well">
+                    <div class="row setup-content" id="quotationInfos">
+                        <div class="col-12">
 
-                    <label>Security Question 2</label>
-                    <select class="form-control  input-lg">
-                        <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-                        <option selected="" value="Where did you first attend school?">Where did you first attend school?</option>
-                        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
-                        <option value="What is your favorite car model?">What is your favorite car model?</option>
-                    </select>
-                    <br>
-                    <label>Enter Response</label>
-                    <input class="form-control  input-lg">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="w-25">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="w-75 form-control" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="w-25">Commercial* :</label> <input id="quotationCommercial" name="quotationCommercial" class="w-75 form-control" type="search" required />
+                                    </div>
+                                    <br />
+
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="w-25">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="w-75 form-control" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="w-25">Date* :</label> <input id="quotationDate" name="quotationDate" class="w-75 form-control" type="date" required />
+                                    </div>
+                                    <br />
+
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="w-25">Gamme* :</label>
+                                        <select class="form-control w-75" id="quotationCollection" name="quotationCollection" required>
+                                            <option value="null" selected>Choix gamme</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="w-25">Modèle gamme* :</label>
+                                        <select class="form-control w-75" id="quotationModelCollection" name="quotationModelCollection" required>
+                                            <option value="null" selected>Choix modèle</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="w-25">Remplissage* :</label>
+                                        <select class="form-control w-75" id="quotationFillType" name="quotationFillType" required>
+                                            <option value="null" selected>Choix remplissage</option>
+                                        </select>
+                                    </div>
+                                    <br />
+
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="w-25">Finition ext* :</label>
+                                        <select class="form-control w-75" id="quotationFinishOut" name="quotationFinishOut" required>
+                                            <option value="null" selected>Choix finition extérieur</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="w-25">Finition int* :</label>
+
+                                        <select class="form-control w-75" id="quotationFinishIn" name="quotationFinishIn" required>
+                                            <option value="null" selected>Choix finition intétieur</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="w-25">Coupe* :</label>
+                                        <select class="form-control w-75" id="quotationCut" name="quotationCut" required>
+                                            <option value="null" selected>Choix coupe de principe</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
+                            <br />
+                            <div class="well text-right">
+                                <button id="activate-collection" class="btn btn-success btn-lg next">Suivant</button>
+                            </div>
+
+                        </div>
+                    </div>
 
                 </div>
-                <a class="btn btn-default next" href="#">Continue</a>
             </div>
+
             <div class="tab-pane fade" id="step3">
-                <div class="well"> <h2>Step 3</h2> Add another step here..</div>
-                <a class="btn btn-default next" href="#">Continue</a>
+
+
+
+
+                <div class="well">
+
+                    <div class="input-group margin-bottom-sm w-25">
+                        <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+                        <input class="form-control" type="search" placeholder="Rechercher un client">
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex">
+                                <label class="w-25">Nom* :</label> <input id="customerName" name="customerName" class="w-75 form-control" type="text" required />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="w-75 form-control" type="text" required />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Société :</label> <input id="customerCompany" name="customerCompany" class="w-75 form-control" type="text" />
+                            </div>
+                            <br />
+                            <div class="d-flex">
+                                <label class="w-25">Email* :</label> <input id="customerMail" name="customerMail" class="w-75 form-control" type="email" required />
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="well text-right">
+                    <button id="activate-collection" class="btn btn-success btn-lg next">Suivant</button>
+                </div>
+
             </div>
+
             <div class="tab-pane fade" id="step4">
-                <div class="well"> <h2>Step 4</h2> Add another almost done step here..</div>
-                <a class="btn btn-default next" href="#">Continue</a>
+                <div class="well">
+
+                    <div class="well">
+
+                        <div class="input-group margin-bottom-sm w-25">
+                            <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+                            <input class="form-control" type="search" placeholder="Rechercher un client">
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-flex">
+                                    <label class="w-25">Nom* :</label> <input id="customerName" name="customerName" class="w-75 form-control" type="text" required />
+                                </div>
+                                <br />
+                                <div class="d-flex">
+                                    <label class="w-25">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="w-75 form-control" type="text" required />
+                                </div>
+                                <br />
+                                <div class="d-flex">
+                                    <label class="w-25">Société :</label> <input id="customerCompany" name="customerCompany" class="w-75 form-control" type="text" />
+                                </div>
+                                <br />
+                                <div class="d-flex">
+                                    <label class="w-25">Email* :</label> <input id="customerMail" name="customerMail" class="w-75 form-control" type="email" required />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="well text-left col-6">
+                            <button id="activate-collection" class="btn btn-success btn-lg next">Voir le dossier technique</button>
+                        </div>
+                        <div class="well text-right col-6">
+                            <button id="activate-collection" class="btn btn-success btn-lg next">Enregistrer le devis</button>
+                        </div>
+                    </div>
+                    <hr />
+
+                </div>
+
             </div>
-            <div class="tab-pane fade" id="step5">
-                <div class="well"> <h2>Step 5</h2> You're Done!</div>
-                <a class="btn btn-success first" href="#">Start over</a>
-            </div>
+
         </div>
 
-        <hr>
-
-        <hr>
-
-    </div>
 
 
 
 
 
+        <!--
 
-    <!--
+        <div name="client">
+        <div class="input-group margin-bottom-sm w-25">
+        <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+        <input class="form-control" type="search" placeholder="Rechercher un client">
+        </div>
+        <br />
+        <div class="row">
+        <div class="col-6">
+        <div class="d-flex">
+        <label class="w-25">Nom* :</label> <input id="customerName" name="customerName" class="w-75 form-control" type="text" required />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="w-75 form-control" type="text" required />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Société :</label> <input id="customerCompany" name="customerCompany" class="w-75 form-control" type="text" />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Email* :</label> <input id="customerMail" name="customerMail" class="w-75 form-control" type="email" required />
+        </div>
+        </div>
 
-    <div name="client">
-    <div class="input-group margin-bottom-sm w-25">
-    <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
-    <input class="form-control" type="search" placeholder="Rechercher un client">
-    </div>
-    <br />
-    <div class="row">
-    <div class="col-6">
-    <div class="d-flex">
-    <label class="w-25">Nom* :</label> <input id="customerName" name="customerName" class="w-75 form-control" type="text" required />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="w-75 form-control" type="text" required />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Société :</label> <input id="customerCompany" name="customerCompany" class="w-75 form-control" type="text" />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Email* :</label> <input id="customerMail" name="customerMail" class="w-75 form-control" type="email" required />
-    </div>
-    </div>
+        <div class="col-6">
+        <div class="d-flex">
+        <label class="w-25">Adresse* :</label> <input id="customerAddress" name="customerAddress" class="w-75 form-control" type="text" required />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Code Postal* :</label> <input id="customerPostal" name="customerPostal" class="w-75 form-control" type="text" required />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Ville* :</label> <input id="customerCity" name="customerCity" class="w-75 form-control" type="text" />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="w-75 form-control" type="tel" required />
+        </div>
+        </div>
+        </div>
+        <br />
+        <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
+        <br />
+        </div>
 
-    <div class="col-6">
-    <div class="d-flex">
-    <label class="w-25">Adresse* :</label> <input id="customerAddress" name="customerAddress" class="w-75 form-control" type="text" required />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Code Postal* :</label> <input id="customerPostal" name="customerPostal" class="w-75 form-control" type="text" required />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Ville* :</label> <input id="customerCity" name="customerCity" class="w-75 form-control" type="text" />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="w-75 form-control" type="tel" required />
-    </div>
-    </div>
-    </div>
-    <br />
-    <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
-    <br />
-    </div>
+        <div name="devis">
+        <div class="row setup-content" id="quotationInfos">
+        <div class="col-12">
 
-    <div name="devis">
-    <div class="row setup-content" id="quotationInfos">
-    <div class="col-12">
+        <div class="row">
+        <div class="col-6">
+        <div class="d-flex">
+        <label class="w-25">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="w-75 form-control" type="text" required />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Commercial* :</label> <input id="quotationCommercial" name="quotationCommercial" class="w-75 form-control" type="search" required />
+        </div>
+        <br />
 
-    <div class="row">
-    <div class="col-6">
-    <div class="d-flex">
-    <label class="w-25">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="w-75 form-control" type="text" required />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Commercial* :</label> <input id="quotationCommercial" name="quotationCommercial" class="w-75 form-control" type="search" required />
-    </div>
-    <br />
+        </div>
 
-    </div>
+        <div class="col-6">
+        <div class="d-flex">
+        <label class="w-25">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="w-75 form-control" type="text" required />
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Date* :</label> <input id="quotationDate" name="quotationDate" class="w-75 form-control" type="date" required />
+        </div>
+        <br />
 
-    <div class="col-6">
-    <div class="d-flex">
-    <label class="w-25">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="w-75 form-control" type="text" required />
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Date* :</label> <input id="quotationDate" name="quotationDate" class="w-75 form-control" type="date" required />
-    </div>
-    <br />
+        </div>
+        </div>
 
-    </div>
-    </div>
+        <hr />
 
-    <hr />
+        <div class="row">
+        <div class="col-6">
+        <div class="d-flex">
+        <label class="w-25">Gamme* :</label>
+        <select class="form-control w-75" id="quotationCollection" name="quotationCollection" required>
+        <option value="null" selected>Choix gamme</option>
+        </select>
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Modèle gamme* :</label>
+        <select class="form-control w-75" id="quotationModelCollection" name="quotationModelCollection" required>
+        <option value="null" selected>Choix modèle</option>
+        </select>
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Remplissage* :</label>
+        <select class="form-control w-75" id="quotationFillType" name="quotationFillType" required>
+        <option value="null" selected>Choix remplissage</option>
+        </select>
+        </div>
+        <br />
 
-    <div class="row">
-    <div class="col-6">
-    <div class="d-flex">
-    <label class="w-25">Gamme* :</label>
-    <select class="form-control w-75" id="quotationCollection" name="quotationCollection" required>
-    <option value="null" selected>Choix gamme</option>
-    </select>
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Modèle gamme* :</label>
-    <select class="form-control w-75" id="quotationModelCollection" name="quotationModelCollection" required>
-    <option value="null" selected>Choix modèle</option>
-    </select>
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Remplissage* :</label>
-    <select class="form-control w-75" id="quotationFillType" name="quotationFillType" required>
-    <option value="null" selected>Choix remplissage</option>
-    </select>
-    </div>
-    <br />
+        </div>
 
-    </div>
+        <div class="col-6">
+        <div class="d-flex">
+        <label class="w-25">Finition ext* :</label>
+        <select class="form-control w-75" id="quotationFinishOut" name="quotationFinishOut" required>
+        <option value="null" selected>Choix finition extérieur</option>
+        </select>
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Finition int* :</label>
 
-    <div class="col-6">
-    <div class="d-flex">
-    <label class="w-25">Finition ext* :</label>
-    <select class="form-control w-75" id="quotationFinishOut" name="quotationFinishOut" required>
-    <option value="null" selected>Choix finition extérieur</option>
-    </select>
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Finition int* :</label>
+        <select class="form-control w-75" id="quotationFinishIn" name="quotationFinishIn" required>
+        <option value="null" selected>Choix finition intétieur</option>
+        </select>
+        </div>
+        <br />
+        <div class="d-flex">
+        <label class="w-25">Coupe* :</label>
+        <select class="form-control w-75" id="quotationCut" name="quotationCut" required>
+        <option value="null" selected>Choix coupe de principe</option>
+        </select>
+        </div>
+        <br />
+        </div>
+        </div>
+        <br />
+        <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
+        <br />
+        <div class="well text-right">
+        <button id="activate-collection" class="btn btn-primary btn-lg">Suivant</button>
+        </div>
 
-    <select class="form-control w-75" id="quotationFinishIn" name="quotationFinishIn" required>
-    <option value="null" selected>Choix finition intétieur</option>
-    </select>
-    </div>
-    <br />
-    <div class="d-flex">
-    <label class="w-25">Coupe* :</label>
-    <select class="form-control w-75" id="quotationCut" name="quotationCut" required>
-    <option value="null" selected>Choix coupe de principe</option>
-    </select>
-    </div>
-    <br />
-    </div>
-    </div>
-    <br />
-    <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
-    <br />
-    <div class="well text-right">
-    <button id="activate-collection" class="btn btn-primary btn-lg">Valider cette étape</button>
-    </div>
+        </div>
+        </div>
 
-    </div>
-    </div>
+        </div>
 
-    </div>
-
-            -->
+                -->
 
 
-    <script src="scripts/jquery/jquery-3.4.1.js"></script>
-    <script src="scripts/Bootstrap/bootstrap.min.js"></script>
-    <script src="scripts/formQuotation.js"></script>
+        <script src="scripts/jquery/jquery-3.4.1.js"></script>
+        <script src="scripts/Bootstrap/bootstrap.min.js"></script>
+        <script src="scripts/formQuotation.js"></script>
 </body>
 </html>
