@@ -1,0 +1,10 @@
+﻿body {
+}
+/* For small screen */
+ul :nth-child(even) {
+    background-color: white;
+}
+
+ul :nth-child(odd) {
+    background-color: lightgray;
+}
