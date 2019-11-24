@@ -27,6 +27,19 @@
 
     })
 
+
+    $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+        var className = $('#step4').attr('class');
+        if (className.includes('active')) {
+            resetQuotation();
+            completeQuotation();
+        }
+    })
+
+
+    $('#step4').on('focusin', function (e) {
+        console.log('test');
+    });
 });
 
 function duplicateItem() {
@@ -38,6 +51,53 @@ function duplicateItem() {
     document.getElementById("table-collection").appendChild(tr);
 
 };
+
+function resetQuotation() {
+    document.getElementById('refQuotationToInsert').innerHTML = "";
+    document.getElementById('dateQuotationToInsert').innerHTML = "";
+    document.getElementById('customerNameToInsert').innerHTML = "";
+    document.getElementById('customerAddressToInsert').innerHTML = "";
+    document.getElementById('customerPostalToInsert').innerHTML = "";
+
+}
+
+function completeQuotation() {
+
+    var formText = document.createTextNode(document.getElementById("quotationReference").value);
+    var quotationDiv = document.getElementById("refQuotationToInsert");
+    quotationDiv.appendChild(formText);
+
+    var date = new Date(document.getElementById("quotationDate").value);
+    var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+
+    var dateTemp = date.toLocaleDateString('fr-FR', options)
+
+    formText = document.createTextNode(dateTemp);
+    quotationDiv = document.getElementById("dateQuotationToInsert");
+    quotationDiv.appendChild(formText);
+
+
+    var tempText = document.getElementById("customerName").value + ' ' + document.getElementById("customerFirstName").value;
+    if (document.getElementById("customerCompany").value != '') {
+        tempText += ' (' + document.getElementById("customerCompany").value + ')';
+    }
+
+    formText = document.createTextNode(tempText);
+    quotationDiv = document.getElementById("customerNameToInsert");
+    quotationDiv.appendChild(formText);
+
+    formText = document.createTextNode(document.getElementById("customerAddress").value);
+    quotationDiv = document.getElementById("customerAddressToInsert");
+    quotationDiv.appendChild(formText);
+
+    var tempText = document.getElementById("customerPostal").value + ' ' + document.getElementById("customerCity").value;
+
+    formText = document.createTextNode(tempText);
+    quotationDiv = document.getElementById("customerPostalToInsert");
+    quotationDiv.appendChild(formText);
+
+
+}
 
 function generatePDF() {
 
@@ -71,12 +131,4 @@ function generatePDF() {
 
         pdf.save("HTML-Document.pdf");
     });
-
-
-    //var el = document.querySelector('#step4');
-    //var doc = new jsPDF()
-
-
-    //doc.fromHTML(el, 10, 10)
-    //doc.save('test.pdf')
 }
