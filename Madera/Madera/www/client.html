@@ -19,11 +19,10 @@
 <body>
     <div class="row col-sm-4 pull-right">
         <button type="button" class="btn btn-sm btn-outline-secondary" id="newCustomer">Nouveau</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="editCustomer">Editer</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="deleteCustomer">Supprimer</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary ml-2" id="editCustomer">Editer</button>
     </div>
     <div class="row col-sm-12">
-        <div class="col-sm-4 customerList">
+        <div class="col-sm-3 customerList">
             <ul class="list-group" id="customerList">
                 <li class="list-group-item bg-secondary text-light disabled">Liste des clients</li>
             </ul>
@@ -34,7 +33,7 @@
                 <form>
                     <input type="hidden" id="idCustomer">
                     <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold font-weight-bold" for="inputName">Nom :</label>
+                        <label class="col-sm-3 mt-1 font-weight-bold font-weight-bold" for="inputName" >Nom :</label>
                         <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputName">
                     </div>
                     <div class="input-group-sm row mb-1">
