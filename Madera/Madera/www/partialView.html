@@ -1,39 +1,52 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <link href="css/Content/bootstrap.css" rel="stylesheet" />
-    <link href="css/Content/bootstrap.min.css" rel="stylesheet" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="css/partialView.css" rel="stylesheet">
-    <script src="../Scripts/jquery-3.4.1.js"></script>
-    <script src="../Scripts/bootstrap.js"></script>
+    <link href="css/Bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="css/Bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../css/font-awesome.css" rel="stylesheet" />
+    <script src="scripts/Bootstrap/jquery-3.0.0.js"></script>
+    <script src="scripts/Bootstrap/bootstrap.js"></script>
+    <link href="css/partialView.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-3.4.1.js"></script>
+    <script src="scripts/Bootstrap/handlebars.min.js"></script>
+    <script src="../Scripts/jquery-3.4.1.min.js"></script>
     <title></title>
 </head>
 <body>
-    <div class="navBar col-sm-3">
-        <img class="logo" src="images/logo.png" alt="Logo madera">
-        <ul>
-            <li><a href=""><span class="fa fa-home"></span>Accueil</a></li>
-            <li>
-                <a href="#collapse1" data-toggle="collapse"><span class="fa fa-black-tie"></span>Service commercial</a>
-                <ul id="collapse1" class="panel-collapse collapse">
-                    <li><a href=""><span class="fa fa-flag"></span>- Projets</a></li>
-                    <li><a href=""><span class="fa fa-file"></span>- Création de devis</a></li>
-                    <li><a href=""><span class="fa fa-user"></span>- Clients</a></li>
-                </ul>
-            </li>
-            <li><a href=""><span class="fa fa-shopping-cart"></span>Service des achats</a></li>
-            <li><a href=""><span class="fa fa-database"></span>Service des stocks</a></li>
-            <li><a href=""><span class="fa fa-industry"></span>Service des production</a></li>
-        </ul>
+    <div class="row col-sm-12">
+        <div class="navBar col-sm-3">
+            <img class="logo" src="images/logo.png" alt="Logo madera">
+            <ul>
+                <li id="home"><a href="#"><span class="fa fa-home"></span>Accueil</a></li>
+                <li>
+                    <a href="#collapse1" data-toggle="collapse"><span class="fa fa-black-tie"></span>Service commercial</a>
+                    <ul id="collapse1" class="panel-collapse collapse">
+                        <li><a href="#"><span class="fa fa-flag"></span>- Projets</a></li>
+                        <li><a href="#"><span class="fa fa-file"></span>- Création de devis</a></li>
+                        <li><a href="#"><span class="fa fa-user"></span>- Clients</a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><span class="fa fa-shopping-cart"></span>Service des achats</a></li>
+                <li><a href="#"><span class="fa fa-database"></span>Service des stocks</a></li>
+                <li><a href="#"><span class="fa fa-industry"></span>Service des production</a></li>
+            </ul>
 
-    </div>
-    <div class="mainContent">
-        <div class="headBar"></div>
-        <div class="content"></div>
+        </div>
+        <div class="col-sm-9">
+            <div class="col-sm-12">
+                <p class="pageTitle text-center">Titre explicite</p>
+            </div>
+            <div id="content">
+            </div>
+        </div>
     </div>
     <script type="text/javascript" src="scripts/partialView.js"></script>
 </body>
 </html>
+
+<script id="contenu" type="text/x-handlebars-template">
+    <h1>Currency Rates</h1>
+    <hr>
+</script>

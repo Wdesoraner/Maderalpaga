@@ -2,7 +2,7 @@
 }
 
 img{
-    width:80%;
+    width:90%;
     align-self : center;
 }
 
@@ -30,7 +30,6 @@ li:hover{
     border : solid;
     border-color : grey;
     height:100vh;
-    margin-left:1px;
 }
 
 a:hover{
@@ -44,3 +43,4 @@ a {
 a:hover{
     text-decoration:none;
 }
+

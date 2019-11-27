@@ -1,0 +1,23 @@
+﻿@media screen and (orientation:portrait) {
+    body {
+        display : none
+    }
+}
+
+body {
+    font-size: 1vw;
+}
+
+
+ul :nth-child(even) {
+    background-color: white;
+}
+
+ul :nth-child(odd) {
+    background-color: lightgray;
+}
+
+label{
+    margin-right: 1%;
+}
+
