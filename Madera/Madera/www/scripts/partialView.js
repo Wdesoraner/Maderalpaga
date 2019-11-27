@@ -1,6 +1,6 @@
 ﻿
 $(document).ready(function () {
-
+    initDB();
     initElement();
 });
 
@@ -17,4 +17,6 @@ function initElement() {
 function showAlert() {
     $('#content').load("authentication.html");
 }
+
+
 
