@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Formulaire de devis</title>
+    <title>Formulaire de création de projet</title>
 
     <link href="css/formQuotation.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -24,15 +24,15 @@
 
             <div class="container wizard-quotation">
 
-                <h3>Formulaire de devis</h3>
+                <h3>Formulaire de création de projet</h3>
 
                 <hr>
 
                 <div class="navbar card-header-pills">
                     <div class="navbar-inner">
                         <ul class="nav nav-tabs">
-                            <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Client</a></li>
-                            <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Informations Devis</a></li>
+                            <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Informations projet</a></li>
+                            <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Devis</a></li>
                         </ul>
                     </div>
                 </div>
@@ -50,40 +50,70 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="d-flex">
-                                        <label class="w-25">Nom* :</label> <input id="customerName" name="customerName" class="w-75 form-control" type="text" required />
+                                        <label class="col-5">Nom* :</label> <input id="customerName" name="customerName" class="col-7 form-control" type="text" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="w-25">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="w-75 form-control" type="text" required />
+                                        <label class="col-5">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="col-7 form-control" type="text" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="w-25">Société :</label> <input id="customerCompany" name="customerCompany" class="w-75 form-control" type="text" />
+                                        <label class="col-5">Société :</label> <input id="customerCompany" name="customerCompany" class="col-7 form-control" type="text" />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="w-25">Email* :</label> <input id="customerMail" name="customerMail" class="w-75 form-control" type="email" required />
+                                        <label class="col-5">Email* :</label> <input id="customerMail" name="customerMail" class="col-7 form-control" type="email" required />
                                     </div>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="d-flex">
-                                        <label class="w-25">Adresse* :</label> <input id="customerAddress" name="customerAddress" class="w-75 form-control" type="text" required />
+                                        <label class="col-5">Adresse* :</label> <input id="customerAddress" name="customerAddress" class="col-7 form-control" type="text" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="w-25">Code Postal* :</label> <input id="customerPostal" name="customerPostal" class="w-75 form-control" type="text" required />
+                                        <label class="col-5">Code Postal* :</label> <input id="customerPostal" name="customerPostal" class="col-7 form-control" type="text" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="w-25">Ville* :</label> <input id="customerCity" name="customerCity" class="w-75 form-control" type="text" />
+                                        <label class="col-5">Ville* :</label> <input id="customerCity" name="customerCity" class="col-7 form-control" type="text" />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="w-25">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="w-75 form-control" type="tel" required />
+                                        <label class="col-5">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="col-7 form-control" type="tel" required />
                                     </div>
                                 </div>
                             </div>
+
+                            <hr />
+
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="col-5">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="col-7 form-control" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Commercial* :</label> <input id="quotationCommercial" name="quotationCommercial" class="col-7 form-control" type="search" required />
+                                    </div>
+                                    <br />
+
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="col-5">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="col-7 form-control" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Date* :</label> <input id="quotationDate" name="quotationDate" class="col-7 form-control" type="date" required />
+                                    </div>
+                                    <br />
+
+                                </div>
+                            </div>
+
                             <br />
                             <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
                             <br />
