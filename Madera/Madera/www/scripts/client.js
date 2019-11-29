@@ -8,51 +8,31 @@ DBOpenRequest.onupgradeneeded = function (event) {
 
     // Create an object store named notes. Object stores
     // in databases are where data are stored.
-    if (!db.objectStoreNames.contains("customer")) {
         let objectStore = db.createObjectStore('customer', { autoIncrement: true });
-    } else {
-        DBOpenRequest.transaction.objectStore("customer");
-    };
-
-    if (!notes.indexNames.contains('name')) {
+    
         console.log("create index : name");
         objectStore.createIndex("name", "name", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('firstName')) {
+    
         console.log("create index : firstName");
         objectStore.createIndex("firstName", "firstName", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('company')) {
+    
         console.log("create index : company");
         objectStore.createIndex("company", "company", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('address')) {
+    
         console.log("create index : address");
         objectStore.createIndex("address", "address", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('city')) {
+    
         console.log("create index : city");
         objectStore.createIndex("city", "city", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('zipCode')) {
+    
         console.log("create index : zipCode");
         objectStore.createIndex("zipCode", "zipCode", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('mail')) {
+    
         console.log("create index : mail");
         objectStore.createIndex("mail", "mail", { unique: false });
-    }
-
-    if (!notes.indexNames.contains('phone')) {
+    
         console.log("create index : phone");
         objectStore.createIndex("phone", "phone", { unique: false });
-    }
 
 }
 DBOpenRequest.onsuccess = function (event) {
