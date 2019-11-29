@@ -127,257 +127,43 @@
                     </div>
 
                     <div class="tab-pane fade" id="step2">
-                        <div class="well">
-                            <div class="row setup-content" id="quotationInfos">
-                                <div class="col-12">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="well m-5">
 
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="d-flex">
-                                                <label class="col-5">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="col-7 form-control" type="text" required />
-                                            </div>
-                                            <br />
-                                            <div class="d-flex">
-                                                <label class="col-5">Commercial* :</label> <input id="quotationCommercial" name="quotationCommercial" class="col-7 form-control" type="search" required />
-                                            </div>
-                                            <br />
-
-                                        </div>
-
-                                        <div class="col-6">
-                                            <div class="d-flex">
-                                                <label class="col-5">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="col-7 form-control" type="text" required />
-                                            </div>
-                                            <br />
-                                            <div class="d-flex">
-                                                <label class="col-5">Date* :</label> <input id="quotationDate" name="quotationDate" class="col-7 form-control" type="date" required />
-                                            </div>
-                                            <br />
-
-                                        </div>
+                                    <div class="input-group margin-bottom-sm col-5">
+                                        <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+                                        <input class="form-control" type="search" placeholder="Rechercher un devis">
                                     </div>
 
-                                    <hr />
-
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="d-flex">
-                                                <label class="col-5">Gamme* :</label>
-                                                <select class="form-control col-7" id="quotationCollection" name="quotationCollection" required>
-                                                    <option value="null" selected>Choix gamme</option>
-                                                </select>
-                                            </div>
-                                            <br />
-                                            <div class="d-flex">
-                                                <label class="col-5">Modèle gamme* :</label>
-                                                <select class="form-control col-7" id="quotationModelCollection" name="quotationModelCollection" required>
-                                                    <option value="null" selected>Choix modèle</option>
-                                                </select>
-                                            </div>
-                                            <br />
-                                            <div class="d-flex">
-                                                <label class="col-5">Remplissage* :</label>
-                                                <select class="form-control col-7" id="quotationFillType" name="quotationFillType" required>
-                                                    <option value="null" selected>Choix remplissage</option>
-                                                </select>
-                                            </div>
-                                            <br />
-
-                                        </div>
-
-                                        <div class="col-6">
-                                            <div class="d-flex">
-                                                <label class="col-5">Finition ext* :</label>
-                                                <select class="form-control col-7" id="quotationFinishOut" name="quotationFinishOut" required>
-                                                    <option value="null" selected>Choix finition extérieur</option>
-                                                </select>
-                                            </div>
-                                            <br />
-                                            <div class="d-flex">
-                                                <label class="col-5">Finition int* :</label>
-
-                                                <select class="form-control col-7" id="quotationFinishIn" name="quotationFinishIn" required>
-                                                    <option value="null" selected>Choix finition intétieur</option>
-                                                </select>
-                                            </div>
-                                            <br />
-                                            <div class="d-flex">
-                                                <label class="col-5">Coupe* :</label>
-                                                <select class="form-control col-7" id="quotationCut" name="quotationCut" required>
-                                                    <option value="null" selected>Choix coupe de principe</option>
-                                                </select>
-                                            </div>
-                                            <br />
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
                                     <br />
                                     <div class="well text-right">
-                                        <button id="activate-collection" class="btn btn-success btn-lg next">Suivant</button>
+                                        <a href="formQuotation.html" class="btn btn-success rounded rounded-circle" id="add-item-collection"><div class="font-weight-bold">+</div></a>
+                                        <button class="btn btn-danger rounded rounded-circle" id="del-item-collection"><div class="font-weight-bold">-</div></button>
                                     </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="step3">
-
-                        <div class="well">
-                            <div class="well text-right">
-                                <button class="btn btn-success rounded rounded-circle" id="add-item-collection"><div class="font-weight-bold">+</div></button>
-                                <button class="btn btn-danger rounded rounded-circle" id="del-item-collection"><div class="font-weight-bold">-</div></button>
-                            </div>
-
-                            <table id="table-collection" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Nom</th>
-                                        <th>Section/Longueur</th>
-                                        <th>Angle</th>
-                                    </tr>
-                                </thead>
-                                <tr class="item-collection">
-                                    <td>
-                                        <select class="w-100 h-100 border border-0">
-                                            <option>Mur Droit</option>
-                                            <option>Mur Angle</option>
-                                        </select>
-                                    </td>
-                                    <td><input type="text" class="w-100 h-100 border border-0" /></td>
-                                    <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td>
-                                    <td>
-                                        <select class="w-100 h-100 border border-0">
-                                            <option></option>
-                                            <option>Entrant</option>
-                                            <option>Sortant</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </div>
-
-
-                        <div class="well text-right">
-                            <button id="activate-collection" class="btn btn-success btn-lg next">Suivant</button>
-                        </div>
-
-                    </div>
-
-                    <div class="tab-pane fade" id="step4">
-                        <div class="well p-5">
-
-                            <div id="previewQuotation">
-                                <div class="row">
-                                    <div class="col-6 text-left font-weight-bold">Madera</div>
-                                    <div class="col-6 text-center font-weight-bolder">DEVIS</div>
-                                </div>
-
-                                <div class="pt-3">
-                                    <ul class="list-unstyled">
-                                        <li>Rue Enzo Ferrari</li>
-                                        <li>85000 La Roche sur Yon</li>
-                                        <li>02 51 98 18 32</li>
-                                        <li>madera-construction.fr</li>
-                                    </ul>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-6">
-                                        <ul class="list-unstyled">
-                                            <li class="row">
-                                                <div class="col-4">Référence</div>
-                                                <div id="refQuotationToInsert" class="col-8">: </div>
-                                            </li>
-                                            <li class="row">
-                                                <div class="col-4">Date</div>
-                                                <div id="dateQuotationToInsert" class="col-8">: </div>
-                                            </li>
-                                            <!--<li class="row">
-                                                <div class="col-4">N° Client</div>
-                                                <div id="clientToInsert" class="col-8 wip">: </div>
-                                            </li>-->
-                                        </ul>
-                                    </div>
-                                    <div class="col-6">
-                                        <ul class="list-unstyled">
-                                            <li><div id="customerNameToInsert"></div></li>
-                                            <li><div id="customerAddressToInsert"></div></li>
-                                            <li><div id="customerPostalToInsert"></div></li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <label>Composant du projet</label>
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Quantité</th>
-                                            <th>Désignation</th>
-                                            <th>Prix unitaire HT/TTC</th>
-                                            <th>Prix Total HT/TTC</th>
+                                    <table id="table-collection" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Libelle</th>
+                                                <th>Date</th>
+                                                <th>Créateur</th>
+                                                <th>Client (Société)</th>
+                                                <th>État</th>
+                                                <th>Montant</th>
+                                            </tr>
+                                        </thead>
+                                        <tr class="item-collection">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                                    </table>
 
-                                <div class="row">
-                                    <div class="col-8"></div>
-                                    <div class="col-4">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td>Total HT</td>
-                                                <td id="totalHT"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>TVA à 20%</td>
-                                                <td id="tva20"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total TTC</td>
-                                                <td id="totalTTC"></td>
-                                            </tr>
-                                        </table>
-
-                                    </div>
-                                </div>
-
-                                <p>
-                                    Nous restons à votre disposition pour toute information complémentaire. <br /> Coridalement.
-                                </p>
-                                <p>
-                                    Si ce devis vous convient, veuillez nous le retourner signé précédé de la mention "Bon pour accord et éxecution du devis"
-                                    <div class="row">
-                                        <div class="col-6">Date :</div>
-                                        <div class="col-6">Signature :</div>
-                                    </div>
-                                </p>
-                                <p class="text-muted">
-                                    Validité du devis : 3 mois <br />
-                                    Conditions de règlement : 40% à la commande, solde à la livraison
-                                    <div class="text-secondary">
-                                        Toute somme non payés à sa date d'exigilibilité produira de plein droit des interêt de retard équivalent au triple du taux d'interet légal de l'année en cours ainsi que les paiements d'une somme de 40€ due au tire des frais de recouvrement
-                                    </div>
-                                </p>
-                                <p class="text-secondary text-center wip">
-                                    N° SIRET ............... <br />
-                                    Code APE ..............
-                                </p>
-                            </div>
-
-                            <div class="row">
-                                <div class="well text-left col-6">
-                                    <button id="btnTechnical" class="btn btn-success btn-lg next">Voir le dossier technique</button>
-                                </div>
-                                <div class="well text-right col-6">
-                                    <button id="btnSaveQuotation" class="btn btn-success btn-lg next">Enregistrer le devis</button>
                                 </div>
                             </div>
-
                         </div>
 
                     </div>
