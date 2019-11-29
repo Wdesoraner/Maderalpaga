@@ -1,7 +1,70 @@
-﻿$(document).ready(function () {
+﻿
+let db;
+let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+
+DBOpenRequest.onupgradeneeded = function (event) {
+    // Set the db variable to our database so we can use it!  
+    db = event.target.result;
+
+    // Create an object store named notes. Object stores
+    // in databases are where data are stored.
+    if (!db.objectStoreNames.contains("customer")) {
+        let objectStore = db.createObjectStore('customer', { autoIncrement: true });
+    } else {
+        DBOpenRequest.transaction.objectStore("customer");
+    };
+
+    if (!notes.indexNames.contains('name')) {
+        console.log("create index : name");
+        objectStore.createIndex("name", "name", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('firstName')) {
+        console.log("create index : firstName");
+        objectStore.createIndex("firstName", "firstName", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('company')) {
+        console.log("create index : company");
+        objectStore.createIndex("company", "company", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('address')) {
+        console.log("create index : address");
+        objectStore.createIndex("address", "address", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('city')) {
+        console.log("create index : city");
+        objectStore.createIndex("city", "city", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('zipCode')) {
+        console.log("create index : zipCode");
+        objectStore.createIndex("zipCode", "zipCode", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('mail')) {
+        console.log("create index : mail");
+        objectStore.createIndex("mail", "mail", { unique: false });
+    }
+
+    if (!notes.indexNames.contains('phone')) {
+        console.log("create index : phone");
+        objectStore.createIndex("phone", "phone", { unique: false });
+    }
+
+}
+DBOpenRequest.onsuccess = function (event) {
+    db = event.target.result;
+    initCustomerList(db);
+}
+DBOpenRequest.onerror = function (event) {
+    alert('error opening database ' + event.target.errorCode);
+}
+
+$(document).ready(function () {
     initElement();
-    openDB();
-    initCustomerList();
 });
 
 function addListCustomer(customerName, idCustomer) {
@@ -19,8 +82,11 @@ function initElement() {
     inputState(true);
 }
 
-function addCustomer() {
-    openDB();
+function addCustomer(db) {
+
+
+    console.log(db);
+
     var newItem = [{
         name: document.getElementById("inputName").value,
         firstName: document.getElementById("inputFirstName").value,
@@ -34,7 +100,7 @@ function addCustomer() {
 
     console.log(newItem);
 
-    var transaction = db.transaction("customerDB", "readwrite");
+    let transaction = db.transaction("customer", "readwrite");
 
     // On indique le succès de la transaction
     transaction.oncomplete = function (event) {
@@ -46,10 +112,10 @@ function addCustomer() {
     };
 
     // On crée un magasin d'objet pour la transaction
-    var objectStore = transaction.objectStore("customerDB");
+    let objectStore = transaction.objectStore("customer");
 
     // On ajoute l'objet newItem au magasin d'objets
-    var objectStoreRequest = objectStore.add(newItem[0]);
+    let objectStoreRequest = objectStore.add(newItem[0]);
 
     objectStoreRequest.onsuccess = function (event) {
         // On indique le succès de l'ajout de l'objet
@@ -63,7 +129,6 @@ function addCustomer() {
 }
 
 function newCustomer() {
-    document.getElementById("validCustomer").onclick = addCustomer;
     document.getElementById("idCustomer").value = 0;
     document.getElementById("inputName").value = "";
     document.getElementById("inputFirstName").value = "";
@@ -74,165 +139,150 @@ function newCustomer() {
     document.getElementById("inputMail").value = "";
     document.getElementById("inputPhone").value = "";
     inputState(false);
+
+    let db;
+    let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        document.getElementById("validCustomer").onclick = function () { addCustomer(db) };
+    }
+
 }
 
 function editCustomer() {
-    document.getElementById("validCustomer").onclick = updateCustomer;
-    inputState(false);
+    if (document.getElementById("idCustomer").value != "0") {
+        document.getElementById("validCustomer").onclick = updateCustomer;
+        inputState(false);
+    }
 }
 
 function updateCustomer() {
-
-}
-
-function initCustomerList() {
-    var DBOpenRequest = window.indexedDB.open("customerDB", 1);
-
-    DBOpenRequest.onerror = function (event) {
-        console.log("Erreur lors du chargement de la base de données");
-    };
-
+    let db;
+    let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+    var id = parseInt(document.getElementById("idCustomer").value, 10);
 
     DBOpenRequest.onsuccess = function (event) {
-        console.log("Base de données initialisée");
+        db = event.target.result;
 
-        // On enregistre le résultat de l'ouverture 
-        // dans la variable db (on l'utilisera plusieurs
-        // fois par la suite).
-        console.log(DBOpenRequest.result);
-        db = DBOpenRequest.result;
 
-        console.log("Wallah");
-        var transaction = db.transaction("customerDB", "readwrite");
+        var transaction = db.transaction("customer", "readwrite");
+
+        // On indique le succès de la transaction
+        transaction.oncomplete = function (event) {
+            console.log("Transaction terminée : lecture finie");
+        };
+
+        transaction.onerror = function (event) {
+            console.log("Transaction non-ouverte à cause d'une erreur");
+        };
 
         // On crée un magasin d'objet pour la transaction
-        var objectStore = transaction.objectStore("customerDB");
+        var objectStore = transaction.objectStore("customer");
 
+        console.log(typeof id);
         // On ajoute l'objet newItem au magasin d'objets
-        var objectStoreRequest = objectStore.getAll();
-
+        var objectStoreRequest = objectStore.get(id);
         objectStoreRequest.onsuccess = function (event) {
             // On indique le succès de l'ajout de l'objet
             // dans la base de données
-            console.log("Les objets ont été récupérés");
-            console.log(objectStoreRequest.result);
+            var data = objectStoreRequest.result;
 
-            objectStoreRequest.result.forEach(function (element) {
-                if (element.company != "") {
-                    addListCustomer(element.company, element.name);
-                } else {
-                    addListCustomer(element.firstName + " " + element.name, element.name)
-                }
+            data.name = document.getElementById("inputName").value;
+            data.firstName = document.getElementById("inputFirstName").value;
+            data.company = document.getElementById("inputCompany").value;
+            data.city = document.getElementById("inputCity").value;
+            data.address = document.getElementById("inputAddress").value;
+            data.zipCode = document.getElementById("inputZipCode").value;
+            data.mail = document.getElementById("inputMail").value;
+            data.phone = document.getElementById("inputPhone").value;
 
-                console.log(element);
-            });
-        };
-
-    };
-
-    // Ce gestionnaire permet de parer au cas où une 
-    // nouvelle version de la base de données doit 
-    // être créée.
-    // Soit la base de données n'existait pas, soit
-    // il faut utiliser une nouvelle version
-
-    DBOpenRequest.onupgradeneeded = function (event) {
-        db = DBOpenRequest.result;
-
-        db.onerror = function (event) {
-            console.log("Erreur lors du chargement de la base");
+            var requestUpdate = objectStore.put(data);
+            requestUpdate.onerror = function (event) {
+                // Faire quelque chose avec l’erreur
+            };
+            requestUpdate.onsuccess = function (event) {
+                // Succès - la donnée est mise à jour !
+                objectStore.delete(id);
+            };
         };
 
     }
+
+}
+
+function initCustomerList(db) {
+
+    let transaction = db.transaction("customer", "readwrite");
+
+    let objectStore = transaction.objectStore("customer");
+    let request = objectStore.openCursor();
+
+    request.onerror = function (event) {
+        console.err("error fetching data");
+    };
+
+    request.onsuccess = function (event) {
+        let cursor = event.target.result;
+        if (cursor) {
+            let key = cursor.primaryKey;
+            let value = cursor.value;
+            console.log(key, value);
+            if (value.company != "") {
+                addListCustomer(value.company, key);
+            } else {
+                addListCustomer(value.firstName + " " + value.name, key)
+            }
+            cursor.continue();
+        }
+    };
+
 
 }
 
 function clickListItem(keyItem) {
-    document.getElementById("editCustomer").onclick = editCustomer;
-
-    openDB();
-    var transaction = db.transaction("customerDB", "readonly");
-
-    // On indique le succès de la transaction
-    transaction.oncomplete = function (event) {
-        console.log("Transaction terminée : lecture finie");
-    };
-
-    transaction.onerror = function (event) {
-        console.log("Transaction non-ouverte à cause d'une erreur");
-    };
-
-    // On crée un magasin d'objet pour la transaction
-    var objectStore = transaction.objectStore("customerDB");
-
-    // On ajoute l'objet newItem au magasin d'objets
-    var objectStoreRequest = objectStore.get(keyItem);
-
-    objectStoreRequest.onsuccess = function (event) {
-        // On indique le succès de l'ajout de l'objet
-        // dans la base de données
-        console.log("Un objet a été récupéré dans la base");
-        document.getElementById("inputName").value = objectStoreRequest.result.name;
-        document.getElementById("inputFirstName").value = objectStoreRequest.result.firstName;
-        document.getElementById("inputCompany").value = objectStoreRequest.result.company;
-        document.getElementById("inputAddress").value = objectStoreRequest.result.address;
-        document.getElementById("inputCity").value = objectStoreRequest.result.city;
-        document.getElementById("inputZipCode").value = objectStoreRequest.result.zipCode;
-        document.getElementById("inputMail").value = objectStoreRequest.result.mail;
-        document.getElementById("inputPhone").value = objectStoreRequest.result.phone;
-    };
-
-}
-
-function openDB() {
-    //indexedDB.deleteDatabase("customerDB");
-    var DBOpenRequest = window.indexedDB.open("customerDB", 1);
-
-    DBOpenRequest.onerror = function (event) {
-        console.log("Erreur lors du chargement de la base de données");
-    };
+    let db;
+    let DBOpenRequest = window.indexedDB.open("customerDB", 1);
 
     DBOpenRequest.onsuccess = function (event) {
-        console.log("Base de données initialisée");
+        db = event.target.result;
+        document.getElementById("editCustomer").onclick = function () { editCustomer(keyItem) };
 
-        // On enregistre le résultat de l'ouverture 
-        // dans la variable db (on l'utilisera plusieurs
-        // fois par la suite).
-        db = DBOpenRequest.result;
-    };
+        var transaction = db.transaction("customer", "readonly");
 
-    // Ce gestionnaire permet de parer au cas où une 
-    // nouvelle version de la base de données doit 
-    // être créée.
-    // Soit la base de données n'existait pas, soit
-    // il faut utiliser une nouvelle version
-
-    DBOpenRequest.onupgradeneeded = function (event) {
-        let db = DBOpenRequest.result;
-
-        // On crée un magasin d'objet objectStore pour 
-        // cette base de données via IDBDatabase.createObjectStore
-
-        var objectStore = db.createObjectStore("customerDB", { keyPath: "name" });
-
-        // Enfin, on définit les données qui seront contenues
-        // dans ce modèle de données
-
-        objectStore.createIndex("firstName", "firstName", { unique: false });
-        objectStore.createIndex("company", "company", { unique: false });
-        objectStore.createIndex("address", "address", { unique: false });
-        objectStore.createIndex("city", "city", { unique: false });
-        objectStore.createIndex("zipCode", "zipCode", { unique: false });
-        objectStore.createIndex("mail", "mail", { unique: false });
-        objectStore.createIndex("phone", "phone", { unique: false });
-
-
-        db.onerror = function (event) {
-            console.log("Erreur lors du chargement de la base");
+        // On indique le succès de la transaction
+        transaction.oncomplete = function (event) {
+            console.log("Transaction terminée : lecture finie");
         };
 
+        transaction.onerror = function (event) {
+            console.log("Transaction non-ouverte à cause d'une erreur");
+        };
+
+        // On crée un magasin d'objet pour la transaction
+        var objectStore = transaction.objectStore("customer");
+
+        // On ajoute l'objet newItem au magasin d'objets
+        var objectStoreRequest = objectStore.get(keyItem);
+
+        objectStoreRequest.onsuccess = function (event) {
+            // On indique le succès de l'ajout de l'objet
+            // dans la base de données
+            console.log("Un objet a été récupéré dans la base");
+            document.getElementById("idCustomer").value = keyItem;
+            document.getElementById("inputName").value = objectStoreRequest.result.name;
+            document.getElementById("inputFirstName").value = objectStoreRequest.result.firstName;
+            document.getElementById("inputCompany").value = objectStoreRequest.result.company;
+            document.getElementById("inputAddress").value = objectStoreRequest.result.address;
+            document.getElementById("inputCity").value = objectStoreRequest.result.city;
+            document.getElementById("inputZipCode").value = objectStoreRequest.result.zipCode;
+            document.getElementById("inputMail").value = objectStoreRequest.result.mail;
+            document.getElementById("inputPhone").value = objectStoreRequest.result.phone;
+        };
 
     }
+
+
 }
 
 function inputState(bool) {
