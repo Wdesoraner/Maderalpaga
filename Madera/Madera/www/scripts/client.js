@@ -1,6 +1,6 @@
 ﻿
 let db;
-let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
 
 DBOpenRequest.onupgradeneeded = function (event) {
     // Set the db variable to our database so we can use it!  
@@ -9,7 +9,10 @@ DBOpenRequest.onupgradeneeded = function (event) {
     // Create an object store named notes. Object stores
     // in databases are where data are stored.
         let objectStore = db.createObjectStore('customer', { autoIncrement: true });
-    
+
+        console.log("create index : idCustomer");
+        objectStore.createIndex("idCustomer", "idCustomer", { unique: false });
+
         console.log("create index : name");
         objectStore.createIndex("name", "name", { unique: false });
     
@@ -121,7 +124,7 @@ function newCustomer() {
     inputState(false);
 
     let db;
-    let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+    let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
 
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
@@ -139,7 +142,7 @@ function editCustomer() {
 
 function updateCustomer() {
     let db;
-    let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+    let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
     var id = parseInt(document.getElementById("idCustomer").value, 10);
 
     DBOpenRequest.onsuccess = function (event) {
@@ -222,7 +225,7 @@ function initCustomerList(db) {
 
 function clickListItem(keyItem) {
     let db;
-    let DBOpenRequest = window.indexedDB.open("customerDB", 1);
+    let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
 
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
