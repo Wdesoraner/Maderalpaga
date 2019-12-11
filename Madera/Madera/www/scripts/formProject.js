@@ -1,39 +1,9 @@
-﻿let db;
-let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
-
-DBOpenRequest.onupgradeneeded = function (event) {
-    // Set the db variable to our database so we can use it!  
-    db = event.target.result;
-
-    // Create an object store named notes. Object stores
-    // in databases are where data are stored.
-    let objectStore = db.createObjectStore('project', { autoIncrement: true });
-
-    console.log("create index : projectName");
-    objectStore.createIndex("projectName", "projectName", { unique: false });
-
-    console.log("create index : commercial");
-    objectStore.createIndex("commercial", "commercial", { unique: false });
-
-    console.log("create index : date");
-    objectStore.createIndex("date", "date", { unique: false });
-
-    console.log("create index : idProject");
-    objectStore.createIndex("idProject", "idProject", { unique: false });
-
-    console.log("create index : refProject");
-    objectStore.createIndex("refProject", "refProject", { unique: false });
-
-}
-DBOpenRequest.onsuccess = function (event) {
-    db = event.target.result;
-}
-DBOpenRequest.onerror = function (event) {
-    alert('error opening database ' + event.target.errorCode);
-}
+﻿
 
 $(document).ready(function () {
+
     initSelect();
+    document.getElementById("idProject").value = 0
     $('[href="#step1"]').tab('show');
     var now = new Date();
 
@@ -41,7 +11,11 @@ $(document).ready(function () {
     var month = ("0" + (now.getMonth() + 1)).slice(-2);
 
     var today = now.getFullYear() + "-" + (month) + "-" + (day);
-    document.getElementById("quotationDate").value = today;
+    document.getElementById("projectDate").value = today;
+
+    if (document.getElementById("idProject").value = "0") {
+        document.getElementById("submitButton").onclick = newProject;
+    }
 });
 
 function initSelect() {
@@ -125,12 +99,12 @@ function optionSelected() {
                     inputState(true);
                 } else {
                     cursor.continue();
-                }           
+                }
             } else {
                 document.getElementById("idCustomer").value = "";
                 document.getElementById("customerName").value = "";
                 document.getElementById("customerFirstName").value = "";
-                document.getElementById("customerCompany").value ="";
+                document.getElementById("customerCompany").value = "";
                 document.getElementById("customerAddress").value = "";
                 document.getElementById("customerCity").value = "";
                 document.getElementById("customerZipCode").value = "";
@@ -146,5 +120,48 @@ function inputState(bool) {
     var element = document.getElementsByClassName("customer");
     for (var i = 0; i < element.length; i++) {
         element[i].readOnly = bool;
+    }
+}
+
+function newProject() {
+
+    if (document.getElementById("projectName").value != ""){
+
+        let db;
+        let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
+
+        DBOpenRequest.onsuccess = function (event) {
+            db = event.target.result;
+            let transaction = db.transaction("project", "readwrite");
+
+            // On indique le succès de la transaction
+            transaction.oncomplete = function (event) {
+                console.log("Transaction terminée : modification finie");
+            };
+
+            transaction.onerror = function (event) {
+                console.log("Transaction non-ouverte à cause d'une erreur.Les doublons ne sont pas autorisés");
+            };
+
+            var newItem = [{
+                projectName: document.getElementById("projectName").value,
+                commercial: document.getElementById("idCommercial").value,
+                refProject: document.getElementById("projectReference").value,
+                date: document.getElementById("projectDate").value
+            }];
+
+            // On crée un magasin d'objet pour la transaction
+            let objectStore = transaction.objectStore("project");
+
+            // On ajoute l'objet newItem au magasin d'objets
+            let objectStoreRequest = objectStore.add(newItem[0]);
+
+            objectStoreRequest.onsuccess = function (event) {
+                // On indique le succès de l'ajout de l'objet
+                // dans la base de données
+                console.log("Un nouvel élément a été ajouté dans la base de données");
+            };
+
+        }
     }
 }

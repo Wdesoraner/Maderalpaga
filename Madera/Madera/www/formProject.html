@@ -96,11 +96,13 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="d-flex">
-                                        <label class="col-5">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="col-7 form-control" type="text"  />
+                                        <input type="hidden" id="idProject" />
+                                        <label class="col-5">Nom du projet* :</label> <input id="projectName" name="projectName" class="col-7 form-control" type="text" />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Commercial* :</label> <input id="quotationCommercial" name="quotationCommercial" class="col-7 form-control" type="search"  />
+                                        <input type="hidden" id="idCommercial"/>
+                                        <label class="col-5">Commercial* :</label> <input id="commercial" name="commercial" class="col-7 form-control" type="search"  />
                                     </div>
                                     <br />
 
@@ -108,11 +110,11 @@
 
                                 <div class="col-6">
                                     <div class="d-flex">
-                                        <label class="col-5">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="col-7 form-control" type="text"  />
+                                        <label class="col-5">Ref. projet* :</label> <input id="projectReference" name="projectReference" class="col-7 form-control" type="text"  />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Date* :</label> <input id="quotationDate" name="quotationDate" class="col-7 form-control" type="date"  />
+                                        <label class="col-5">Date* :</label> <input id="projectDate" name="projectDate" class="col-7 form-control" type="date"  />
                                     </div>
                                     <br />
 
@@ -126,7 +128,7 @@
                         </div>
 
                         <div class="well text-right">
-                            <button id="activate-collection" class="btn btn-success btn-lg next">Suivant</button>
+                            <button id="submitButton" class="btn btn-success btn-lg next">Suivant</button>
                         </div>
 
                     </div>
