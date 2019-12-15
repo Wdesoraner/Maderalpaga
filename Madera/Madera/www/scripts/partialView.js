@@ -18,5 +18,12 @@ function showAlert() {
     $('#content').load("authentication.html");
 }
 
+function getSlideshow() {
+   var test = document.getElementById("bla").innerHTML;
+}
+
+function myFunction() {
+    document.getElementById("content").outerHTML = getSlideshow.test;
+}
 
 
