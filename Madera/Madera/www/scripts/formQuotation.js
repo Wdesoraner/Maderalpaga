@@ -65,7 +65,8 @@ $(document).ready(function () {
     })
 
     $('#btnSaveQuotation').click(function () {
-        generatePDF();
+        //generatePDF();
+        addQuotation(db);
     })
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -352,19 +353,25 @@ DBOpenRequest.onupgradeneeded = function (event) {
     objectStore = db.createObjectStore('quotation', { autoIncrement: true });
 
     //console.log("create index : date");
+    objectStore.createIndex("name", "name", { unique: true });
+
+    //console.log("create index : date");
+    objectStore.createIndex("reference", "reference", { unique: true });
+
+    //console.log("create index : date");
     objectStore.createIndex("date", "date", { unique: false });
 
     //console.log("create index : collection");
     objectStore.createIndex("collection", "collection", { unique: false });
 
-    //console.log("create index : finishOut");
-    objectStore.createIndex("address", "address", { unique: false });
-
-    //console.log("create index : finishIn");
-    objectStore.createIndex("city", "city", { unique: false });
-
     //console.log("create index : fill");
     objectStore.createIndex("fill", "fill", { unique: false });
+
+    //console.log("create index : fill");
+    objectStore.createIndex("finishIn", "finishIn", { unique: false });
+
+    //console.log("create index : fill");
+    objectStore.createIndex("finishOut", "finishOut", { unique: false });
 
     //console.log("create index : cut");
     objectStore.createIndex("cut", "cut", { unique: false });
@@ -383,14 +390,14 @@ DBOpenRequest.onupgradeneeded = function (event) {
     //console.log("create index : collection");
     objectStore.createIndex("code", "code", { unique: false });
 }
-//DBOpenRequest.onsuccess = function (event) {
-//    db = event.target.result;
-//    initTypeComponentList(db);
-//    initCollectionList(db);
+DBOpenRequest.onsuccess = function (event) {
+    //db = event.target.result;
+    //initTypeComponentList(db);
+    //initCollectionList(db);
 
-//    //initTableCollection(db);
-//    //initTableTypeComponent(db);
-//}
+    //initTableCollection(db);
+    //initTableTypeComponent(db);
+}
 DBOpenRequest.onerror = function (event) {
     alert('error opening database ' + event.target.errorCode);
 }
@@ -551,142 +558,184 @@ function initTableTypeComponent(db) {
 }
 
 
-/*
-let DBOpenRequest = indexedDB.open("quotationDB");
+function addQuotation(db) {
 
-DBOpenRequest.onupgradeneeded = function (event) {
-// Set the db variable to our database so we can use it!
-db = event.target.result;
+    console.log(db);
 
-// Create an object store named db. Object stores
-// in databases are where data are stored.
-let objectStore = db.createObjectStore('quotation', { autoIncrement: true });
+    var newItem = [{
+        name: document.getElementById("quotationName").value,
+        reference: document.getElementById("quotationReference").value,
+        date: document.getElementById("quotationDate").value,
+        collection: document.getElementById("quotationCollection").value,
+        fill: document.getElementById("quotationFillType").value,
+        finishOut: document.getElementById("quotationFinishOut").value,
+        finishIn: document.getElementById("quotationFinishIn").value,
+        cut: document.getElementById("quotationCut").value
+    }];
 
+    console.log(newItem);
 
-//console.log("create index : date");
-objectStore.createIndex("date", "date", { unique: false });
+    let transaction = db.transaction("quotation", "readwrite");
 
-//console.log("create index : collection");
-objectStore.createIndex("collection", "collection", { unique: false });
+    // On indique le succès de la transaction
+    transaction.oncomplete = function (event) {
+        console.log("Transaction terminée : modification finie");
+    };
 
-//console.log("create index : finishOut");
-objectStore.createIndex("address", "address", { unique: false });
+    transaction.onerror = function (event) {
+        console.log("Transaction non-ouverte à cause d'une erreur.Les doublons ne sont pas autorisés");
+    };
 
-//console.log("create index : finishIn");
-objectStore.createIndex("city", "city", { unique: false });
+    // On crée un magasin d'objet pour la transaction
+    let objectStore = transaction.objectStore("quotation");
 
-//console.log("create index : fill");
-objectStore.createIndex("fill", "fill", { unique: false });
+    // On ajoute l'objet newItem au magasin d'objets
+    let objectStoreRequest = objectStore.add(newItem[0]);
 
-//console.log("create index : cut");
-objectStore.createIndex("cut", "cut", { unique: false });
-
-//console.log("create index : components");
-objectStore.createIndex("components", "components", { unique: false });
-
-}
-DBOpenRequest.onsuccess = function (event) {
-db = event.target.result;
-initQuotationList(db);
-}
-DBOpenRequest.onerror = function (event) {
-alert('error opening database ' + event.target.errorCode);
-}
-
-
-DBOpenRequest = indexedDB.open("typeComponentDB");
-
-DBOpenRequest.onupgradeneeded = function (event) {
-// Set the db variable to our database so we can use it!
-db = event.target.result;
-
-// Create an object store named db. Object stores
-// in databases are where data are stored.
-let objectStore = db.createObjectStore('typeComponent', { autoIncrement: true });
-
-
-//console.log("create index : date");
-objectStore.createIndex("label", "label", { unique: false });
-
-//console.log("create index : collection");
-objectStore.createIndex("code", "code", { unique: false });
-
-}
-DBOpenRequest.onsuccess = function (event) {
-db = event.target.result;
-initQuotationList(db);
-}
-DBOpenRequest.onerror = function (event) {
-alert('error opening database ' + event.target.errorCode);
+    objectStoreRequest.onsuccess = function (event) {
+        // On indique le succès de l'ajout de l'objet
+        // dans la base de données
+        console.log("Un nouvel élément a été ajouté dans la base de données");
+    };
+    
 }
 
 
-DBOpenRequest = indexedDB.open("componentsDB");
+//let DBOpenRequest = indexedDB.open("quotationDB");
 
-DBOpenRequest.onupgradeneeded = function (event) {
-// Set the db variable to our database so we can use it!
-db = event.target.result;
+//DBOpenRequest.onupgradeneeded = function (event) {
+//// Set the db variable to our database so we can use it!
+//db = event.target.result;
 
-// Create an object store named db. Object stores
-// in databases are where data are stored.
-let objectStore = db.createObjectStore('components', { autoIncrement: true });
-
-
-//console.log("create index : refComposant");
-objectStore.createIndex("refComposant", "refComposant", { unique: false });
-
-//console.log("create index : label");
-objectStore.createIndex("label", "label", { unique: false });
-
-//console.log("create index : price");
-objectStore.createIndex("price", "price", { unique: false });
-
-//console.log("create index : comment");
-objectStore.createIndex("comment", "comment", { unique: false });
-
-//console.log("create index : typeComponent");
-objectStore.createIndex("typeComponent", "typeComponent", { unique: false });
-
-//console.log("create index : component");
-objectStore.createIndex("component", "component", { unique: false });
-
-}
-DBOpenRequest.onsuccess = function (event) {
-db = event.target.result;
-initComponentList(db);
-}
-DBOpenRequest.onerror = function (event) {
-alert('error opening database ' + event.target.errorCode);
-}
+//// Create an object store named db. Object stores
+//// in databases are where data are stored.
+//let objectStore = db.createObjectStore('quotation', { autoIncrement: true });
 
 
-DBOpenRequest = indexedDB.open("collectionDB");
+////console.log("create index : date");
+//objectStore.createIndex("date", "date", { unique: false });
 
-DBOpenRequest.onupgradeneeded = function (event) {
-// Set the db variable to our database so we can use it!
-db = event.target.result;
+////console.log("create index : collection");
+//objectStore.createIndex("collection", "collection", { unique: false });
 
-// Create an object store named db. Object stores
-// in databases are where data are stored.
-let objectStore = db.createObjectStore('collection', { autoIncrement: true });
+////console.log("create index : finishOut");
+//objectStore.createIndex("address", "address", { unique: false });
+
+////console.log("create index : finishIn");
+//objectStore.createIndex("city", "city", { unique: false });
+
+////console.log("create index : fill");
+//objectStore.createIndex("fill", "fill", { unique: false });
+
+////console.log("create index : cut");
+//objectStore.createIndex("cut", "cut", { unique: false });
+
+////console.log("create index : components");
+//objectStore.createIndex("components", "components", { unique: false });
+
+//}
+//DBOpenRequest.onsuccess = function (event) {
+//db = event.target.result;
+//initQuotationList(db);
+//}
+//DBOpenRequest.onerror = function (event) {
+//alert('error opening database ' + event.target.errorCode);
+//}
 
 
-//console.log("create index : label");
-objectStore.createIndex("label", "label", { unique: false });
+//DBOpenRequest = indexedDB.open("typeComponentDB");
 
-//console.log("create index : collection");
-objectStore.createIndex("quality", "quality", { unique: false });
+//DBOpenRequest.onupgradeneeded = function (event) {
+//// Set the db variable to our database so we can use it!
+//db = event.target.result;
 
-}
-DBOpenRequest.onsuccess = function (event) {
-db = event.target.result;
-initCollectionList(db);
-}
-DBOpenRequest.onerror = function (event) {
-alert('error opening database ' + event.target.errorCode);
-}
+//// Create an object store named db. Object stores
+//// in databases are where data are stored.
+//let objectStore = db.createObjectStore('typeComponent', { autoIncrement: true });
 
-*/
+
+////console.log("create index : date");
+//objectStore.createIndex("label", "label", { unique: false });
+
+////console.log("create index : collection");
+//objectStore.createIndex("code", "code", { unique: false });
+
+//}
+//DBOpenRequest.onsuccess = function (event) {
+//db = event.target.result;
+//initQuotationList(db);
+//}
+//DBOpenRequest.onerror = function (event) {
+//alert('error opening database ' + event.target.errorCode);
+//}
+
+
+//DBOpenRequest = indexedDB.open("componentsDB");
+
+//DBOpenRequest.onupgradeneeded = function (event) {
+//// Set the db variable to our database so we can use it!
+//db = event.target.result;
+
+//// Create an object store named db. Object stores
+//// in databases are where data are stored.
+//let objectStore = db.createObjectStore('components', { autoIncrement: true });
+
+
+////console.log("create index : refComposant");
+//objectStore.createIndex("refComposant", "refComposant", { unique: false });
+
+////console.log("create index : label");
+//objectStore.createIndex("label", "label", { unique: false });
+
+////console.log("create index : price");
+//objectStore.createIndex("price", "price", { unique: false });
+
+////console.log("create index : comment");
+//objectStore.createIndex("comment", "comment", { unique: false });
+
+////console.log("create index : typeComponent");
+//objectStore.createIndex("typeComponent", "typeComponent", { unique: false });
+
+////console.log("create index : component");
+//objectStore.createIndex("component", "component", { unique: false });
+
+//}
+//DBOpenRequest.onsuccess = function (event) {
+//db = event.target.result;
+//initComponentList(db);
+//}
+//DBOpenRequest.onerror = function (event) {
+//alert('error opening database ' + event.target.errorCode);
+//}
+
+
+//DBOpenRequest = indexedDB.open("collectionDB");
+
+//DBOpenRequest.onupgradeneeded = function (event) {
+//// Set the db variable to our database so we can use it!
+//db = event.target.result;
+
+//// Create an object store named db. Object stores
+//// in databases are where data are stored.
+//let objectStore = db.createObjectStore('collection', { autoIncrement: true });
+
+
+////console.log("create index : label");
+//objectStore.createIndex("label", "label", { unique: false });
+
+////console.log("create index : collection");
+//objectStore.createIndex("quality", "quality", { unique: false });
+
+//}
+//DBOpenRequest.onsuccess = function (event) {
+//db = event.target.result;
+//initCollectionList(db);
+//}
+//DBOpenRequest.onerror = function (event) {
+//alert('error opening database ' + event.target.errorCode);
+//}
+
+
 
 
 
