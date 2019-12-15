@@ -19,42 +19,49 @@ $(document).ready(function () {
 });
 
 function initSelect() {
-    var select = document.getElementById("selectCustomer");
-    var option = document.createElement("option");
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
 
-    let transaction = db.transaction("customer", "readwrite");
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        var select = document.getElementById("selectCustomer");
 
-    let objectStore = transaction.objectStore("customer");
-    let request = objectStore.openCursor();
+        let transaction = db.transaction("customer", "readwrite");
 
-    request.onerror = function (event) {
-        console.err("error fetching data");
-    };
+        let objectStore = transaction.objectStore("customer");
+        let request = objectStore.openCursor();
 
-    request.onsuccess = function (event) {
-        let cursor = event.target.result;
-        if (cursor) {
-            let key = cursor.primaryKey;
-            let value = cursor.value;
-            console.log(key, value);
-            if (value.company != "") {
-                option.text = value.company;
-                option.id = value.key;
-            } else {
-                option.text = value.firstName + " " + value.name;
-                option.id = value.key;
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            let cursor = event.target.result;
+            if (cursor) {
+                var option = document.createElement("option");
+                let key = cursor.primaryKey;
+                let value = cursor.value;
+                console.info(key, value.company);
+                if (value.company != "") {
+                    option.text = value.company;
+                } else {
+                    option.text = value.firstName + " " + value.name;
+                }
+                option.id = key;
+                console.log(option);
+                select.appendChild(option);
+                cursor.continue();
             }
-            select.appendChild(option);
-            cursor.continue();
-        }
-    };
+            sortList();
+        };
+    }
 }
 
 function optionSelected() {
     let userSelected = document.getElementById("pickedCustomer").value;
 
     let db;
-    let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
 
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
@@ -125,10 +132,11 @@ function inputState(bool) {
 
 function newProject() {
 
-    if (document.getElementById("projectName").value != ""){
+    if (checkRequiredInput()) {
 
+        console.log("yep");
         let db;
-        let DBOpenRequest = window.indexedDB.open("maderaDB", 1);
+        let DBOpenRequest = window.indexedDB.open("maderaDB");
 
         DBOpenRequest.onsuccess = function (event) {
             db = event.target.result;
@@ -147,7 +155,8 @@ function newProject() {
                 projectName: document.getElementById("projectName").value,
                 commercial: document.getElementById("idCommercial").value,
                 refProject: document.getElementById("projectReference").value,
-                date: document.getElementById("projectDate").value
+                date: document.getElementById("projectDate").value,
+                customer : document.getElementById("idCustomer").value
             }];
 
             // On crée un magasin d'objet pour la transaction
@@ -164,4 +173,48 @@ function newProject() {
 
         }
     }
+}
+
+function sortList() {
+    var list, i, switching, b, shouldSwitch;
+    list = document.getElementById("selectCustomer");
+    switching = true;
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        b = list.getElementsByTagName("option");
+        // Loop through all list items:
+        for (i = 1; i < (b.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Check if the next item should
+            switch place with the current item: */
+            if (b[i].innerHTML.toLowerCase() > b[i + 1].innerHTML.toLowerCase()) {
+                /* If next item is alphabetically lower than current item,
+                mark as a switch and break the loop: */
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark the switch as done: */
+            b[i].parentNode.insertBefore(b[i + 1], b[i]);
+            switching = true;
+        }
+    }
+}
+
+function checkRequiredInput() {
+    var inputList = document.getElementsByTagName('input');
+    for (var i = 0; i < inputList.length; i++) {
+        if (inputList[i].value === '' && inputList[i].hasAttribute('required')) {
+            alert('Certains champs requis sont incomplets!');
+            return false;
+        }
+    };
+    return true;
+
 }
