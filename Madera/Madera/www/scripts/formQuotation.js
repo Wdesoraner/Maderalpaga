@@ -1,4 +1,51 @@
-﻿
+﻿var listen = {
+    //listener click tr
+    clickListener: function (tr) {
+        tr.find('.add-child-item').click(function (e) {
+            console.log($(this));
+            listen.addChild($(this).attr('id'));
+            //listen.addChild($(this).attr('id'));
+        }),
+            tr.find('.del-item-collection').click(function (e) {
+                listen.delChild($(this).closest("tr").attr('id'))
+            })
+            ;
+    },
+    addChild: function (id) {
+
+        // si undefined, duplicateItem()
+        if (id === undefined) {
+
+        }
+        document.getElementById("hiddenId").value++;
+        let idTr = document.getElementById("hiddenId").value;
+
+        newRowComponent = getRowComponent(idTr, id)
+
+        let tr = document.createElement("tr");
+        tr.innerHTML = newRowComponent;
+        tr.classList.add('item-collection');
+        tr.id = idTr;
+
+        var element = document.getElementById(id);
+        element.closest("tr").after(tr);
+        //element.after(tr);
+
+        let DBOpenRequest = indexedDB.open("localMaderaDB");
+        DBOpenRequest.onsuccess = function (event) {
+            db = event.target.result;
+            initTypeComponentList(db, idTr);
+            initCollectionList(db, idTr);
+        }
+        listen.clickListener($(tr));
+    },
+    delChild: function (id) {
+        var element = document.getElementById(id);
+        element.remove(element);
+    }
+}
+
+
 $(document).ready(function () {
     document.getElementById("hiddenId").value = 0;
 
@@ -30,6 +77,7 @@ $(document).ready(function () {
         $('.progress-bar').css({ width: percent + '%' });
         $('.progress-bar').text("Étape " + step + " sur 3");
 
+
     })
 
 
@@ -41,7 +89,15 @@ $(document).ready(function () {
         }
     })
 
+
+
 });
+
+function getRowComponent(idTr, idParent = 0) {
+    return '<tr id="' + idTr + '" class="item-collection"><td style="width:10%"><span id="parentComponent">' + idParent + '</span></td><td><select class="w-100 h-100 border border-0" id="selectTypeComponent' + idTr + '"></select></td><td><select class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" class="w-100 h-100 border border-0" /></td> <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td><td><select class="w-100 h-100 border border-0"><option></option><option>Entrant</option><option>Sortant</option></select></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
+    // onclick="addChild(' + idTr + ')
+    //"onclick="delItem(' + idTr + ')"
+}
 
 function duplicateItem() {
     document.getElementById("hiddenId").value++;
@@ -50,7 +106,7 @@ function duplicateItem() {
 
     let idTr = document.getElementById("hiddenId").value;
 
-    const newRowComponent = '<tr class="item-collection"><td style="width:10%"><span id="parentComponent"></span></td><td><select class="w-100 h-100 border border-0" id="selectTypeComponent' + idTr + '"></select></td><td><select class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" class="w-100 h-100 border border-0" /></td> <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td><td><select class="w-100 h-100 border border-0"><option></option><option>Entrant</option><option>Sortant</option></select></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '" onclick="addChild(' + idTr + ')"><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '"onclick="delItem(' + idTr + ')"><div class="font-weight-bold">-</div></button></td></tr >'
+    newRowComponent = getRowComponent(idTr)
 
     let tr = document.createElement("tr");
 
@@ -69,25 +125,60 @@ function duplicateItem() {
         //initTableCollection(db);
         //initTableTypeComponent(db);
     }
+    listen.clickListener($(tr));
 
 
 };
 
-function delItem(id) {
-    console.log('wallah');
+//function delItem(id) {
+//    console.log('wallah');
 
-    var element = document.getElementById(id);
-    element.parentNode.removeChild(element);
-}
+//    var element = document.getElementById(id);
+//    element.remove(element);
+//    //element.parentNode.removeChild(element);
+//}
 
-function addChild(id) {
-    console.log('ntm');
-    var element = document.getElementById(id);
-    var table = document.getElementById("table-collection");
-    var row = table.insertRow(document.getElementById(id).rowIndex);
-    console.log(document.getElementById(id).rowIndex);
+//function addChild(id) {
+//    document.getElementById("hiddenId").value++;
+//    let idTr = document.getElementById("hiddenId").value;
 
-}
+//    newRowComponent = getRowComponent(idTr, id)
+
+//    let tr = document.createElement("tr");
+//    tr.innerHTML = newRowComponent;
+//    tr.classList.add('item-collection');
+//    tr.id = idTr;
+
+//    var element = document.getElementById(id);
+//    console.log(element.id);
+//    //element.closest("tr").after(tr);
+//    element.after(tr);
+
+//    let DBOpenRequest = indexedDB.open("localMaderaDB");
+//    DBOpenRequest.onsuccess = function (event) {
+//        db = event.target.result;
+//        initTypeComponentList(db, idTr);
+//        initCollectionList(db, idTr);
+//    }
+
+
+//    test.generateLine();
+
+
+
+
+//    //console.log('ntm');
+//    //document.getElementById("hiddenId").value++;
+//    //let idTr = document.getElementById("hiddenId").value;
+
+//    //var element = document.getElementById(id);
+//    //var table = document.getElementById("table-collection");
+//    //newRowComponent = getRowComponent(idTr)
+//    //element.closest("tr").after();
+//    //var row = table.insertRow(document.getElementById(id).rowIndex);
+//    //console.log(document.getElementById(id).rowIndex);
+
+//}
 
 function resetQuotation() {
     document.getElementById('refQuotationToInsert').innerHTML = "";
