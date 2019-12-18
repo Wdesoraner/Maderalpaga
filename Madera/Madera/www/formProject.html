@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Formulaire de création de projet</title>
+
+    <link href="css/formQuotation.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="css/Bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/Bootstrap/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="css/Bootstrap/bootstrap-select.css" rel="stylesheet" />
+
+    <script src="scripts/HTML2Canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script src="../Scripts/jquery-3.4.1.js"></script>
+    <script src="scripts/formProject.js"></script>
+    <script src="scripts/Bootstrap/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-3"></div>
+
+        <div class="col-9">
+
+            <div class="container wizard-quotation">
+
+                <h3>Formulaire de création de projet</h3>
+
+                <hr>
+
+                <div class="navbar card-header-pills">
+                    <div class="navbar-inner">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Informations projet</a></li>
+                            <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Devis</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content card over-heigt">
+                    <div class="tab-pane fade in active" id="step1">
+
+                        <div class="well">
+
+                            <div class="input-group margin-bottom-sm col-5">
+                                <input type="hidden" id="idCustomer"/>
+                                <input type="text" class="custom-select custom-select-sm" id="pickedCustomer" onchange="optionSelected()" list="selectCustomer"/>
+                                <datalist id="selectCustomer">
+                                    <option> </option>
+                                </datalist>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="col-5">Nom* :</label> <input id="customerName" name="customerName" class="col-7 form-control customer" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="col-7 form-control customer" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Société :</label> <input id="customerCompany" name="customerCompany" class="col-7 form-control customer" type="text" />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Email* :</label> <input id="customerMail" name="customerMail" class="col-7 form-control customer" type="email" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="col-5">Adresse* :</label> <input id="customerAddress" name="customerAddress" class="col-7 form-control customer" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Code Postal* :</label> <input id="customerZipCode" name="customerZipCode" class="col-7 form-control customer" type="text" required />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Ville* :</label> <input id="customerCity" name="customerCity" class="col-7 form-control customer" type="text" required/>
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="col-7 form-control customer" type="tel"  required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <input type="hidden" id="idProject" />
+                                        <label class="col-5">Nom du projet* :</label> <input id="projectName" name="projectName" class="col-7 form-control" type="text" required/>
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <input type="hidden" id="idCommercial"/>
+                                        <label class="col-5">Commercial* :</label> <input id="commercial" name="commercial" class="col-7 form-control" type="search" required />
+                                    </div>
+                                    <br />
+
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label class="col-5">Ref. projet* :</label> <input id="projectReference" name="projectReference" class="col-7 form-control" type="text" />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex">
+                                        <label class="col-5">Date* :</label> <input id="projectDate" name="projectDate" class="col-7 form-control" type="date" required />
+                                    </div>
+                                    <br />
+
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
+                            <br />
+
+                        </div>
+
+                        <div class="well text-right">
+                            <button id="submitButton" class="btn btn-success btn-lg next">Suivant</button>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="step2">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="well m-5">
+
+                                    <div class="input-group margin-bottom-sm col-5">
+                                        <button class="input-group-addon text-center mx-auto prepend-icon"><i class="fa fa-search"></i></button>
+                                        <input class="form-control" type="search" placeholder="Rechercher un devis">
+                                    </div>
+
+                                    <br />
+                                    <div class="well text-right">
+                                        <a href="formQuotation.html" class="btn btn-success rounded rounded-circle" id="add-item-collection"><div class="font-weight-bold">+</div></a>
+                                        <button class="btn btn-danger rounded rounded-circle" id="del-item-collection"><div class="font-weight-bold">-</div></button>
+                                    </div>
+                                    <table id="table-collection" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Libelle</th>
+                                                <th>Date</th>
+                                                <th>Créateur</th>
+                                                <th>Client (Société)</th>
+                                                <th>État</th>
+                                                <th>Montant</th>
+                                            </tr>
+                                        </thead>
+                                        <tr class="item-collection">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

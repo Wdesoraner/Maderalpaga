@@ -17,55 +17,56 @@
     <title></title>
 </head>
 <body>
-    <div class="row col-sm-4 pull-right">
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="newCustomer">Nouveau</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary ml-2" id="editCustomer">Editer</button>
-    </div>
-    <div class="row col-sm-12">
-        <div class="col-sm-3 customerList">
-            <ul class="list-group" id="customerList">
-                <li class="list-group-item bg-secondary text-light disabled">Liste des clients</li>
-            </ul>
+    <div id="clientPage">
+        <div class="row col-sm-4 pull-right">
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="newCustomer">Nouveau</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary ml-2" id="editCustomer">Editer</button>
         </div>
-        <div class="col-sm-8">
-            <h5 class="col-sm-3" for="boxDetail">Détail</h5>
-            <div class="col-sm-10 border p-3 clearfix" id="boxDetail">
-                <form>
-                    <input type="hidden" id="idCustomer">
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold font-weight-bold" for="inputName" >Nom :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputName">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputFirstName">Prénom :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputFirstName">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputCompany">Société :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputCompany">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputAdresse">Adresse :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputAddress">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputZC">Code postal :</label>
-                        <input type="text" class="form-control input-sm col-sm-5 text-muted" id="inputZipCode">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputCity">Ville :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputCity">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputMail">Mail :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputMail">
-                    </div>
-                    <div class="input-group-sm row mb-1">
-                        <label class="col-sm-3 mt-1 font-weight-bold" for="inputPhone">Téléphone :</label>
-                        <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputPhone">
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary float-right mr-4" id="validCustomer">Valider</button>
-                </form>
+        <div class="row col-sm-12">
+            <div class="col-sm-3 customerList">
+                <ul class="list-group" id="customerList">
+                </ul>
+            </div>
+            <div class="col-sm-8">
+                <h5 class="col-sm-3" for="boxDetail">Détail</h5>
+                <div class="col-sm-10 border p-3 clearfix" id="boxDetail">
+                    <form>
+                        <input type="hidden" id="idCustomer">
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold font-weight-bold" for="inputName">Nom* :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputName" required>
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputFirstName">Prénom* :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputFirstName">
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputCompany">Société :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputCompany">
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputAdresse">Adresse* :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputAddress" required>
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputZC">Code postal* :</label>
+                            <input type="text" class="form-control input-sm col-sm-5 text-muted" id="inputZipCode" required>
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputCity">Ville* :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputCity" required>
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputMail">Mail* :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputMail" required>
+                        </div>
+                        <div class="input-group-sm row mb-1">
+                            <label class="col-sm-3 mt-1 font-weight-bold" for="inputPhone">Téléphone* :</label>
+                            <input type="text" class="form-control input-sm col-sm-6 text-muted" id="inputPhone" required>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary float-right mr-4" id="validCustomer">Valider</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
