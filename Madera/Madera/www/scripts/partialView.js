@@ -1,29 +1,25 @@
 ﻿
 $(document).ready(function () {
-    initDB();
+    document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>'
     initElement();
 });
 
 function initElement() {
-    var p = document.getElementById("home");
-    p.onclick = showAlert;
+    var home = document.getElementById("home");
+    home.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>' };
 
-    //const el = $('#content');
-    //const test = Handlebars.compile($('#contenu').html());
-    //const html = test();
-    //el.html(html);
+    var client = document.getElementById("customer");
+    client.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="client.html" ></object>' };
+
+    var createQuote = document.getElementById("createQuote");
+    createQuote.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="listQuotation.html" ></object>' };
+
+    var projects = document.getElementById("projects");
+    projects.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="listProject.html" ></object>' };
+
 };
 
-function showAlert() {
-    $('#content').load("authentication.html");
-}
 
-function getSlideshow() {
-   var test = document.getElementById("bla").innerHTML;
-}
 
-function myFunction() {
-    document.getElementById("content").outerHTML = getSlideshow.test;
-}
 
 
