@@ -1,5 +1,4 @@
-﻿body {
-}
+﻿
 
 img{
     width:90%;
@@ -42,5 +41,10 @@ a {
 
 a:hover{
     text-decoration:none;
+}
+
+.content{
+    width : 100%;
+    height:100%;
 }
 
