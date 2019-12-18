@@ -16,7 +16,7 @@ function initElement() {
 
     var projects = document.getElementById("projects");
     projects.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="listProject.html" ></object>' };
-
+    
 };
 
 
