@@ -1,0 +1,27 @@
+﻿@media screen and (orientation:portrait) {
+    body {
+        display: none;
+        padding-top: 3em;
+    }
+}
+
+body {
+    background-color: #292b2c;
+}
+
+.carousel-slide {
+    margin: auto;
+}
+
+.item {
+    height: 100vh;
+}
+
+    .item img {
+        height: 100% !important;
+        margin: auto;
+    }
+
+.carousel-control {
+    background: none !important;
+}
