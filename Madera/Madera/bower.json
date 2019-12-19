@@ -1,5 +1,7 @@
 {
-    "name": "Madera",
-    "dependencies": {
-    }
+  "name": "Madera",
+  "dependencies": {
+    "javascript-bcrypt": "0.3",
+    "js-sha256": "v0.9.0"
+  }
 }

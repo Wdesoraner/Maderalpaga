@@ -8,6 +8,8 @@
     <script src="scripts/Bootstrap/jquery-3.0.0.js"></script>
     <script src="scripts/Bootstrap/bootstrap.js"></script>
     <script src="scripts/initDB.js"></script>
+    <script src="scripts/authentication.js"></script>
+    <script src="scripts/sha256.min.js"></script>
 
     <title>Page de Connexion</title>
 </head>
@@ -22,22 +24,22 @@
 
                 <div class="container h-75">
                     <div class="row align-items-center h-75 w-100">
-                        <form class="mx-auto w-100">
+                        <div class="mx-auto w-100">
                             <p>
                                 <label for="idUser">Adresse mail</label> <br />
-                                <input name="idUser" type="text" placeholder="jd@madera.fr" class="w-100" /><br />
+                                <input name="idUser" id="login" type="text" placeholder="jd@madera.fr" class="w-100" /><br />
                             </p>
                             <p>
                                 <label for="pwdUser">Mot de passe</label><br />
-                                <input name="pwdUser" type="password" class="w-100" /><br />
+                                <input name="pwdUser" id="password" type="password" class="w-100" /><br />
                             </p>
                             <p>
                                 <a href="#">Mot de passe oublié ?</a>
                             </p>
                             <p class="float-right">
-                                <input type="submit" value="Se connecter">
+                                <button id="connexion">Se connecter</button> 
                             </p>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
