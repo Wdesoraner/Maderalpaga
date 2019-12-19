@@ -27,6 +27,16 @@ function initElement() {
 
 };
 
+$('li').on('click', function () {
+    $('li').removeClass();
+    $(this).addClass('permaLink');
+});
+
+$('a').on('click', function () {
+    $('a').removeClass();
+    $(this).addClass('permaLinkSubmenu');
+});
+
 
 
 

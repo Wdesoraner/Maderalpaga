@@ -31,16 +31,23 @@ li:hover{
     height:100vh;
 }
 
-a:hover{
-    color:black;
+a:hover {
+    color: black;
+    text-decoration: none;
 }
 
 a {
     color: black;
 }
 
-a:hover{
-    text-decoration:none;
+.permaLink {
+    background-color: lightgray;
+    border: solid;
+    border-color: black;
+}
+
+.permaLinkSubmenu {
+font-weight:bold;
 }
 
 .content{
