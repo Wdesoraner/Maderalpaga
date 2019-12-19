@@ -1,22 +1,30 @@
 ﻿
 $(document).ready(function () {
-    document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>'
     initElement();
+    document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>';
+    document.getElementById("title").innerHTML = '<span style="float:left;margin-top:10px" class="fa fa-home"></span> Accueil';
 });
 
 function initElement() {
     var home = document.getElementById("home");
-    home.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>' };
+    home.onclick = function () {
+        document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>';
+        document.getElementById("title").innerHTML = '<span style="float:left;margin-top:10px" class="fa fa-home"></span> Accueil';
+    };
 
     var client = document.getElementById("customer");
-    client.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="client.html" ></object>' };
-
-    var createQuote = document.getElementById("createQuote");
-    createQuote.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="listQuotation.html" ></object>' };
+    client.onclick = function () {
+        document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="client.html" ></object>';
+        document.getElementById("title").innerHTML = '<span style="float:left;margin-top:10px" class="fa fa-user"></span> Clients';
+    };
 
     var projects = document.getElementById("projects");
-    projects.onclick = function () { document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="listProject.html" ></object>' };
-    
+    projects.onclick = function () {
+        document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="listProject.html" ></object>';
+        document.getElementById("title").innerHTML = '<span style="float:left;margin-top:10px" class="fa fa-flag"></span> Projets';
+
+    };
+
 };
 
 

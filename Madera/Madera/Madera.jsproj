@@ -90,6 +90,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bower_components\" />
+    <Folder Include="bower_components\js-sha256\build\" />
     <Folder Include="css\" />
   </ItemGroup>
 </Project>
