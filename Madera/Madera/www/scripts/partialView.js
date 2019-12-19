@@ -1,4 +1,11 @@
-﻿
+﻿window.onload = function (event) {
+    event.stopPropagation(true);
+    if (!sessionStorage.getItem('connexion')) {
+        window.location.href = "authentication.html";
+    }
+ };
+
+
 $(document).ready(function () {
     initElement();
     document.getElementById("content").innerHTML = '<object style="width:100%;height:95vh;" type="text/html" data="homeSlideshow.html" ></object>';
@@ -24,6 +31,12 @@ function initElement() {
         document.getElementById("title").innerHTML = '<span style="float:left;margin-top:10px" class="fa fa-flag"></span> Projets';
 
     };
+
+    var deco = document.getElementById("deconnect");
+    deco.onclick = function () {
+        sessionStorage.removeItem('connexion');
+        document.location.href = "authentication.html";
+    }
 
 };
 

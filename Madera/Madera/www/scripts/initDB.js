@@ -30,9 +30,9 @@ $(document).ready(function () {
 
     let componentsQuotation = ["idQuotation", "idComponent"];
 
-    let tables = [department, shop, customer, project, collection, typeComponent, components, quotation, componentsQuotation];
+    let tables = [department, shop, customer, project, collection, typeComponent, components, quotation, componentsQuotation, user, userProject];
 
-    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "quotation", "componentsQuotation"];
+    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "quotation", "componentsQuotation","user","userProject"];
 
     CreateObjectStore(tableNames, tables, 0);
 })
@@ -155,7 +155,7 @@ function initTableUser(db) {
             department: 1,
             shop: 1,
             mail: "lb@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "RAKIC",
@@ -163,7 +163,7 @@ function initTableUser(db) {
             department: 2,
             shop: 2,
             mail: "jr@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "MORIN",
@@ -171,7 +171,7 @@ function initTableUser(db) {
             department: 3,
             shop: 1,
             mail: "am@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "COMMERCIAL",
@@ -179,7 +179,7 @@ function initTableUser(db) {
             department: 3,
             shop: 2,
             mail: "commercial@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "Etude",
@@ -187,7 +187,7 @@ function initTableUser(db) {
             department: 4,
             shop: 1,
             mail: "etude@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
 
     ]
