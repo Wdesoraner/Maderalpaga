@@ -33,10 +33,10 @@ function checkUser(login, pwd) {
         var db = e.target.result;
         let transaction = db.transaction("user", "readonly");
         let objectStore = transaction.objectStore("user");
-        var index = objectStore.index("name");
+        var index = objectStore.index("mail");
         index.get(login).onsuccess = function (event) {
             if (event.target.result.password == sha256(pwd)) {
-                sessionStorage.setItem('connexion', sha256(event.target.result.name));
+                sessionStorage.setItem('connexion', sha256(event.target.result.mail));
                 console.log(sessionStorage.getItem('connexion'));
                 window.location.href="partialView.html"
             }

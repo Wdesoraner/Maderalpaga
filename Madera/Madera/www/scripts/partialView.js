@@ -1,5 +1,6 @@
 ﻿window.onload = function (event) {
     event.stopPropagation(true);
+    console.log(sessionStorage.getItem('connexion'));
     if (!sessionStorage.getItem('connexion')) {
         window.location.href = "authentication.html";
     }
@@ -34,7 +35,7 @@ function initElement() {
 
     var deco = document.getElementById("deconnect");
     deco.onclick = function () {
-        sessionStorage.removeItem('connexion');
+        sessionStorage.clear();
         document.location.href = "authentication.html";
     }
 
