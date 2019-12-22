@@ -24,15 +24,17 @@ $(document).ready(function () {
 
     let typeComponent = ["idTypeComponent", "label", "code"];
 
-    let components = ["idComponent", "refComposant", "label", "price", "comment", "typeComponent"];
+    let components = ["idComponent", "refComposant", "label", "price", "comment", "typeComponent", "taxe"];
+
+    let taxes = ["idTaxe", "amount"];
 
     let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
 
     let componentsQuotation = ["idQuotation", "idComponent"];
 
-    let tables = [department, shop, customer, project, collection, typeComponent, components, quotation, componentsQuotation, user, userProject];
+    let tables = [department, shop, customer, project, collection, typeComponent, components, taxes, quotation, componentsQuotation, user, userProject];
 
-    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "quotation", "componentsQuotation","user","userProject"];
+    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "taxes", "quotation", "componentsQuotation", "user", "userProject"];
 
     CreateObjectStore(tableNames, tables, 0);
 })
@@ -69,6 +71,8 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                     initTableCollection(e.target.result);
                 } else if (tableNames[indexTab] == "typeComponent") {
                     initTableTypeComponent(e.target.result);
+                } else if (tableNames[indexTab] == "taxes") {
+                    initTableTaxes(e.target.result);
                 }
 
                 if (fixture) {
@@ -79,11 +83,11 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                     } else if (tableNames[indexTab] == "userProject") {
                         initTableUserProject(e.target.result);
                     } else if (tableNames[indexTab] == "components") {
-                       // initTableComponents(e.target.result);
+                        // initTableComponents(e.target.result);
                     } else if (tableNames[indexTab] == "quotation") {
                         initTableQuotation(e.target.result);
                     } else if (tableNames[indexTab] == "componentsQuotation") {
-                       // initTableComponentsQuotation(e.target.result);
+                        // initTableComponentsQuotation(e.target.result);
                     }
                 }
                 e.target.result.close();
@@ -321,6 +325,33 @@ function initTableCustomer(db) {
     let transaction = db.transaction("customer", "readwrite");
 
     let objectStore = transaction.objectStore("customer");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+function initTableTaxes(db) {
+    let newItems = [
+        {
+            amount:20
+        },
+        {
+            amount:10
+        },
+        {
+            amount:5.5
+        },
+        {
+            amount:2.1
+        },
+
+    ]
+
+    let transaction = db.transaction("taxes", "readwrite");
+
+    let objectStore = transaction.objectStore("taxes");
     let request = objectStore.openCursor();
     let objectStoreRequest;
 
