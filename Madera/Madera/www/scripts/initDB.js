@@ -365,14 +365,14 @@ function initTableProject(db) {
             projectName: "Petite maison dans la prairie",
             commercial: 1,
             date: "2019-12-18",
-            refProject: "LB-AP-191218",
+            refProject: "LBAP191218",
             customer: 1
         },
         {
             projectName: "Petite maison dans la prairie",
             commercial: 3,
             date: "2019-12-17",
-            refProject: "AM-JM-191217",
+            refProject: "AMJM191217",
             customer: 2
         },
 

@@ -6,10 +6,10 @@ $(document).ready(function () {
 
 
 function connexion() {
-    
+
     if (checkRequiredInput()) {
         let login = document.getElementById("login").value
-        let pwd = document.getElementById("password").value  
+        let pwd = document.getElementById("password").value
         console.log(sha256(pwd));
         checkUser(login, pwd);
     }
@@ -30,15 +30,23 @@ function checkRequiredInput() {
 function checkUser(login, pwd) {
     var request = indexedDB.open("maderaDB");
     request.onsuccess = function (e) {
-        var db = e.target.result;
+        let db = e.target.result;
         let transaction = db.transaction("user", "readonly");
         let objectStore = transaction.objectStore("user");
-        var index = objectStore.index("mail");
-        index.get(login).onsuccess = function (event) {
-            if (event.target.result.password == sha256(pwd)) {
-                sessionStorage.setItem('connexion', sha256(event.target.result.mail));
-                console.log(sessionStorage.getItem('connexion'));
-                window.location.href="partialView.html"
+        let getCursor = objectStore.openCursor();
+        getCursor.onsuccess = function (event) {
+            let cursor = event.target.result;
+            if (cursor) {
+                if (cursor.value.mail == login && cursor.value.password == sha256(pwd)) {
+                    sessionStorage.setItem('connexion', 1);
+                    sessionStorage.setItem('idCommercial', cursor.key)
+                    console.log(sessionStorage.getItem('connexion'));
+                    window.location.href = "partialView.html"
+                } else {
+                    cursor.continue();
+                }
+            } else {
+                alert("Identifiants incorrect");
             }
         }
     }

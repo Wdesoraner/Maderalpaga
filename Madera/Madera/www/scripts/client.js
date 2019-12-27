@@ -81,7 +81,11 @@ function newCustomer() {
 
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
-        document.getElementById("validCustomer").onclick = function () { addCustomer(db) };
+        document.getElementById("validCustomer").onclick = function () {
+            addCustomer(db);
+            inputState(true);
+        };
+
     }
 
 }
@@ -135,14 +139,15 @@ function updateCustomer() {
             data.mail = document.getElementById("inputMail").value;
             data.phone = document.getElementById("inputPhone").value;
 
-            var requestUpdate = objectStore.put(data);
+            var requestUpdate = objectStore.put(data,id);
             requestUpdate.onerror = function (event) {
                 // Faire quelque chose avec l’erreur
             };
             requestUpdate.onsuccess = function (event) {
                 // Succès - la donnée est mise à jour !
-                objectStore.delete(id);
                 initCustomerList();
+
+                inputState(true);
             };
         };
 
@@ -225,6 +230,8 @@ function clickListItem(keyItem) {
             document.getElementById("inputZipCode").value = objectStoreRequest.result.zipCode;
             document.getElementById("inputMail").value = objectStoreRequest.result.mail;
             document.getElementById("inputPhone").value = objectStoreRequest.result.phone;
+
+            inputState(true);
         };
 
     }
