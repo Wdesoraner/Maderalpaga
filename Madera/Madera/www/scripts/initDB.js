@@ -24,15 +24,17 @@ $(document).ready(function () {
 
     let typeComponent = ["idTypeComponent", "label", "code"];
 
-    let components = ["idComponent", "refComposant", "label", "price", "comment", "typeComponent"];
+    let components = ["idComponent", "refComposant", "label", "price", "comment", "typeComponent", "taxe"];
+
+    let taxes = ["idTaxe", "amount"];
 
     let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
 
     let componentsQuotation = ["idQuotation", "idComponent"];
 
-    let tables = [department, shop, customer, project, collection, typeComponent, components, quotation, componentsQuotation];
+    let tables = [department, shop, customer, project, collection, typeComponent, components, taxes, quotation, componentsQuotation, user, userProject];
 
-    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "quotation", "componentsQuotation"];
+    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "taxes", "quotation", "componentsQuotation", "user", "userProject"];
 
     CreateObjectStore(tableNames, tables, 0);
 })
@@ -69,6 +71,8 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                     initTableCollection(e.target.result);
                 } else if (tableNames[indexTab] == "typeComponent") {
                     initTableTypeComponent(e.target.result);
+                } else if (tableNames[indexTab] == "taxes") {
+                    initTableTaxes(e.target.result);
                 }
 
                 if (fixture) {
@@ -79,11 +83,11 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                     } else if (tableNames[indexTab] == "userProject") {
                         initTableUserProject(e.target.result);
                     } else if (tableNames[indexTab] == "components") {
-                       // initTableComponents(e.target.result);
+                        // initTableComponents(e.target.result);
                     } else if (tableNames[indexTab] == "quotation") {
                         initTableQuotation(e.target.result);
                     } else if (tableNames[indexTab] == "componentsQuotation") {
-                       // initTableComponentsQuotation(e.target.result);
+                        // initTableComponentsQuotation(e.target.result);
                     }
                 }
                 e.target.result.close();
@@ -155,7 +159,7 @@ function initTableUser(db) {
             department: 1,
             shop: 1,
             mail: "lb@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "RAKIC",
@@ -163,7 +167,7 @@ function initTableUser(db) {
             department: 2,
             shop: 2,
             mail: "jr@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "MORIN",
@@ -171,7 +175,7 @@ function initTableUser(db) {
             department: 3,
             shop: 1,
             mail: "am@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "COMMERCIAL",
@@ -179,7 +183,7 @@ function initTableUser(db) {
             department: 3,
             shop: 2,
             mail: "commercial@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
         {
             name: "Etude",
@@ -187,7 +191,7 @@ function initTableUser(db) {
             department: 4,
             shop: 1,
             mail: "etude@madera.fr",
-            password: "madera",
+            password: "8c41a399d8cbf4d5711cdbe5f95a89ba81732502edf9267f997487ed9a5f70ad",
         },
 
     ]
@@ -328,20 +332,47 @@ function initTableCustomer(db) {
         objectStoreRequest = objectStore.add(item);
     });
 }
+function initTableTaxes(db) {
+    let newItems = [
+        {
+            amount:20
+        },
+        {
+            amount:10
+        },
+        {
+            amount:5.5
+        },
+        {
+            amount:2.1
+        },
+
+    ]
+
+    let transaction = db.transaction("taxes", "readwrite");
+
+    let objectStore = transaction.objectStore("taxes");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
 function initTableProject(db) {
     let newItems = [
         {
             projectName: "Petite maison dans la prairie",
             commercial: 1,
             date: "2019-12-18",
-            refProject: "LB-AP-191218",
+            refProject: "LBAP191218",
             customer: 1
         },
         {
             projectName: "Petite maison dans la prairie",
             commercial: 3,
             date: "2019-12-17",
-            refProject: "AM-JM-191217",
+            refProject: "AMJM191217",
             customer: 2
         },
 

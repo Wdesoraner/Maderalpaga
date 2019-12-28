@@ -1,0 +1,7 @@
+﻿body {
+}
+
+tbody>tr:hover{
+    background-color : lightblue;
+    user-select:none;
+}

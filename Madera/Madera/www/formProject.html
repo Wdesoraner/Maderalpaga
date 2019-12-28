@@ -18,15 +18,7 @@
 <body>
 
     <div class="row">
-        <div class="col-3"></div>
-
-        <div class="col-9">
-
             <div class="container wizard-quotation">
-
-                <h3>Formulaire de création de projet</h3>
-
-                <hr>
 
                 <div class="navbar card-header-pills">
                     <div class="navbar-inner">
@@ -43,8 +35,8 @@
                         <div class="well">
 
                             <div class="input-group margin-bottom-sm col-5">
-                                <input type="hidden" id="idCustomer"/>
-                                <input type="text" class="custom-select custom-select-sm" id="pickedCustomer" onchange="optionSelected()" list="selectCustomer"/>
+                                <input type="hidden" id="idCustomer" />
+                                <input type="text" class="custom-select custom-select-sm" id="pickedCustomer" onchange="optionSelected()" list="selectCustomer" />
                                 <datalist id="selectCustomer">
                                     <option> </option>
                                 </datalist>
@@ -53,15 +45,15 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="d-flex">
-                                        <label class="col-5">Nom* :</label> <input id="customerName" name="customerName" class="col-7 form-control customer" type="text" required />
+                                        <label class="col-5">Nom* :</label> <input id="customerName" name="customerName" class="col-7 form-control customer" type="text" onchange="refProject()" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="col-7 form-control customer" type="text" required />
+                                        <label class="col-5">Prénom* :</label> <input id="customerFirstName" name="customerFirstName" class="col-7 form-control customer" type="text" onchange="refProject()" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Société :</label> <input id="customerCompany" name="customerCompany" class="col-7 form-control customer" type="text" />
+                                        <label class="col-5">Société :</label> <input id="customerCompany" name="customerCompany" class="col-7 form-control customer" type="text" onchange="refProject()"/>
                                     </div>
                                     <br />
                                     <div class="d-flex">
@@ -79,11 +71,11 @@
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Ville* :</label> <input id="customerCity" name="customerCity" class="col-7 form-control customer" type="text" required/>
+                                        <label class="col-5">Ville* :</label> <input id="customerCity" name="customerCity" class="col-7 form-control customer" type="text" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="col-7 form-control customer" type="tel"  required/>
+                                        <label class="col-5">Téléphone* :</label> <input id="customerPhone" name="customerPhone" class="col-7 form-control customer" type="tel" required />
                                     </div>
                                 </div>
                             </div>
@@ -95,12 +87,13 @@
                                 <div class="col-6">
                                     <div class="d-flex">
                                         <input type="hidden" id="idProject" />
-                                        <label class="col-5">Nom du projet* :</label> <input id="projectName" name="projectName" class="col-7 form-control" type="text" required/>
+                                        <label class="col-5">Nom du projet* :</label> <input id="projectName" name="projectName" class="col-7 form-control" type="text" required />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <input type="hidden" id="idCommercial"/>
-                                        <label class="col-5">Commercial* :</label> <input id="commercial" name="commercial" class="col-7 form-control" type="search" required />
+                                        <input type="hidden" id="idCommercial" />
+                                        <input type="hidden" id="initialCommercial" />
+                                        <label class="col-5">Commercial* :</label> <input id="commercial" name="commercial" class="col-7 form-control" type="search" required readonly />
                                     </div>
                                     <br />
 
@@ -108,26 +101,23 @@
 
                                 <div class="col-6">
                                     <div class="d-flex">
-                                        <label class="col-5">Ref. projet* :</label> <input id="projectReference" name="projectReference" class="col-7 form-control" type="text" />
+                                        <label class="col-5">Ref. projet* :</label> <input id="projectReference" name="projectReference" class="col-7 form-control" type="text" readonly />
                                     </div>
                                     <br />
                                     <div class="d-flex">
-                                        <label class="col-5">Date* :</label> <input id="projectDate" name="projectDate" class="col-7 form-control" type="date" required />
+                                        <label class="col-5">Date* :</label> <input id="projectDate" name="projectDate" class="col-7 form-control" type="date" onchange="refProject()" required />
                                     </div>
                                     <br />
 
                                 </div>
                             </div>
-
-                            <br />
                             <div class="text-muted">Les champs suivi d'un * sont obligatoires</div>
-                            <br />
-
+                            <div class="well text-right">
+                                <button id="submitButton" class="btn btn-success btn-lg next">Suivant</button>
+                            </div>
                         </div>
 
-                        <div class="well text-right">
-                            <button id="submitButton" class="btn btn-success btn-lg next">Suivant</button>
-                        </div>
+                        
 
                     </div>
 

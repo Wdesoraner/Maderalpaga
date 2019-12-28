@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
-    console.log("oui")
     initProjectTable();
+    document.getElementById("add-item-collection").onclick = newProject;
 });
 
 function initProjectTable() {
@@ -52,13 +52,25 @@ function addRow(value,key) {
             } else {
                 customer = request.result.firstName + " " + request.result.name;
             }
-            newRow.id = value.key;
-            newRow.innerHTML += "<td>" + value.projectName + "</td>"
-            newRow.innerHTML += "<td>" + value.date + "</td>"
-            newRow.innerHTML += "<td>" + value.commercial + "</td>"
-            newRow.innerHTML += "<td>" + customer + "</td>"
+            newRow.id = key;
+            newRow.innerHTML += "<td>" + value.projectName + "</td>";
+            newRow.innerHTML += "<td>" + value.date + "</td>";
+            newRow.innerHTML += "<td>" + value.commercial + "</td>";
+            newRow.innerHTML += "<td>" + customer + "</td>";
+            newRow.onclick = function () { clickProjectRow(newRow.id) };
             table.appendChild(newRow);
         }
     }
 
+}
+
+function clickProjectRow(idProject) {
+    sessionStorage.removeItem("project");
+    sessionStorage.setItem("project", idProject);
+    document.location.href = "formProject.html"
+}
+
+function newProject() {
+    sessionStorage.removeItem("project");
+    document.location.href = "formProject.html";
 }

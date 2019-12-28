@@ -3,20 +3,29 @@
 $(document).ready(function () {
 
     initSelect();
-    document.getElementById("idProject").value = 0
-    $('[href="#step1"]').tab('show');
-    var now = new Date();
+    if (sessionStorage.getItem("project")) {
+        document.getElementById("idProject").value = sessionStorage.getItem("project");
+        document.getElementById("submitButton").onclick = updateProject;
+        initExistingProject();
+    } else {
+        document.getElementById("idProject").value = 0;
+        var now = new Date();
 
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
 
-    var today = now.getFullYear() + "-" + (month) + "-" + (day);
-    document.getElementById("projectDate").value = today;
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        document.getElementById("projectDate").value = today;
 
-    if (document.getElementById("idProject").value = "0") {
         document.getElementById("submitButton").onclick = newProject;
+
+        initCommercial();
     }
+    $('[href="#step1"]').tab('show');
+
+
 });
+
 
 function initSelect() {
     let db;
@@ -26,7 +35,7 @@ function initSelect() {
         db = event.target.result;
         var select = document.getElementById("selectCustomer");
 
-        let transaction = db.transaction("customer", "readwrite");
+        let transaction = db.transaction("customer", "readonly");
 
         let objectStore = transaction.objectStore("customer");
         let request = objectStore.openCursor();
@@ -43,9 +52,9 @@ function initSelect() {
                 let value = cursor.value;
                 console.info(key, value.company);
                 if (value.company != "") {
-                    option.text = value.company;
+                    option.value = value.company;
                 } else {
-                    option.text = value.firstName + " " + value.name;
+                    option.value = value.firstName + " " + value.name;
                 }
                 option.id = key;
                 console.log(option);
@@ -58,8 +67,6 @@ function initSelect() {
 }
 
 function optionSelected() {
-    let userSelected = document.getElementById("pickedCustomer").value;
-
     let db;
     let DBOpenRequest = window.indexedDB.open("maderaDB");
 
@@ -80,47 +87,40 @@ function optionSelected() {
         // On crée un magasin d'objet pour la transaction
         var objectStore = transaction.objectStore("customer");
 
-        // On ajoute l'objet newItem au magasin d'objets
-        let request = objectStore.openCursor();
+        if (document.getElementById("idCustomer").value != 0) {
+            console.log(document.getElementById("idCustomer").value);
+            let request = objectStore.get(parseInt(document.getElementById("idCustomer").value));
+            request.onerror = function (event) {
+                console.err("error fetching data");
+            };
 
-        request.onerror = function (event) {
-            console.err("error fetching data");
-        };
-
-        request.onsuccess = function (event) {
-            let cursor = event.target.result;
-            if (cursor) {
-                let key = cursor.primaryKey;
-                let value = cursor.value;
-                console.log(key, value);
-                if (value.company == userSelected || value.firstName + " " + value.name == userSelected) {
-                    document.getElementById("idCustomer").value = key;
-                    document.getElementById("customerName").value = value.name;
-                    document.getElementById("customerFirstName").value = value.firstName;
-                    document.getElementById("customerCompany").value = value.company;
-                    document.getElementById("customerAddress").value = value.address;
-                    document.getElementById("customerCity").value = value.city;
-                    document.getElementById("customerZipCode").value = value.zipCode;
-                    document.getElementById("customerMail").value = value.mail;
-                    document.getElementById("customerPhone").value = value.phone;
-                    inputState(true);
-                } else {
-                    cursor.continue();
-                }
-            } else {
-                document.getElementById("idCustomer").value = "";
-                document.getElementById("customerName").value = "";
-                document.getElementById("customerFirstName").value = "";
-                document.getElementById("customerCompany").value = "";
-                document.getElementById("customerAddress").value = "";
-                document.getElementById("customerCity").value = "";
-                document.getElementById("customerZipCode").value = "";
-                document.getElementById("customerMail").value = "";
-                document.getElementById("customerPhone").value = "";
-                inputState(false);
+            request.onsuccess = function (event) {
+                let value = event.target.result;
+                console.log(value);
+                document.getElementById("customerName").value = value.name;
+                document.getElementById("customerFirstName").value = value.firstName;
+                document.getElementById("customerCompany").value = value.company;
+                document.getElementById("customerAddress").value = value.address;
+                document.getElementById("customerCity").value = value.city;
+                document.getElementById("customerZipCode").value = value.zipCode;
+                document.getElementById("customerMail").value = value.mail;
+                document.getElementById("customerPhone").value = value.phone;
+                inputState(true);
             }
-        };
-    }
+        }
+        else {
+            document.getElementById("idCustomer").value = "";
+            document.getElementById("customerName").value = "";
+            document.getElementById("customerFirstName").value = "";
+            document.getElementById("customerCompany").value = "";
+            document.getElementById("customerAddress").value = "";
+            document.getElementById("customerCity").value = "";
+            document.getElementById("customerZipCode").value = "";
+            document.getElementById("customerMail").value = "";
+            document.getElementById("customerPhone").value = "";
+            inputState(false);
+        }
+    };
 }
 
 function inputState(bool) {
@@ -156,7 +156,7 @@ function newProject() {
                 commercial: document.getElementById("idCommercial").value,
                 refProject: document.getElementById("projectReference").value,
                 date: document.getElementById("projectDate").value,
-                customer : document.getElementById("idCustomer").value
+                customer: document.getElementById("idCustomer").value
             }];
 
             // On crée un magasin d'objet pour la transaction
@@ -217,4 +217,135 @@ function checkRequiredInput() {
     };
     return true;
 
+}
+
+function initExistingProject() {
+    var idProject = parseInt(sessionStorage.getItem("project"));
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        let transaction = db.transaction("project", "readonly");
+        let objectStore = transaction.objectStore("project");
+        let request = objectStore.get(idProject);
+        console.log(idProject);
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            document.getElementById("projectDate").value = result.date;
+            document.getElementById("projectReference").value = result.refProject;
+            document.getElementById("projectName").value = result.projectName;
+            document.getElementById("idCommercial").value = result.commercial;
+            console.log(result.customer);
+            document.getElementById("idCustomer").value = result.customer;
+            optionSelected();
+
+            initCommercial();
+        }
+
+    }
+}
+
+function updateProject() {
+    if (checkRequiredInput()) {
+        let db;
+        let DBOpenRequest = window.indexedDB.open("maderaDB");
+        var id = parseInt(document.getElementById("idProject").value, 10);
+
+        DBOpenRequest.onsuccess = function (event) {
+            db = event.target.result;
+
+
+            var transaction = db.transaction("project", "readwrite");
+
+            // On indique le succès de la transaction
+            transaction.oncomplete = function (event) {
+                console.log("Transaction terminée : lecture finie");
+            };
+
+            transaction.onerror = function (event) {
+                console.log("Transaction non-ouverte à cause d'une erreur");
+            };
+
+            // On crée un magasin d'objet pour la transaction
+            var objectStore = transaction.objectStore("project");
+
+            // On ajoute l'objet newItem au magasin d'objets
+            var objectStoreRequest = objectStore.get(id);
+            objectStoreRequest.onsuccess = function (event) {
+                // On indique le succès de l'ajout de l'objet
+                // dans la base de données
+                var data = objectStoreRequest.result;
+
+                data.projectName = document.getElementById("projectName").value;
+                data.date = document.getElementById("dateProject").value;
+                data.commercial = document.getElementById("commercial").value;
+
+                var requestUpdate = objectStore.put(data);
+                requestUpdate.onerror = function (event) {
+                    // Faire quelque chose avec l’erreur
+                };
+                requestUpdate.onsuccess = function (event) {
+                    // Succès - la donnée est mise à jour !
+                    objectStore.delete(id);
+                    alert("Projet mis à jour !");
+                };
+            };
+
+        }
+    }
+
+}
+
+function refProject() {
+    let refProject;
+    if (document.getElementById("customerCompany").value != "") {
+        refProject = document.getElementById("initialCommercial").value + '-' + document.getElementById("customerCompany").value.substring(0, 2) + '-' + document.getElementById("projectDate").value.split("-").join(""); 
+    } else {
+        refProject = document.getElementById("initialCommercial").value + '-' + document.getElementById("customerFirstName").value.charAt(0) + document.getElementById("customerName").value.charAt(0) + '-' + document.getElementById("projectDate").value.split("-").join(""); 
+    }
+    document.getElementById("projectReference").value = refProject.toUpperCase();
+}
+
+function initCommercial() {
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+    var id;
+
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+
+
+        var transaction = db.transaction("user", "readonly");
+        // On indique le succès de la transaction
+        transaction.oncomplete = function (event) {
+            console.log("Transaction terminée : lecture finie");
+        };
+
+        transaction.onerror = function (event) {
+            console.log("Transaction non-ouverte à cause d'une erreur");
+        };
+
+        // On crée un magasin d'objet pour la transaction
+        var objectStore = transaction.objectStore("user");
+
+        // On ajoute l'objet newItem au magasin d'objets
+        if (document.getElementById("idCommercial").value == 0) {
+            id = sessionStorage.getItem("idCommercial");
+        } else {
+            id = document.getElementById("idCommercial").value;
+        }
+        var objectStoreRequest = objectStore.get(parseInt(id));
+        objectStoreRequest.onsuccess = function (event) {
+            // On indique le succès de l'ajout de l'objet
+            // dans la base de données
+            document.getElementById("commercial").value = event.target.result.firstName + " " + event.target.result.name;
+            document.getElementById("initialCommercial").value = event.target.result.firstName.charAt(0).toLowerCase() + event.target.result.name.charAt(0).toLowerCase() + id;
+            console.log(document.getElementById("initialCommercial").value);
+        }
+    }
 }
