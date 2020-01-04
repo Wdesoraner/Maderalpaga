@@ -34,7 +34,7 @@
         let DBOpenRequest = indexedDB.open("maderaDB");
         DBOpenRequest.onsuccess = function (event) {
             db = event.target.result;
-            initTypeComponentList(db, idTr);
+            initModuleList(db, idTr);
             initCollectionList(db, idTr);
         }
         listen.clickListener($(tr));
@@ -101,9 +101,38 @@ $(document).ready(function () {
 });
 
 function getRowComponent(idTr, idParent = 0) {
-    return '<tr id="' + idTr + '" class="item-collection"><td style="width:10%"><span id="parentComponent">' + idParent + '</span></td><td><select class="w-100 h-100 border border-0" id="selectTypeComponent' + idTr + '"></select></td><td><select class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" class="w-100 h-100 border border-0" /></td> <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td><td><select class="w-100 h-100 border border-0"><option></option><option>Entrant</option><option>Sortant</option></select></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
+    //return '<tr id="' + idTr + '" class="item-collection"><td style="width:10%"><span id="parentComponent">' + idParent + '</span></td><td><select class="w-100 h-100 border border-0" id="selectTypeComponent' + idTr + '"></select></td><td><select class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" class="w-100 h-100 border border-0" /></td> <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td><td><select class="w-100 h-100 border border-0"><option></option><option>Entrant</option><option>Sortant</option></select></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
+    return '<tr id="' + idTr + '" class="item-collection"><td><select class="w-100 h-100 border border-0" id="selectModule' + idTr + '" onchange="changeCollection(' + idTr + ')"></select></td><td><select disabled class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" class="w-100 h-100 border border-0" /></td> <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td><td><select class="w-100 h-100 border border-0"><option></option><option>Entrant</option><option>Sortant</option></select></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
     // onclick="addChild(' + idTr + ')
     //"onclick="delItem(' + idTr + ')"
+}
+
+function changeCollection(idTr) {
+    var id = $("#selectModule" + idTr + " option:selected").attr("id");
+    //var idCollection = getCollection(id);
+
+
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        let transaction = db.transaction("modules", "readonly");
+        let objectStore = transaction.objectStore("modules");
+        let request = objectStore.get(parseInt(id));
+
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            console.log(result.idCollection);
+            let idCollection = result.idCollection;
+            //return result.idCollection;
+
+            document.getElementById("selectCollection" + idTr).options.namedItem(idCollection).selected = true;
+        }
+    }
 }
 
 function duplicateItem() {
@@ -126,7 +155,7 @@ function duplicateItem() {
     let DBOpenRequest = indexedDB.open("maderaDB");
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
-        initTypeComponentList(db, idTr);
+        initModuleList(db, idTr);
         initCollectionList(db, idTr);
 
         //initTableCollection(db);
@@ -305,7 +334,7 @@ function addOptionCollection(collectionLabel, idCollection, idTr) {
 }
 
 function addOptionTypeComponent(typeComponentLabel, idTypeComponent, idTr) {
-    let list = document.getElementById("selectTypeComponent" + idTr);
+    let list = document.getElementById("selectModule" + idTr);
     let opt = document.createElement("option");
     opt.id = idTypeComponent;
     opt.appendChild(document.createTextNode(typeComponentLabel));
@@ -318,96 +347,7 @@ function addOptionTypeComponent(typeComponentLabel, idTypeComponent, idTr) {
 
 let db;
 let DBOpenRequest = indexedDB.open("maderaDB");
-/*
-DBOpenRequest.onupgradeneeded = function (event) {
-    // Set the db variable to our database so we can use it!
-    db = event.target.result;
 
-    // Create an object store named db. Object stores
-    // in databases are where data are stored.
-    let objectStore = db.createObjectStore('collection', { autoIncrement: true });
-    //console.log("create index : label");
-    objectStore.createIndex("label", "label", { unique: false });
-
-    //console.log("create index : collection");
-    objectStore.createIndex("quality", "quality", { unique: false });
-
-
-
-    objectStore = db.createObjectStore('components', { autoIncrement: true });
-
-    //console.log("create index : refComposant");
-    objectStore.createIndex("refComposant", "refComposant", { unique: false });
-
-    //console.log("create index : label");
-    objectStore.createIndex("label", "label", { unique: false });
-
-    //console.log("create index : price");
-    objectStore.createIndex("price", "price", { unique: false });
-
-    //console.log("create index : comment");
-    objectStore.createIndex("comment", "comment", { unique: false });
-
-    //console.log("create index : typeComponent");
-    objectStore.createIndex("typeComponent", "typeComponent", { unique: false });
-
-    //console.log("create index : component");
-    objectStore.createIndex("component", "component", { unique: false });
-
-
-
-    objectStore = db.createObjectStore('quotation', { autoIncrement: true });
-
-    //console.log("create index : date");
-    objectStore.createIndex("name", "name", { unique: true });
-
-    //console.log("create index : date");
-    objectStore.createIndex("reference", "reference", { unique: true });
-
-    //console.log("create index : date");
-    objectStore.createIndex("date", "date", { unique: false });
-
-    //console.log("create index : collection");
-    objectStore.createIndex("collection", "collection", { unique: false });
-
-    //console.log("create index : fill");
-    objectStore.createIndex("fill", "fill", { unique: false });
-
-    //console.log("create index : fill");
-    objectStore.createIndex("finishIn", "finishIn", { unique: false });
-
-    //console.log("create index : fill");
-    objectStore.createIndex("finishOut", "finishOut", { unique: false });
-
-    //console.log("create index : cut");
-    objectStore.createIndex("cut", "cut", { unique: false });
-
-    //console.log("create index : components");
-    objectStore.createIndex("components", "components", { unique: false });
-
-
-
-    objectStore = db.createObjectStore('typeComponent', { autoIncrement: true });
-
-
-    //console.log("create index : date");
-    objectStore.createIndex("label", "label", { unique: false });
-
-    //console.log("create index : collection");
-    objectStore.createIndex("code", "code", { unique: false });
-}
-DBOpenRequest.onsuccess = function (event) {
-    //db = event.target.result;
-    //initTypeComponentList(db);
-    //initCollectionList(db);
-
-    //initTableCollection(db);
-    //initTableTypeComponent(db);
-}
-DBOpenRequest.onerror = function (event) {
-    alert('error opening database ' + event.target.errorCode);
-}
-*/
 function initQuotationList(db) {
     let transaction = db.transaction("quotation", "readwrite");
 
@@ -459,10 +399,10 @@ function initComponentsList(db, idTr) {
     };
 }
 
-function initTypeComponentList(db, idTr) {
-    let transaction = db.transaction("typeComponent", "readwrite");
+function initModuleList(db, idTr) {
+    let transaction = db.transaction("modules", "readwrite");
 
-    let objectStore = transaction.objectStore("typeComponent");
+    let objectStore = transaction.objectStore("modules");
     let request = objectStore.openCursor();
 
     request.onerror = function (event) {
@@ -544,6 +484,31 @@ function addQuotation(db) {
 
 }
 
+
+function getCollection(idModule) {
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        let transaction = db.transaction("modules", "readonly");
+        let objectStore = transaction.objectStore("modules");
+        let request = objectStore.get(parseInt(idModule));
+        //let request = objectStore.getAll();
+        console.log(idModule);
+        console.log(request);
+
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            console.log(result);
+            return result.idCollection;
+        }
+    }
+}
+
 function initExistingQuotation() {
     var idQuotation = parseInt(sessionStorage.getItem("quotation"));
     let db;
@@ -561,15 +526,15 @@ function initExistingQuotation() {
 
         request.onsuccess = function (event) {
             var result = event.target.result;
-            document.getElementById("quotationName").value = result.name;
+            document.getElementById("quotationName").value = "Devis n°" + idQuotation;
             document.getElementById("quotationReference").value = result.reference;
             document.getElementById("quotationDate").value = result.date;
-            document.getElementById("quotationFillType").value = result.fill;
-            document.getElementById("quotationFinishOut").value = result.finishOut;
-            document.getElementById("quotationFinishIn").value = result.finishIn;
-            document.getElementById("quotationCut").value = result.cut;
-            optionSelected();
+            //document.getElementById("quotationFillType").value = result.fill;
+            //document.getElementById("quotationFinishOut").value = result.finishOut;
+            //document.getElementById("quotationFinishIn").value = result.finishIn;
+            //document.getElementById("quotationCut").value = result.cut;
 
+            optionSelected();
             initCommercial();
         }
 
