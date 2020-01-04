@@ -31,7 +31,7 @@
         element.closest("tr").after(tr);
         //element.after(tr);
 
-        let DBOpenRequest = indexedDB.open("localMaderaDB");
+        let DBOpenRequest = indexedDB.open("maderaDB");
         DBOpenRequest.onsuccess = function (event) {
             db = event.target.result;
             initTypeComponentList(db, idTr);
@@ -65,8 +65,10 @@ $(document).ready(function () {
     })
 
     $('#btnSaveQuotation').click(function () {
-        //generatePDF();
-        addQuotation(db);
+        generatePDF();
+        if (!sessionStorage.getItem("quotation")) {
+            addQuotation(db);
+        }
     })
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -90,7 +92,11 @@ $(document).ready(function () {
         }
     })
 
-
+    if (sessionStorage.getItem("quotation")) {
+        document.getElementById("idQuotation").value = sessionStorage.getItem("quotation");
+        document.getElementById("btnSaveQuotation").onclick = updateQuotation;
+        initExistingQuotation();
+    }
 
 });
 
@@ -117,7 +123,7 @@ function duplicateItem() {
     tr.id = idTr;
     document.getElementById("table-collection").appendChild(tr);
 
-    let DBOpenRequest = indexedDB.open("localMaderaDB");
+    let DBOpenRequest = indexedDB.open("maderaDB");
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
         initTypeComponentList(db, idTr);
@@ -311,8 +317,8 @@ function addOptionTypeComponent(typeComponentLabel, idTypeComponent, idTr) {
 /*-------------------------------------------------DB--------------------------------------------------------------*/
 
 let db;
-let DBOpenRequest = indexedDB.open("localMaderaDB");
-
+let DBOpenRequest = indexedDB.open("maderaDB");
+/*
 DBOpenRequest.onupgradeneeded = function (event) {
     // Set the db variable to our database so we can use it!
     db = event.target.result;
@@ -401,7 +407,7 @@ DBOpenRequest.onsuccess = function (event) {
 DBOpenRequest.onerror = function (event) {
     alert('error opening database ' + event.target.errorCode);
 }
-
+*/
 function initQuotationList(db) {
     let transaction = db.transaction("quotation", "readwrite");
 
@@ -497,72 +503,10 @@ function initCollectionList(db, idTr) {
 
 }
 
-function initTableCollection(db) {
-    let newItems = [
-        {
-            label: "Economique",
-            quality: 1
-        },
-        {
-            label: "Normal",
-            quality: 2
-        },
-        {
-            label: "Premium",
-            quality: 3
-        }
-    ];
-
-    let transaction = db.transaction("collection", "readwrite");
-    // On crée un magasin d'objet pour la transaction
-    let objectStore = transaction.objectStore("collection");
-    // On ajoute l'objet newItem au magasin d'objets
-    let objectStoreRequest;
-    newItems.forEach(function (item) {
-        objectStoreRequest = objectStore.add(item);
-    });
-}
-function initTableTypeComponent(db) {
-    let newItems = [
-        {
-            label: "Mur Droit",
-            code: "MD"
-        },
-        {
-            label: "Mur Angle",
-            code: "MA"
-        },
-        {
-            label: "Porte Pleine",
-            code: "PtPl"
-        },
-        {
-            label: "Porte Fenetre",
-            code: "PtFe"
-        },
-        {
-            label: "Fenetre",
-            code: "Fe"
-        },
-    ]
-
-    let transaction = db.transaction("typeComponent", "readwrite");
-
-    let objectStore = transaction.objectStore("typeComponent");
-    let request = objectStore.openCursor();
-    let objectStoreRequest;
-
-    newItems.forEach(function (item) {
-        objectStoreRequest = objectStore.add(item);
-    });
-}
-
-
 function addQuotation(db) {
 
-    console.log(db);
-
     var newItem = [{
+        idProject: sessionStorage.getItem("idProject"),
         name: document.getElementById("quotationName").value,
         reference: document.getElementById("quotationReference").value,
         date: document.getElementById("quotationDate").value,
@@ -597,145 +541,105 @@ function addQuotation(db) {
         // dans la base de données
         console.log("Un nouvel élément a été ajouté dans la base de données");
     };
-    
+
 }
 
+function initExistingQuotation() {
+    var idQuotation = parseInt(sessionStorage.getItem("quotation"));
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
 
-//let DBOpenRequest = indexedDB.open("quotationDB");
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        let transaction = db.transaction("quotation", "readonly");
+        let objectStore = transaction.objectStore("quotation");
+        let request = objectStore.get(idQuotation);
+        console.log(idQuotation);
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
 
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            document.getElementById("quotationName").value = result.name;
+            document.getElementById("quotationReference").value = result.reference;
+            document.getElementById("quotationDate").value = result.date;
+            document.getElementById("quotationFillType").value = result.fill;
+            document.getElementById("quotationFinishOut").value = result.finishOut;
+            document.getElementById("quotationFinishIn").value = result.finishIn;
+            document.getElementById("quotationCut").value = result.cut;
+            optionSelected();
 
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('quotation', { autoIncrement: true });
+            initCommercial();
+        }
 
+    }
+}
 
-////console.log("create index : date");
-//objectStore.createIndex("date", "date", { unique: false });
+function checkRequiredInput() {
+    var inputList = document.getElementsByTagName('input');
+    for (var i = 0; i < inputList.length; i++) {
+        if (inputList[i].value === '' && inputList[i].hasAttribute('required')) {
+            alert('Certains champs requis sont incomplets!');
+            return false;
+        }
+    };
+    return true;
 
-////console.log("create index : collection");
-//objectStore.createIndex("collection", "collection", { unique: false });
+}
 
-////console.log("create index : finishOut");
-//objectStore.createIndex("address", "address", { unique: false });
+function updateQuotation() {
+    if (checkRequiredInput()) {
+        let db;
+        let DBOpenRequest = window.indexedDB.open("maderaDB");
+        var id = parseInt(document.getElementById("idQuotation").value, 10);
 
-////console.log("create index : finishIn");
-//objectStore.createIndex("city", "city", { unique: false });
+        DBOpenRequest.onsuccess = function (event) {
+            db = event.target.result;
 
-////console.log("create index : fill");
-//objectStore.createIndex("fill", "fill", { unique: false });
+            var transaction = db.transaction("quotation", "readwrite");
 
-////console.log("create index : cut");
-//objectStore.createIndex("cut", "cut", { unique: false });
+            // On indique le succès de la transaction
+            transaction.oncomplete = function (event) {
+                console.log("Transaction terminée : lecture finie");
+            };
 
-////console.log("create index : components");
-//objectStore.createIndex("components", "components", { unique: false });
+            transaction.onerror = function (event) {
+                console.log("Transaction non-ouverte à cause d'une erreur");
+            };
 
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initQuotationList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
+            // On crée un magasin d'objet pour la transaction
+            var objectStore = transaction.objectStore("quotation");
 
+            // On ajoute l'objet newItem au magasin d'objets
+            var objectStoreRequest = objectStore.get(id);
+            objectStoreRequest.onsuccess = function (event) {
+                // On indique le succès de l'ajout de l'objet
+                // dans la base de données
+                var data = objectStoreRequest.result;
+                data.idProject = sessionStorage.getItem("idProject");
+                data.name = document.getElementById("quotationName").value;
+                data.reference = document.getElementById("quotationReference").value;
+                //data.commercial = document.getElementById("quotationCommercial").value;
+                data.date = document.getElementById("quotationDate").value;
+                data.collection = document.getElementById("quotationCollection").value;
+                data.cut = document.getElementById("quotationCut").value;
+                data.fill = document.getElementById("quotationFillType").value;
+                data.finishIn = document.getElementById("quotationFinishIn").value;
+                data.finishOut = document.getElementById("quotationFinishOut").value;
 
-//DBOpenRequest = indexedDB.open("typeComponentDB");
+                var requestUpdate = objectStore.put(data);
+                requestUpdate.onerror = function (event) {
+                    // Faire quelque chose avec l’erreur
+                };
+                requestUpdate.onsuccess = function (event) {
+                    // Succès - la donnée est mise à jour !
+                    objectStore.delete(id);
+                    alert("Devis mis à jour !");
+                };
+            };
 
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
+        }
+    }
 
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('typeComponent', { autoIncrement: true });
-
-
-////console.log("create index : date");
-//objectStore.createIndex("label", "label", { unique: false });
-
-////console.log("create index : collection");
-//objectStore.createIndex("code", "code", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initQuotationList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-//DBOpenRequest = indexedDB.open("componentsDB");
-
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
-
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('components', { autoIncrement: true });
-
-
-////console.log("create index : refComposant");
-//objectStore.createIndex("refComposant", "refComposant", { unique: false });
-
-////console.log("create index : label");
-//objectStore.createIndex("label", "label", { unique: false });
-
-////console.log("create index : price");
-//objectStore.createIndex("price", "price", { unique: false });
-
-////console.log("create index : comment");
-//objectStore.createIndex("comment", "comment", { unique: false });
-
-////console.log("create index : typeComponent");
-//objectStore.createIndex("typeComponent", "typeComponent", { unique: false });
-
-////console.log("create index : component");
-//objectStore.createIndex("component", "component", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initComponentList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-//DBOpenRequest = indexedDB.open("collectionDB");
-
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
-
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('collection', { autoIncrement: true });
-
-
-////console.log("create index : label");
-//objectStore.createIndex("label", "label", { unique: false });
-
-////console.log("create index : collection");
-//objectStore.createIndex("quality", "quality", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initCollectionList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-
-
-
+}

@@ -16,9 +16,8 @@
 <body>
 
     <div class="row">
-        <div class="col-2"></div>
 
-        <div class="col-10">
+        <div class="col-12">
 
             <div class="container wizard-quotation">
 
@@ -38,7 +37,7 @@
                             <!--<li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Client</a></li>-->
                             <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Informations Devis</a></li>
                             <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Composants</a></li>
-                            <li class="nav-items"><a href="#step3" data-toggle="tab" data-step="3" class="nav-link">Résumé</a></li>
+                            <li class="nav-items"><a href="#step3" data-toggle="tab" data-step="3" class="nav-link">Devis</a></li>
                         </ul>
                     </div>
                 </div>
@@ -113,7 +112,8 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
-                                                <label class="col-5">Nom du projet* :</label> <input id="quotationName" name="quotationName" class="col-7 form-control" type="text" required />
+                                                <input type="hidden" id="idQuotation" />
+                                                <label class="col-5">Nom du devis* :</label> <input id="quotationName" name="quotationName" class="col-7 form-control" type="text" required />
                                             </div>
                                             <br />
                                             <div class="d-flex">
@@ -125,7 +125,7 @@
 
                                         <div class="col-6">
                                             <div class="d-flex">
-                                                <label class="col-5">Ref. projet* :</label> <input id="quotationReference" name="quotationReference" class="col-7 form-control" type="text" required />
+                                                <label class="col-5">Ref. devis* :</label> <input id="quotationReference" name="quotationReference" class="col-7 form-control" type="text" required />
                                             </div>
                                             <br />
                                             <div class="d-flex">
@@ -158,6 +158,8 @@
                                                 <label class="col-5">Remplissage* :</label>
                                                 <select class="form-control col-7" id="quotationFillType" name="quotationFillType" required>
                                                     <option value="null" selected>Choix remplissage</option>
+                                                    <option value="Panneau à Ossature">Panneau à Ossature</option>
+                                                    <option value="Poteaux-Poutre">Poteaux-Poutre</option>
                                                 </select>
                                             </div>
                                             <br />
@@ -169,6 +171,8 @@
                                                 <label class="col-5">Finition ext* :</label>
                                                 <select class="form-control col-7" id="quotationFinishOut" name="quotationFinishOut" required>
                                                     <option value="null" selected>Choix finition extérieur</option>
+                                                    <option value="Bois" >Bois</option>
+                                                    <option value="Crépis">Crépis</option>
                                                 </select>
                                             </div>
                                             <br />
@@ -177,6 +181,8 @@
 
                                                 <select class="form-control col-7" id="quotationFinishIn" name="quotationFinishIn" required>
                                                     <option value="null" selected>Choix finition intétieur</option>
+                                                    <option value="Panneau platre">Panneau platre</option>
+                                                    <option value="null" >Choix finition intétieur</option>
                                                 </select>
                                             </div>
                                             <br />
@@ -184,6 +190,9 @@
                                                 <label class="col-5">Coupe* :</label>
                                                 <select class="form-control col-7" id="quotationCut" name="quotationCut" required>
                                                     <option value="null" selected>Choix coupe de principe</option>
+                                                    <option value="A-A">A-A</option>
+                                                    <option value="B-B">B-B</option>
+                                                    <option value="C-C">C-C</option>
                                                 </select>
                                             </div>
                                             <br />
