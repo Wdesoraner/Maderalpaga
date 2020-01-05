@@ -483,6 +483,34 @@ function initTableUnite(db) {
 function initTableModules(db) {
     let newItems = [
         {
+            label: "Mur droit Chêne",
+            price: 5000,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Mur droit Hêtre",
+            price: 5625,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Mur droit Ipé",
+            price: 7500,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 3,
+            margin: 10
+        },
+
+        {
             label: "Porte Chêne",
             price: 200,
             specific: "Porte en chêne, 2 points",
@@ -509,34 +537,6 @@ function initTableModules(db) {
             idCollection: 3,
             margin: 10
         },
-
-        {
-            label: "Mur droit Chêne",
-            price: 5000,
-            specific: "10m longueur, 2.5m hauteur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 1,
-            margin: 15
-        },
-        {
-            label: "Mur droit Hêtre",
-            price: 5625,
-            specific: "10m longueur, 2.5m hauteur",
-            isModel: true,
-            cut: "B-B",
-            idCollection: 2,
-            margin: 15
-        },
-        {
-            label: "Mur droit Ipé",
-            price: 7500,
-            specific: "10m longueur, 3m hauteur",
-            isModel: true,
-            cut: "C-C",
-            idCollection: 3,
-            margin: 10
-        },
         {
             label: "Fenêtre PVC",
             price: 130,
@@ -558,7 +558,7 @@ function initTableModules(db) {
         {
             label: "Fenêtre Bois",
             price: 400,
-            specific: "200*95",
+            specific: "",
             isModel: true,
             cut: "",
             idCollection: 3,

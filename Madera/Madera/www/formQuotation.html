@@ -47,12 +47,12 @@
                         <div class="well">
                             <div class="row setup-content" id="quotationInfos">
                                 <div class="col-12">
-
+                                    <br />
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
                                                 <input type="hidden" id="idQuotation" />
-                                                <label class="col-5">Nom du devis* :</label> <input readonly="readonly" id="quotationName" name="quotationName" class="col-7 form-control" type="text" required />
+                                                <label class="col-5">Nom du devis :</label> <input readonly="readonly" id="quotationName" name="quotationName" class="col-7 form-control" type="text" />
                                             </div>
                                             <br />
                                             <div class="d-flex">
@@ -76,29 +76,31 @@
                                     </div>
 
                                     <hr />
+                                    <br />
 
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
                                                 <label class="col-5">Gamme* :</label>
                                                 <select class="form-control col-7" id="quotationCollection" name="quotationCollection" required>
-                                                    <option value="null" selected>Choix gamme</option>
+                                                    <option value="0">Choix gamme</option>
                                                 </select>
                                             </div>
                                             <br />
-                                            <div class="d-flex">
+                                            <!--<div class="d-flex">
                                                 <label class="col-5">Modèle gamme* :</label>
                                                 <select class="form-control col-7" id="quotationModelCollection" name="quotationModelCollection" required>
                                                     <option value="null" selected>Choix modèle</option>
                                                 </select>
                                             </div>
-                                            <br />
+                                            <br />-->
                                             <div class="d-flex">
                                                 <label class="col-5">Remplissage* :</label>
-                                                <select class="form-control col-7" id="quotationFillType" name="quotationFillType" required>
-                                                    <option value="null" selected>Choix remplissage</option>
-                                                    <option value="Panneau à Ossature">Panneau à Ossature</option>
-                                                    <option value="Poteaux-Poutre">Poteaux-Poutre</option>
+                                                <select disabled class="form-control col-7" id="quotationFillType" name="quotationFillType" required>
+                                                    <option value="0">Choix remplissage</option>
+                                                    <option value="1">Sans</option>
+                                                    <option value="2">Panneau à Ossature</option>
+                                                    <option value="3">Poteaux-Poutre</option>
                                                 </select>
                                             </div>
                                             <br />
@@ -108,24 +110,26 @@
                                         <div class="col-6">
                                             <div class="d-flex">
                                                 <label class="col-5">Finition ext* :</label>
-                                                <select class="form-control col-7" id="quotationFinishOut" name="quotationFinishOut" required>
-                                                    <option value="null" selected>Choix finition extérieur</option>
-                                                    <option value="Bois">Bois</option>
-                                                    <option value="Crépis">Crépis</option>
+                                                <select disabled class="form-control col-7" id="quotationFinishOut" name="quotationFinishOut" required>
+                                                    <option value="0">Choix finition extérieur</option>
+                                                    <option value="1">Sans</option>
+                                                    <option value="2">Bois</option>
+                                                    <option value="3">Crépis</option>
                                                 </select>
                                             </div>
                                             <br />
                                             <div class="d-flex">
                                                 <label class="col-5">Finition int* :</label>
 
-                                                <select class="form-control col-7" id="quotationFinishIn" name="quotationFinishIn" required>
-                                                    <option value="null" selected>Choix finition intétieur</option>
-                                                    <option value="Panneau platre">Panneau platre</option>
-                                                    <option value="null">Choix finition intétieur</option>
+                                                <select disabled class="form-control col-7" id="quotationFinishIn" name="quotationFinishIn" required>
+                                                    <option value="0">Choix finition intétieur</option>
+                                                    <option value="1">Sans</option>
+                                                    <option value="2">Panneau platre</option>
+                                                    <option value="3">Bois</option>
                                                 </select>
                                             </div>
                                             <br />
-                                            <div class="d-flex">
+                                            <!--<div class="d-flex">
                                                 <label class="col-5">Coupe* :</label>
                                                 <select class="form-control col-7" id="quotationCut" name="quotationCut" required>
                                                     <option value="null" selected>Choix coupe de principe</option>
@@ -134,7 +138,7 @@
                                                     <option value="C-C">C-C</option>
                                                 </select>
                                             </div>
-                                            <br />
+                                            <br />-->
                                         </div>
                                     </div>
                                     <br />
@@ -161,12 +165,13 @@
                                 <thead>
                                     <tr>
                                         <!--<th>Parent</th>-->
-                                        <th>Module</th>
-                                        <th>Gamme</th>
-                                        <th>Nom</th>
-                                        <th>Dimensions</th>
-                                        <th>Angle</th>
-                                        <th>Action</th>
+                                        <th style="width:15%">Module</th>
+                                        <th style="width:15%">Gamme</th>
+                                        <th style="width:20%">Nom</th>
+                                        <th style="width:25%">Dimensions</th>
+                                        <th style="width:10%">Angle</th>
+                                        <th style="width:5%">Quantité</th>
+                                        <th style="width:10%">Action</th>
                                     </tr>
                                 </thead>
 
@@ -226,7 +231,7 @@
                                 </div>
 
                                 <label>Composant du projet</label>
-                                <table class="table table-bordered table-striped">
+                                <table id="quotationModules" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>Quantité</th>
