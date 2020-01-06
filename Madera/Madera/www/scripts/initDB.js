@@ -16,7 +16,9 @@ $(document).ready(function () {
 
     let customer = ["idCustomer", "name", "firstName", "company", "address", "city", "zipCode", "mail", "phone"];
 
-    let project = ["projectName", "commercial", "date", "idProject", "refProject", "customer","amountProject","addressProject","cityProject","zipCodeProject"];
+    let state = ["idState", "label"];
+
+    let project = ["projectName", "commercial", "date", "idProject", "refProject", "customer", "idState"];
 
     let userProject = ["idUser", "idProject"];
 
@@ -24,17 +26,24 @@ $(document).ready(function () {
 
     let typeComponent = ["idTypeComponent", "label", "code"];
 
-    let components = ["idComponent", "refComposant", "label", "price", "comment", "typeComponent", "taxe"];
+    let unite = ["idUnite", "label"];
+
+    let components = ["idComponent", "refComposant", "label", "price", "specific", "typeComponent", "taxe", "idUnite"];
+
+    let moduleComponents = ["idModule", "idComponent", "quantity"];
+
+    let modules = ["idModule", "label", "price", "specific", "isModel", "cut", "idCollection", "margin", "idParentModule"];
+
+    let modulesQuotation = ["idModule", "idQuotation", "label", "length", "height", "section", "angle"];
+
+    //let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
+    let quotation = ["idQuotation", "reference", "date", "idProject"];
 
     let taxes = ["idTaxe", "amount"];
 
-    let quotation = ["idQuotation","state", "name", "reference", "date","discount","idProject"];
+    let tables = [department, shop, customer, project, collection, typeComponent, components, taxes, quotation, user, userProject, modules, modulesQuotation, moduleComponents, state, unite];
 
-    let componentsQuotation = ["idQuotation", "idComponent"];
-
-    let tables = [department, shop, customer, project, collection, typeComponent, components, taxes, quotation, componentsQuotation, user, userProject];
-
-    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "taxes", "quotation", "componentsQuotation", "user", "userProject"];
+    let tableNames = ["department", "shop", "customer", "project", "collection", "typeComponent", "components", "taxes", "quotation", "user", "userProject", "modules", "modulesQuotation", "moduleComponents", "state", "unite"];
 
     CreateObjectStore(tableNames, tables, 0);
 })
@@ -61,6 +70,8 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                 CreateObjectStore(tableNames, storeTables, indexTab + 1);
             };
             secondRequest.onsuccess = function (e) {
+                console.log("init table : " + tableNames[indexTab]);
+
                 if (tableNames[indexTab] == "shop") {
                     initTableShop(e.target.result);
                 } else if (tableNames[indexTab] == "department") {
@@ -71,8 +82,18 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                     initTableCollection(e.target.result);
                 } else if (tableNames[indexTab] == "typeComponent") {
                     initTableTypeComponent(e.target.result);
+                } else if (tableNames[indexTab] == "state") {
+                    initTableState(e.target.result);
+                } else if (tableNames[indexTab] == "unite") {
+                    initTableUnite(e.target.result);
+                } else if (tableNames[indexTab] == "modules") {
+                    initTableModules(e.target.result);
                 } else if (tableNames[indexTab] == "taxes") {
                     initTableTaxes(e.target.result);
+                } else if (tableNames[indexTab] == "components") {
+                    initTableComponents(e.target.result);
+                } else if (tableNames[indexTab] == "moduleComponents") {
+                    initTableModuleComponents(e.target.result);
                 }
 
                 if (fixture) {
@@ -82,8 +103,6 @@ function CreateObjectStore(tableNames, storeTables, indexTab) {
                         initTableProject(e.target.result);
                     } else if (tableNames[indexTab] == "userProject") {
                         initTableUserProject(e.target.result);
-                    } else if (tableNames[indexTab] == "components") {
-                        // initTableComponents(e.target.result);
                     } else if (tableNames[indexTab] == "quotation") {
                         initTableQuotation(e.target.result);
                     } else if (tableNames[indexTab] == "componentsQuotation") {
@@ -254,40 +273,6 @@ function initTableCollection(db) {
         objectStoreRequest = objectStore.add(item);
     });
 }
-function initTableTypeComponent(db) {
-    let newItems = [
-        {
-            label: "Mur Droit",
-            code: "MD"
-        },
-        {
-            label: "Mur Angle",
-            code: "MA"
-        },
-        {
-            label: "Porte Pleine",
-            code: "PtPl"
-        },
-        {
-            label: "Porte Fenetre",
-            code: "PtFe"
-        },
-        {
-            label: "Fenetre",
-            code: "Fe"
-        },
-    ]
-
-    let transaction = db.transaction("typeComponent", "readwrite");
-
-    let objectStore = transaction.objectStore("typeComponent");
-    let request = objectStore.openCursor();
-    let objectStoreRequest;
-
-    newItems.forEach(function (item) {
-        objectStoreRequest = objectStore.add(item);
-    });
-}
 function initTableCustomer(db) {
     let newItems = [
         {
@@ -335,16 +320,16 @@ function initTableCustomer(db) {
 function initTableTaxes(db) {
     let newItems = [
         {
-            amount:20
+            amount: 20
         },
         {
-            amount:10
+            amount: 10
         },
         {
-            amount:5.5
+            amount: 5.5
         },
         {
-            amount:2.1
+            amount: 2.1
         },
 
     ]
@@ -388,57 +373,21 @@ function initTableProject(db) {
         objectStoreRequest = objectStore.add(item);
     });
 }
-function initTableComponents(db) {
-    let newItems = [
-        {
-
-        },
-
-    ]
-
-    let transaction = db.transaction("components", "readwrite");
-
-    let objectStore = transaction.objectStore("components");
-    let request = objectStore.openCursor();
-    let objectStoreRequest;
-
-    newItems.forEach(function (item) {
-        objectStoreRequest = objectStore.add(item);
-    });
-}
 function initTableQuotation(db) {
     let newItems = [
         {
-            name: "Devis 01",
             reference: "P1D1-191219",
             date: "2019-12-19",
-            collection: 1,
-            fill: "Panneau à Ossature",
-            finishIn: "Panneau platre",
-            finishOut: "Bois",
-            cut: "A-A",
             idProject: 1
         },
         {
-            name: "Devis 02",
             reference: "P1D2-191220",
             date: "2019-12-20",
-            collection: 2,
-            fill: "Poteaux-Poutre",
-            finishIn: "Panneau platre",
-            finishOut: "Crépis",
-            cut: "B-B",
             idProject: 1
         },
         {
-            name: "Devis 01",
             reference: "P2D1-191218",
             date: "2019-12-18",
-            collection: 3,
-            fill: "Poteaux-Poutre",
-            finishIn: "Panneau platre",
-            finishOut: "Bois",
-            cut: "C-C",
             idProject: 2
         },
 
@@ -472,6 +421,391 @@ function initTableComponentsQuotation(db) {
         objectStoreRequest = objectStore.add(item);
     });
 }
+function initTableState(db) {
+    let newItems = [
+        {
+            label: "En attente"
+        },
+        {
+            label: "Validé"
+        },
+        {
+            label: "Refusé"
+        },
+        {
+            label: "Projet"
+        },
+    ]
 
+    let transaction = db.transaction("state", "readwrite");
+
+    let objectStore = transaction.objectStore("state");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+function initTableUnite(db) {
+    let newItems = [
+        {
+            label: "pièce"
+        },
+        {
+            label: "m"
+        },
+        {
+            label: "m2"
+        },
+        {
+            label: "cm"
+        },
+        {
+            label: "dm"
+        },
+        {
+            label: "°"
+        }
+
+    ]
+
+    let transaction = db.transaction("unite", "readwrite");
+
+    let objectStore = transaction.objectStore("unite");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+function initTableModules(db) {
+    let newItems = [
+        {
+            label: "Mur droit Chêne",
+            price: 5000,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Mur droit Hêtre",
+            price: 5625,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Mur droit Ipé",
+            price: 7500,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 3,
+            margin: 10
+        },
+
+        {
+            label: "Porte Chêne",
+            price: 200,
+            specific: "Porte en chêne, 2 points",
+            isModel: true,
+            cut: "",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Porte Hêtre",
+            price: 300,
+            specific: "Porte en hêtre, 4 points",
+            isModel: true,
+            cut: "",
+            idCollection: 2,
+            margin: 10
+        },
+        {
+            label: "Porte Ipé",
+            price: 500,
+            specific: "Porte en ipé, 6 points",
+            isModel: true,
+            cut: "",
+            idCollection: 3,
+            margin: 10
+        },
+        {
+            label: "Fenêtre PVC",
+            price: 130,
+            specific: "100*95",
+            isModel: true,
+            cut: "",
+            idCollection: 1,
+            margin: 20
+        },
+        {
+            label: "Fenêtre Bois",
+            price: 200,
+            specific: "100*95",
+            isModel: true,
+            cut: "",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Fenêtre Bois",
+            price: 400,
+            specific: "",
+            isModel: true,
+            cut: "",
+            idCollection: 3,
+            margin: 15
+        }]
+
+    let transaction = db.transaction("modules", "readwrite");
+
+    let objectStore = transaction.objectStore("modules");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+function initTableTypeComponent(db) {
+    let newItems = [
+        {
+            label: "Huisserie",
+            code: "HUI"
+        },
+        {
+            label: "Isolant",
+            code: "ISO"
+        },
+        {
+            label: "Matériaux",
+            code: "MAT"
+        },
+    ]
+
+    let transaction = db.transaction("typeComponent", "readwrite");
+
+    let objectStore = transaction.objectStore("typeComponent");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+function initTableComponents(db) {
+    let newItems = [
+        {
+            refComposant: "HUI-VSL",
+            label: "Vis Longue",
+            price: 0.5,
+            specific: "Vis longue",
+            typeComponent: 1,
+            taxe: 3,
+            idUnite: 1
+        },
+        {
+            refComposant: "HUI-VSC",
+            label: "Vis courte",
+            price: 0.5,
+            specific: "Vis longue pour poignée de porte",
+            typeComponent: 1,
+            taxe: 3,
+            idUnite: 1
+        },
+        {
+            refComposant: "HUI-GP",
+            label: "Gond porte",
+            price: 2,
+            specific: "Gond pour porte",
+            typeComponent: 1,
+            taxe: 3,
+            idUnite: 1
+        },
+        {
+            refComposant: "HUI-POI",
+            label: "Ensemble poignée",
+            price: 15,
+            specific: "Poignée de porte",
+            typeComponent: 1,
+            taxe: 3,
+            idUnite: 1
+        },
+        {
+            refComposant: "ISO-LR",
+            label: "Laine de roche",
+            price: 7,
+            specific: "",
+            typeComponent: 2,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            refComposant: "ISO-LV",
+            label: "Laine de verre",
+            price: 6,
+            specific: "",
+            typeComponent: 2,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            refComposant: "MAT-BC",
+            label: "Chêne",
+            price: 40,
+            specific: "",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            refComposant: "MAT-BH",
+            label: "Hêtre",
+            price: 55,
+            specific: "",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            refComposant: "MAT-BI",
+            label: "Ipé",
+            price: 90,
+            specific: "",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+
+    ]
+
+    let transaction = db.transaction("components", "readwrite");
+
+    let objectStore = transaction.objectStore("components");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+function initTableModuleComponents(db) {
+    let newItems = [
+        {
+            idModule: 1,
+            idComponent: 1,
+            quantity: 6
+        },
+        {
+            idModule: 1,
+            idComponent: 3,
+            quantity: 2
+        },
+        {
+            idModule: 1,
+            idComponent: 4,
+            quantity: 1
+        },
+        {
+            idModule: 2,
+            idComponent: 2,
+            quantity: 6
+        },
+        {
+            idModule: 2,
+            idComponent: 3,
+            quantity: 4
+        },
+        {
+            idModule: 2,
+            idComponent: 4,
+            quantity: 1
+        },
+        {
+            idModule: 3,
+            idComponent: 2,
+            quantity: 6
+        },
+        {
+            idModule: 3,
+            idComponent: 3,
+            quantity: 6
+        },
+        {
+            idModule: 3,
+            idComponent: 4,
+            quantity: 1
+        },
+        {
+            idModule: 4,
+            idComponent: 7,
+            quantity: 25
+        },
+        {
+            idModule: 4,
+            idComponent: 6,
+            quantity: 25
+        },
+        {
+            idModule: 5,
+            idComponent: 8,
+            quantity: 25
+        },
+        {
+            idModule: 5,
+            idComponent: 6,
+            quantity: 25
+        },
+        {
+            idModule: 6,
+            idComponent: 9,
+            quantity: 30
+        },
+        {
+            idModule: 6,
+            idComponent: 5,
+            quantity: 30
+        },
+    ]
+
+    let transaction = db.transaction("moduleComponents", "readwrite");
+
+    let objectStore = transaction.objectStore("moduleComponents");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+
+/*
+function initTable(db) {
+    let newItems = [
+        {
+
+        },
+
+    ]
+
+    let transaction = db.transaction("", "readwrite");
+
+    let objectStore = transaction.objectStore("");
+    let request = objectStore.openCursor();
+    let objectStoreRequest;
+
+    newItems.forEach(function (item) {
+        objectStoreRequest = objectStore.add(item);
+    });
+}
+*/
 
 

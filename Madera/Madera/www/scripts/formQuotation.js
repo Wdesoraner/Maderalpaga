@@ -20,21 +20,20 @@
         document.getElementById("hiddenId").value++;
         let idTr = document.getElementById("hiddenId").value;
 
-        newRowComponent = getRowComponent(idTr, id)
+        newRowModule = getRowModule(idTr, id)
 
         let tr = document.createElement("tr");
-        tr.innerHTML = newRowComponent;
+        tr.innerHTML = newRowModule;
         tr.classList.add('item-collection');
         tr.id = idTr;
 
         var element = document.getElementById(id);
         element.closest("tr").after(tr);
-        //element.after(tr);
 
-        let DBOpenRequest = indexedDB.open("localMaderaDB");
+        let DBOpenRequest = indexedDB.open("maderaDB");
         DBOpenRequest.onsuccess = function (event) {
             db = event.target.result;
-            initTypeComponentList(db, idTr);
+            initModuleList(db, idTr);
             initCollectionList(db, idTr);
         }
         listen.clickListener($(tr));
@@ -51,6 +50,8 @@ $(document).ready(function () {
 
     duplicateItem();
 
+    initCollectionListQuotation();
+
     $('[href="#step1"]').tab('show');
 
     $('.next').click(function () {
@@ -65,8 +66,10 @@ $(document).ready(function () {
     })
 
     $('#btnSaveQuotation').click(function () {
-        //generatePDF();
-        addQuotation(db);
+        generatePDF();
+        if (!sessionStorage.getItem("quotation")) {
+            addQuotation(db);
+        }
     })
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -81,105 +84,134 @@ $(document).ready(function () {
 
     })
 
-
     $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
         var className = $('#step3').attr('class');
         if (className.includes('active')) {
             resetQuotation();
-            completeQuotation();
+
+            let listModules = getModulesList();
+            console.log(listModules);
+
+            completeQuotation(listModules);
         }
     })
 
+    if (sessionStorage.getItem("quotation")) {
+        document.getElementById("idQuotation").value = sessionStorage.getItem("quotation");
+        document.getElementById("btnSaveQuotation").onclick = updateQuotation;
+        initExistingQuotation();
+    }
 
+    $("#quotationCollection").on("change", function () {
+        var id = $("#quotationCollection option:selected").attr("id");
+        //alert(typeof(id));
+        $("#quotationFillType").val(id);
+        $("#quotationFinishOut").val(id);
+        $("#quotationFinishIn").val(id);
 
+    })
 });
 
-function getRowComponent(idTr, idParent = 0) {
-    return '<tr id="' + idTr + '" class="item-collection"><td style="width:10%"><span id="parentComponent">' + idParent + '</span></td><td><select class="w-100 h-100 border border-0" id="selectTypeComponent' + idTr + '"></select></td><td><select class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" class="w-100 h-100 border border-0" /></td> <td class="text-right"><input type="number" class="w-75 h-100 border border-0" />m</td><td><select class="w-100 h-100 border border-0"><option></option><option>Entrant</option><option>Sortant</option></select></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
+function initCollectionListQuotation() {
+    let DBOpenRequest = indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+
+        let transaction = db.transaction("collection", "readwrite");
+
+        let objectStore = transaction.objectStore("collection");
+        let request = objectStore.openCursor();
+
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            let cursor = event.target.result;
+            if (cursor) {
+                let key = cursor.primaryKey;
+                let value = cursor.value;
+                //console.log(key, value);
+                addOptionCollectionQuotation(value.label, key);
+                cursor.continue();
+            }
+        };
+    }
+}
+
+function addOptionCollectionQuotation(collectionLabel, idCollection) {
+    let list = document.getElementById("quotationCollection");
+    let opt = document.createElement("option");
+    opt.id = idCollection;
+    opt.appendChild(document.createTextNode(collectionLabel));
+    opt.onclick = function () { clickListItem(idCollection) };
+    list.appendChild(opt);
+}
+
+function getRowModule(idTr, idParent = 0) {
+    return '<tr id="' + idTr + '" class="item-collection"><td style="display:none"><input type="text" id="parentModule' + idTr + '" value="' + idParent + '"></td><td><select class="w-100 h-100 border border-0" id="selectModule' + idTr + '" onchange="onChangeModule(' + idTr + ')"></select></td><td><select disabled class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" id="labelModule' + idTr + '" class="w-100 h-100 border border-0" /></td><td> <div class="row"><div class="col-6"> L : <input type="number" id="lengthModule' + idTr + '" class="w-50 h-100 border border-0" />m </div><div class="col-6"> H : <input type="number" id="heightModule' + idTr + '" class="w-50 h-100 border border-0" />m </div></div></td><td><select id="selectAngle' + idTr + '" class="w-100 h-100 border border-0"><option></option><option value=true>Oui</option><option value=false>Non</option></select></td><td><input type="number" id="quantityModule' + idTr + '" class="h-100 border border-0" value="1"/></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
     // onclick="addChild(' + idTr + ')
     //"onclick="delItem(' + idTr + ')"
+}
+
+function onChangeModule(idTr) {
+    var id = $("#selectModule" + idTr + " option:selected").attr("id");
+    console.log($("#lengthModule" + idTr));
+    $("#labelModule" + idTr).val('');
+    $("#lengthModule" + idTr).val('');
+    $("#heightModule" + idTr).val('');
+    document.getElementById("selectAngle" + idTr).value = "";
+    $("#quantityModule" + idTr).val('1');
+
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        let transaction = db.transaction("modules", "readonly");
+        let objectStore = transaction.objectStore("modules");
+        let request = objectStore.get(parseInt(id));
+
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            console.log(result.idCollection);
+            let idCollection = result.idCollection;
+            //return result.idCollection;
+
+            document.getElementById("selectCollection" + idTr).options.namedItem(idCollection).selected = true;
+        }
+    }
 }
 
 function duplicateItem() {
     document.getElementById("hiddenId").value++;
 
-    //    console.log(document.getElementById("hiddenId").value);
-
     let idTr = document.getElementById("hiddenId").value;
 
-    newRowComponent = getRowComponent(idTr)
+    newRowModule = getRowModule(idTr)
 
     let tr = document.createElement("tr");
 
-    tr.innerHTML = newRowComponent;
+    tr.innerHTML = newRowModule;
 
     tr.classList.add('item-collection');
     tr.id = idTr;
     document.getElementById("table-collection").appendChild(tr);
 
-    let DBOpenRequest = indexedDB.open("localMaderaDB");
+    let DBOpenRequest = indexedDB.open("maderaDB");
     DBOpenRequest.onsuccess = function (event) {
         db = event.target.result;
-        initTypeComponentList(db, idTr);
+        initModuleList(db, idTr);
         initCollectionList(db, idTr);
 
-        //initTableCollection(db);
-        //initTableTypeComponent(db);
     }
     listen.clickListener($(tr));
 
 
-};
-
-//function delItem(id) {
-//    console.log('wallah');
-
-//    var element = document.getElementById(id);
-//    element.remove(element);
-//    //element.parentNode.removeChild(element);
-//}
-
-//function addChild(id) {
-//    document.getElementById("hiddenId").value++;
-//    let idTr = document.getElementById("hiddenId").value;
-
-//    newRowComponent = getRowComponent(idTr, id)
-
-//    let tr = document.createElement("tr");
-//    tr.innerHTML = newRowComponent;
-//    tr.classList.add('item-collection');
-//    tr.id = idTr;
-
-//    var element = document.getElementById(id);
-//    console.log(element.id);
-//    //element.closest("tr").after(tr);
-//    element.after(tr);
-
-//    let DBOpenRequest = indexedDB.open("localMaderaDB");
-//    DBOpenRequest.onsuccess = function (event) {
-//        db = event.target.result;
-//        initTypeComponentList(db, idTr);
-//        initCollectionList(db, idTr);
-//    }
-
-
-//    test.generateLine();
-
-
-
-
-//    //console.log('ntm');
-//    //document.getElementById("hiddenId").value++;
-//    //let idTr = document.getElementById("hiddenId").value;
-
-//    //var element = document.getElementById(id);
-//    //var table = document.getElementById("table-collection");
-//    //newRowComponent = getRowComponent(idTr)
-//    //element.closest("tr").after();
-//    //var row = table.insertRow(document.getElementById(id).rowIndex);
-//    //console.log(document.getElementById(id).rowIndex);
-
-//}
+}
 
 function resetQuotation() {
     document.getElementById('refQuotationToInsert').innerHTML = "";
@@ -187,10 +219,92 @@ function resetQuotation() {
     document.getElementById('customerNameToInsert').innerHTML = "";
     document.getElementById('customerAddressToInsert').innerHTML = "";
     document.getElementById('customerPostalToInsert').innerHTML = "";
+    $(".item-quotation").remove();
+
 
 }
 
-function completeQuotation() {
+function getFixtureList() {
+    list = [{
+        moduleParent: 0,
+        moduleId: 1,
+        moduleModel: 1,
+        moduleCollection: 1,
+        moduleLabel: "Mur nord",
+        moduleLength: "10",
+        moduleHeight: "3",
+        moduleAngle: false,
+    },
+    {
+        moduleParent: 1,
+        moduleId: 5,
+        moduleModel: 4,
+        moduleCollection: 1,
+        moduleLabel: "Porte nord",
+        moduleLength: "",
+        moduleHeight: "",
+        moduleAngle: false,
+    },
+    {
+        moduleParent: 0,
+        moduleId: 2,
+        moduleModel: 1,
+        moduleCollection: 1,
+        moduleLabel: "Mur est",
+        moduleLength: "10",
+        moduleHeight: "3",
+        moduleAngle: false,
+    },
+    {
+        moduleParent: 2,
+        moduleId: 6,
+        moduleModel: 8,
+        moduleCollection: 2,
+        moduleLabel: "fenetres est",
+        moduleLength: "",
+        moduleHeight: "",
+        moduleAngle: false,
+    },
+    {
+        moduleParent: 2,
+        moduleId: 6,
+        moduleModel: 8,
+        moduleCollection: 2,
+        moduleLabel: "fenetres est",
+        moduleLength: "",
+        moduleHeight: "",
+        moduleAngle: false,
+    },
+    {
+        moduleParent: 0,
+        moduleId: 3,
+        moduleModel: 1,
+        moduleCollection: 1,
+        moduleLabel: "Mur sud",
+        moduleLength: "10",
+        moduleHeight: "3",
+        moduleAngle: false,
+    },
+    {
+        moduleParent: 0,
+        moduleId: 4,
+        moduleModel: 1,
+        moduleCollection: 1,
+        moduleLabel: "Mur ouest",
+        moduleLength: "10",
+        moduleHeight: "3",
+        moduleAngle: false,
+
+    },
+    ]
+
+    return list;
+}
+
+function completeQuotation(listModules) {
+
+    //listModules = getFixtureList();
+    //console.log(listModules);
 
     var formText = document.createTextNode(document.getElementById("quotationReference").value);
     var quotationDiv = document.getElementById("refQuotationToInsert");
@@ -206,26 +320,70 @@ function completeQuotation() {
     quotationDiv.appendChild(formText);
 
 
-    //var tempText = document.getElementById("customerName").value + ' ' + document.getElementById("customerFirstName").value;
-    //if (document.getElementById("customerCompany").value != '') {
-    //tempText += ' (' + document.getElementById("customerCompany").value + ')';
-    //}
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+        let project = sessionStorage.getItem("project");
 
-    //formText = document.createTextNode(tempText);
-    //quotationDiv = document.getElementById("customerNameToInsert");
-    //quotationDiv.appendChild(formText);
+        let db = event.target.result;
+        let transaction = db.transaction("project", "readonly");
+        let objectStore = transaction.objectStore("project");
+        let request = objectStore.get(parseInt(project));
 
-    //formText = document.createTextNode(document.getElementById("customerAddress").value);
-    //quotationDiv = document.getElementById("customerAddressToInsert");
-    //quotationDiv.appendChild(formText);
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
 
-    //var tempText = document.getElementById("customerPostal").value + ' ' + document.getElementById("customerCity").value;
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            console.log(result);
 
-    //formText = document.createTextNode(tempText);
-    //quotationDiv = document.getElementById("customerPostalToInsert");
-    //quotationDiv.appendChild(formText);
+            let transaction2 = db.transaction("customer", "readonly");
+            let objectStore2 = transaction2.objectStore("customer");
+            let request = objectStore2.get(parseInt(result.customer));
+
+            request.onsuccess = function (event) {
+                var result2 = event.target.result;
 
 
+                var tempText = result2.name + ' ' + result2.firstName;
+                if (result2.company != '') {
+                    tempText += ' (' + result2.company + ')';
+                }
+
+                formText = document.createTextNode(tempText);
+                quotationDiv = document.getElementById("customerNameToInsert");
+                quotationDiv.appendChild(formText);
+
+                formText = document.createTextNode(result2.address);
+                quotationDiv = document.getElementById("customerAddressToInsert");
+                quotationDiv.appendChild(formText);
+
+                var tempText = result2.zipCode + ' ' + result2.city;
+
+                formText = document.createTextNode(tempText);
+                quotationDiv = document.getElementById("customerPostalToInsert");
+                quotationDiv.appendChild(formText);
+            }
+        }
+    }
+
+    let tableToComplete = $("#quotationModules");
+    let i = 1;
+    listModules.forEach(function (item) {
+
+        let newRowModuleQuotation = getRowModuleQuotation(i++, item.moduleLabel);
+        let tr = document.createElement("tr");
+        tr.innerHTML = newRowModuleQuotation;
+
+        tr.classList.add('item-quotation');
+        tr.id = i;
+        document.getElementById("quotationModules").appendChild(tr);
+    });
+
+}
+
+function getRowModuleQuotation(id, name) {
+    return tr = '<tr><td id="quantity' + id + '">1</td><td id="label' + id + '">' + name + '</td><td id="unitPrice' + id + '"></td><td id="totalPrice' + id + '"></td></tr>';
 }
 
 function generatePDF() {
@@ -258,6 +416,278 @@ function generatePDF() {
 
         pdf.save("HTML-Document.pdf");
     });
+}
+
+function getModulesList() {
+    let itemsHTML = document.getElementsByClassName("item-collection");
+
+    let listItems = []
+
+    for (let item of itemsHTML) {
+        let id = item.id;
+
+        let quantity = $("#quantityModule" + id).val();
+
+        for (let i = 0; i < quantity; i++) {
+            let stringParent = $("#parentModule" + id).val();
+            let newModule = {
+                moduleParent: parseInt(stringParent.replace("btnAdd", "")),
+                moduleId: parseInt(id),
+                moduleModel: parseInt($("#selectModule" + id + " option:selected").attr("id")),
+                moduleCollection: parseInt($("#selectCollection" + id + " option:selected").attr("id")),
+                moduleLabel: $("#labelModule" + id).val(),
+                moduleLength: $("#lengthModule" + id).val(),
+                moduleHeight: $("#heightModule" + id).val(),
+                moduleAngle: $("#selectAngle" + id + " option:selected").attr("id")
+            };
+
+            listItems.push(newModule);
+        }
+    }
+
+    //console.log(listItems);
+    return listItems;
+}
+
+/*-------------------------------------------------DB--------------------------------------------------------------*/
+
+let db;
+let DBOpenRequest = indexedDB.open("maderaDB");
+
+function initQuotationList(db) {
+    let transaction = db.transaction("quotation", "readwrite");
+
+    let objectStore = transaction.objectStore("quotation");
+    let request = objectStore.openCursor();
+
+    request.onerror = function (event) {
+        console.err("error fetching data");
+    };
+
+    request.onsuccess = function (event) {
+        let cursor = event.target.result;
+        //if (cursor) {
+        //let key = cursor.primaryKey;
+        //let value = cursor.value;
+        ////console.log(key, value);
+        //if (value.company != "") {
+        //addListCustomer(value.company, key);
+        //} else {
+        //addListCustomer(value.firstName + " " + value.name, key)
+        //}
+        //cursor.continue();
+        //}
+    };
+}
+function initModulesList(db, idTr) {
+    let transaction = db.transaction("components", "readwrite");
+
+    let objectStore = transaction.objectStore("quotation");
+    let request = objectStore.openCursor();
+
+    request.onerror = function (event) {
+        console.err("error fetching data");
+    };
+
+    request.onsuccess = function (event) {
+        let cursor = event.target.result;
+        //if (cursor) {
+        //let key = cursor.primaryKey;
+        //let value = cursor.value;
+        ////console.log(key, value);
+        //if (value.company != "") {
+        //addListCustomer(value.company, key);
+        //} else {
+        //addListCustomer(value.firstName + " " + value.name, key)
+        //}
+        //cursor.continue();
+        //}
+    };
+}
+
+function initModuleList(db, idTr) {
+    let transaction = db.transaction("modules", "readwrite");
+
+    let objectStore = transaction.objectStore("modules");
+    let request = objectStore.openCursor();
+
+    request.onerror = function (event) {
+        console.err("error fetching data");
+    };
+
+    request.onsuccess = function (event) {
+        let cursor = event.target.result;
+        if (cursor) {
+            let key = cursor.primaryKey;
+            let value = cursor.value;
+            //console.log(key, value);
+            addOptionTypeModule(value.label, key, idTr);
+            cursor.continue();
+        }
+    };
+}
+function initCollectionList(db, idTr) {
+    let transaction = db.transaction("collection", "readwrite");
+
+    let objectStore = transaction.objectStore("collection");
+    let request = objectStore.openCursor();
+
+    request.onerror = function (event) {
+        console.err("error fetching data");
+    };
+
+    request.onsuccess = function (event) {
+        let cursor = event.target.result;
+        if (cursor) {
+            let key = cursor.primaryKey;
+            let value = cursor.value;
+            //console.log(key, value);
+            addOptionCollection(value.label, key, idTr);
+            cursor.continue();
+        }
+    };
+
+}
+
+function addQuotation(db) {
+
+    var newItem = [{
+        idProject: sessionStorage.getItem("idProject"),
+        name: document.getElementById("quotationName").value,
+        reference: document.getElementById("quotationReference").value,
+        date: document.getElementById("quotationDate").value,
+        collection: document.getElementById("quotationCollection").value,
+        fill: document.getElementById("quotationFillType").value,
+        finishOut: document.getElementById("quotationFinishOut").value,
+        finishIn: document.getElementById("quotationFinishIn").value,
+        cut: document.getElementById("quotationCut").value
+    }];
+
+    console.log(newItem);
+
+    let transaction = db.transaction("quotation", "readwrite");
+
+    // On indique le succès de la transaction
+    transaction.oncomplete = function (event) {
+        console.log("Transaction terminée : modification finie");
+    };
+
+    transaction.onerror = function (event) {
+        console.log("Transaction non-ouverte à cause d'une erreur.Les doublons ne sont pas autorisés");
+    };
+
+    // On crée un magasin d'objet pour la transaction
+    let objectStore = transaction.objectStore("quotation");
+
+    // On ajoute l'objet newItem au magasin d'objets
+    let objectStoreRequest = objectStore.add(newItem[0]);
+
+    objectStoreRequest.onsuccess = function (event) {
+        // On indique le succès de l'ajout de l'objet
+        // dans la base de données
+        console.log("Un nouvel élément a été ajouté dans la base de données");
+    };
+
+}
+
+function initExistingQuotation() {
+    var idQuotation = parseInt(sessionStorage.getItem("quotation"));
+    let db;
+    let DBOpenRequest = window.indexedDB.open("maderaDB");
+
+    DBOpenRequest.onsuccess = function (event) {
+        db = event.target.result;
+        let transaction = db.transaction("quotation", "readonly");
+        let objectStore = transaction.objectStore("quotation");
+        let request = objectStore.get(idQuotation);
+        console.log(idQuotation);
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
+
+        request.onsuccess = function (event) {
+            var result = event.target.result;
+            document.getElementById("quotationName").value = "Devis n°" + idQuotation;
+            document.getElementById("quotationReference").value = result.reference;
+            document.getElementById("quotationDate").value = result.date;
+            //document.getElementById("quotationFillType").value = result.fill;
+            //document.getElementById("quotationFinishOut").value = result.finishOut;
+            //document.getElementById("quotationFinishIn").value = result.finishIn;
+            //document.getElementById("quotationCut").value = result.cut;
+
+            optionSelected();
+            initCommercial();
+        }
+
+    }
+}
+
+function checkRequiredInput() {
+    var inputList = document.getElementsByTagName('input');
+    for (var i = 0; i < inputList.length; i++) {
+        if (inputList[i].value === '' && inputList[i].hasAttribute('required')) {
+            alert('Certains champs requis sont incomplets!');
+            return false;
+        }
+    };
+    return true;
+
+}
+
+function updateQuotation() {
+    if (checkRequiredInput()) {
+        let db;
+        let DBOpenRequest = window.indexedDB.open("maderaDB");
+        var id = parseInt(document.getElementById("idQuotation").value, 10);
+
+        DBOpenRequest.onsuccess = function (event) {
+            db = event.target.result;
+
+            var transaction = db.transaction("quotation", "readwrite");
+
+            // On indique le succès de la transaction
+            transaction.oncomplete = function (event) {
+                console.log("Transaction terminée : lecture finie");
+            };
+
+            transaction.onerror = function (event) {
+                console.log("Transaction non-ouverte à cause d'une erreur");
+            };
+
+            // On crée un magasin d'objet pour la transaction
+            var objectStore = transaction.objectStore("quotation");
+
+            // On ajoute l'objet newItem au magasin d'objets
+            var objectStoreRequest = objectStore.get(id);
+            objectStoreRequest.onsuccess = function (event) {
+                // On indique le succès de l'ajout de l'objet
+                // dans la base de données
+                var data = objectStoreRequest.result;
+                data.idProject = sessionStorage.getItem("idProject");
+                data.name = document.getElementById("quotationName").value;
+                data.reference = document.getElementById("quotationReference").value;
+                //data.commercial = document.getElementById("quotationCommercial").value;
+                data.date = document.getElementById("quotationDate").value;
+                data.collection = document.getElementById("quotationCollection").value;
+                data.cut = document.getElementById("quotationCut").value;
+                data.fill = document.getElementById("quotationFillType").value;
+                data.finishIn = document.getElementById("quotationFinishIn").value;
+                data.finishOut = document.getElementById("quotationFinishOut").value;
+
+                var requestUpdate = objectStore.put(data);
+                requestUpdate.onerror = function (event) {
+                    // Faire quelque chose avec l’erreur
+                };
+                requestUpdate.onsuccess = function (event) {
+                    // Succès - la donnée est mise à jour !
+                    objectStore.delete(id);
+                    alert("Devis mis à jour !");
+                };
+            };
+
+        }
+    }
+
 }
 
 function initQuotationList(db) {
@@ -298,444 +728,11 @@ function addOptionCollection(collectionLabel, idCollection, idTr) {
     list.appendChild(opt);
 }
 
-function addOptionTypeComponent(typeComponentLabel, idTypeComponent, idTr) {
-    let list = document.getElementById("selectTypeComponent" + idTr);
+function addOptionTypeModule(typeModuleLabel, idTypeModule, idTr) {
+    let list = document.getElementById("selectModule" + idTr);
     let opt = document.createElement("option");
-    opt.id = idTypeComponent;
-    opt.appendChild(document.createTextNode(typeComponentLabel));
-    opt.onclick = function () { clickListItem(idTypeComponent) };
+    opt.id = idTypeModule;
+    opt.appendChild(document.createTextNode(typeModuleLabel));
+    opt.onclick = function () { clickListItem(idTypeModule) };
     list.appendChild(opt);
 }
-
-
-/*-------------------------------------------------DB--------------------------------------------------------------*/
-
-let db;
-let DBOpenRequest = indexedDB.open("localMaderaDB");
-
-DBOpenRequest.onupgradeneeded = function (event) {
-    // Set the db variable to our database so we can use it!
-    db = event.target.result;
-
-    // Create an object store named db. Object stores
-    // in databases are where data are stored.
-    let objectStore = db.createObjectStore('collection', { autoIncrement: true });
-    //console.log("create index : label");
-    objectStore.createIndex("label", "label", { unique: false });
-
-    //console.log("create index : collection");
-    objectStore.createIndex("quality", "quality", { unique: false });
-
-
-
-    objectStore = db.createObjectStore('components', { autoIncrement: true });
-
-    //console.log("create index : refComposant");
-    objectStore.createIndex("refComposant", "refComposant", { unique: false });
-
-    //console.log("create index : label");
-    objectStore.createIndex("label", "label", { unique: false });
-
-    //console.log("create index : price");
-    objectStore.createIndex("price", "price", { unique: false });
-
-    //console.log("create index : comment");
-    objectStore.createIndex("comment", "comment", { unique: false });
-
-    //console.log("create index : typeComponent");
-    objectStore.createIndex("typeComponent", "typeComponent", { unique: false });
-
-    //console.log("create index : component");
-    objectStore.createIndex("component", "component", { unique: false });
-
-
-
-    objectStore = db.createObjectStore('quotation', { autoIncrement: true });
-
-    //console.log("create index : date");
-    objectStore.createIndex("name", "name", { unique: true });
-
-    //console.log("create index : date");
-    objectStore.createIndex("reference", "reference", { unique: true });
-
-    //console.log("create index : date");
-    objectStore.createIndex("date", "date", { unique: false });
-
-    //console.log("create index : collection");
-    objectStore.createIndex("collection", "collection", { unique: false });
-
-    //console.log("create index : fill");
-    objectStore.createIndex("fill", "fill", { unique: false });
-
-    //console.log("create index : fill");
-    objectStore.createIndex("finishIn", "finishIn", { unique: false });
-
-    //console.log("create index : fill");
-    objectStore.createIndex("finishOut", "finishOut", { unique: false });
-
-    //console.log("create index : cut");
-    objectStore.createIndex("cut", "cut", { unique: false });
-
-    //console.log("create index : components");
-    objectStore.createIndex("components", "components", { unique: false });
-
-
-
-    objectStore = db.createObjectStore('typeComponent', { autoIncrement: true });
-
-
-    //console.log("create index : date");
-    objectStore.createIndex("label", "label", { unique: false });
-
-    //console.log("create index : collection");
-    objectStore.createIndex("code", "code", { unique: false });
-}
-DBOpenRequest.onsuccess = function (event) {
-    //db = event.target.result;
-    //initTypeComponentList(db);
-    //initCollectionList(db);
-
-    //initTableCollection(db);
-    //initTableTypeComponent(db);
-}
-DBOpenRequest.onerror = function (event) {
-    alert('error opening database ' + event.target.errorCode);
-}
-
-function initQuotationList(db) {
-    let transaction = db.transaction("quotation", "readwrite");
-
-    let objectStore = transaction.objectStore("quotation");
-    let request = objectStore.openCursor();
-
-    request.onerror = function (event) {
-        console.err("error fetching data");
-    };
-
-    request.onsuccess = function (event) {
-        let cursor = event.target.result;
-        //if (cursor) {
-        //let key = cursor.primaryKey;
-        //let value = cursor.value;
-        ////console.log(key, value);
-        //if (value.company != "") {
-        //addListCustomer(value.company, key);
-        //} else {
-        //addListCustomer(value.firstName + " " + value.name, key)
-        //}
-        //cursor.continue();
-        //}
-    };
-}
-function initComponentsList(db, idTr) {
-    let transaction = db.transaction("components", "readwrite");
-
-    let objectStore = transaction.objectStore("quotation");
-    let request = objectStore.openCursor();
-
-    request.onerror = function (event) {
-        console.err("error fetching data");
-    };
-
-    request.onsuccess = function (event) {
-        let cursor = event.target.result;
-        //if (cursor) {
-        //let key = cursor.primaryKey;
-        //let value = cursor.value;
-        ////console.log(key, value);
-        //if (value.company != "") {
-        //addListCustomer(value.company, key);
-        //} else {
-        //addListCustomer(value.firstName + " " + value.name, key)
-        //}
-        //cursor.continue();
-        //}
-    };
-}
-
-function initTypeComponentList(db, idTr) {
-    let transaction = db.transaction("typeComponent", "readwrite");
-
-    let objectStore = transaction.objectStore("typeComponent");
-    let request = objectStore.openCursor();
-
-    request.onerror = function (event) {
-        console.err("error fetching data");
-    };
-
-    request.onsuccess = function (event) {
-        let cursor = event.target.result;
-        if (cursor) {
-            let key = cursor.primaryKey;
-            let value = cursor.value;
-            //console.log(key, value);
-            addOptionTypeComponent(value.label, key, idTr);
-            cursor.continue();
-        }
-    };
-}
-function initCollectionList(db, idTr) {
-    let transaction = db.transaction("collection", "readwrite");
-
-    let objectStore = transaction.objectStore("collection");
-    let request = objectStore.openCursor();
-
-    request.onerror = function (event) {
-        console.err("error fetching data");
-    };
-
-    request.onsuccess = function (event) {
-        let cursor = event.target.result;
-        if (cursor) {
-            let key = cursor.primaryKey;
-            let value = cursor.value;
-            //console.log(key, value);
-            addOptionCollection(value.label, key, idTr);
-            cursor.continue();
-        }
-    };
-
-}
-
-function initTableCollection(db) {
-    let newItems = [
-        {
-            label: "Economique",
-            quality: 1
-        },
-        {
-            label: "Normal",
-            quality: 2
-        },
-        {
-            label: "Premium",
-            quality: 3
-        }
-    ];
-
-    let transaction = db.transaction("collection", "readwrite");
-    // On crée un magasin d'objet pour la transaction
-    let objectStore = transaction.objectStore("collection");
-    // On ajoute l'objet newItem au magasin d'objets
-    let objectStoreRequest;
-    newItems.forEach(function (item) {
-        objectStoreRequest = objectStore.add(item);
-    });
-}
-function initTableTypeComponent(db) {
-    let newItems = [
-        {
-            label: "Mur Droit",
-            code: "MD"
-        },
-        {
-            label: "Mur Angle",
-            code: "MA"
-        },
-        {
-            label: "Porte Pleine",
-            code: "PtPl"
-        },
-        {
-            label: "Porte Fenetre",
-            code: "PtFe"
-        },
-        {
-            label: "Fenetre",
-            code: "Fe"
-        },
-    ]
-
-    let transaction = db.transaction("typeComponent", "readwrite");
-
-    let objectStore = transaction.objectStore("typeComponent");
-    let request = objectStore.openCursor();
-    let objectStoreRequest;
-
-    newItems.forEach(function (item) {
-        objectStoreRequest = objectStore.add(item);
-    });
-}
-
-
-function addQuotation(db) {
-
-    console.log(db);
-
-    var newItem = [{
-        name: document.getElementById("quotationName").value,
-        reference: document.getElementById("quotationReference").value,
-        date: document.getElementById("quotationDate").value,
-        collection: document.getElementById("quotationCollection").value,
-        fill: document.getElementById("quotationFillType").value,
-        finishOut: document.getElementById("quotationFinishOut").value,
-        finishIn: document.getElementById("quotationFinishIn").value,
-        cut: document.getElementById("quotationCut").value
-    }];
-
-    console.log(newItem);
-
-    let transaction = db.transaction("quotation", "readwrite");
-
-    // On indique le succès de la transaction
-    transaction.oncomplete = function (event) {
-        console.log("Transaction terminée : modification finie");
-    };
-
-    transaction.onerror = function (event) {
-        console.log("Transaction non-ouverte à cause d'une erreur.Les doublons ne sont pas autorisés");
-    };
-
-    // On crée un magasin d'objet pour la transaction
-    let objectStore = transaction.objectStore("quotation");
-
-    // On ajoute l'objet newItem au magasin d'objets
-    let objectStoreRequest = objectStore.add(newItem[0]);
-
-    objectStoreRequest.onsuccess = function (event) {
-        // On indique le succès de l'ajout de l'objet
-        // dans la base de données
-        console.log("Un nouvel élément a été ajouté dans la base de données");
-    };
-    
-}
-
-
-//let DBOpenRequest = indexedDB.open("quotationDB");
-
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
-
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('quotation', { autoIncrement: true });
-
-
-////console.log("create index : date");
-//objectStore.createIndex("date", "date", { unique: false });
-
-////console.log("create index : collection");
-//objectStore.createIndex("collection", "collection", { unique: false });
-
-////console.log("create index : finishOut");
-//objectStore.createIndex("address", "address", { unique: false });
-
-////console.log("create index : finishIn");
-//objectStore.createIndex("city", "city", { unique: false });
-
-////console.log("create index : fill");
-//objectStore.createIndex("fill", "fill", { unique: false });
-
-////console.log("create index : cut");
-//objectStore.createIndex("cut", "cut", { unique: false });
-
-////console.log("create index : components");
-//objectStore.createIndex("components", "components", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initQuotationList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-//DBOpenRequest = indexedDB.open("typeComponentDB");
-
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
-
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('typeComponent', { autoIncrement: true });
-
-
-////console.log("create index : date");
-//objectStore.createIndex("label", "label", { unique: false });
-
-////console.log("create index : collection");
-//objectStore.createIndex("code", "code", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initQuotationList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-//DBOpenRequest = indexedDB.open("componentsDB");
-
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
-
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('components', { autoIncrement: true });
-
-
-////console.log("create index : refComposant");
-//objectStore.createIndex("refComposant", "refComposant", { unique: false });
-
-////console.log("create index : label");
-//objectStore.createIndex("label", "label", { unique: false });
-
-////console.log("create index : price");
-//objectStore.createIndex("price", "price", { unique: false });
-
-////console.log("create index : comment");
-//objectStore.createIndex("comment", "comment", { unique: false });
-
-////console.log("create index : typeComponent");
-//objectStore.createIndex("typeComponent", "typeComponent", { unique: false });
-
-////console.log("create index : component");
-//objectStore.createIndex("component", "component", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initComponentList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-//DBOpenRequest = indexedDB.open("collectionDB");
-
-//DBOpenRequest.onupgradeneeded = function (event) {
-//// Set the db variable to our database so we can use it!
-//db = event.target.result;
-
-//// Create an object store named db. Object stores
-//// in databases are where data are stored.
-//let objectStore = db.createObjectStore('collection', { autoIncrement: true });
-
-
-////console.log("create index : label");
-//objectStore.createIndex("label", "label", { unique: false });
-
-////console.log("create index : collection");
-//objectStore.createIndex("quality", "quality", { unique: false });
-
-//}
-//DBOpenRequest.onsuccess = function (event) {
-//db = event.target.result;
-//initCollectionList(db);
-//}
-//DBOpenRequest.onerror = function (event) {
-//alert('error opening database ' + event.target.errorCode);
-//}
-
-
-
-
-
