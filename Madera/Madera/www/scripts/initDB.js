@@ -37,7 +37,7 @@ $(document).ready(function () {
     let modulesQuotation = ["idModule", "idQuotation", "label", "length", "height", "section", "angle"];
 
     //let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
-    let quotation = ["idQuotation", "reference", "date", "idProject"];
+    let quotation = ["idQuotation","state","discount", "reference", "date", "idProject"];
 
     let taxes = ["idTaxe", "amount"];
 
