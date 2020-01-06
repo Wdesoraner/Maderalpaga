@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     let customer = ["idCustomer", "name", "firstName", "company", "address", "city", "zipCode", "mail", "phone"];
 
-    let project = ["projectName", "commercial", "date", "idProject", "refProject", "customer"];
+    let project = ["projectName", "commercial", "date", "idProject", "refProject", "customer","amountProject","addressProject","cityProject","zipCodeProject"];
 
     let userProject = ["idUser", "idProject"];
 
@@ -28,7 +28,7 @@ $(document).ready(function () {
 
     let taxes = ["idTaxe", "amount"];
 
-    let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
+    let quotation = ["idQuotation","state", "name", "reference", "date","discount","idProject"];
 
     let componentsQuotation = ["idQuotation", "idComponent"];
 
