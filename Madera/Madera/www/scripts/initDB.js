@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     let state = ["idState", "label"];
 
-    let project = ["projectName", "commercial", "date", "idProject", "refProject", "customer", "idState"];
+    let project = ["projectName", "commercial", "date", "idProject", "refProject", "customer", "addressProject", "cityProject","zipCodeProject","amountProject"];
 
     let userProject = ["idUser", "idProject"];
 
