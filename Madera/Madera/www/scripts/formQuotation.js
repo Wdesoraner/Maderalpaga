@@ -25,6 +25,8 @@
         let tr = document.createElement("tr");
         tr.innerHTML = newRowModule;
         tr.classList.add('item-collection');
+        //tr.style.add('background-color:lightgray');
+        tr.style.backgroundColor = "lightgray";
         tr.id = idTr;
 
         var element = document.getElementById(id);
@@ -91,7 +93,7 @@ $(document).ready(function () {
 
             let listModules = getModulesList();
             console.log(listModules);
-
+            console.clear();
             completeQuotation(listModules);
         }
     })
@@ -364,26 +366,131 @@ function completeQuotation(listModules) {
                 quotationDiv = document.getElementById("customerPostalToInsert");
                 quotationDiv.appendChild(formText);
             }
+            db.close();
         }
     }
 
     let tableToComplete = $("#quotationModules");
     let i = 1;
-    listModules.forEach(function (item) {
 
-        let newRowModuleQuotation = getRowModuleQuotation(i++, item.moduleLabel);
-        let tr = document.createElement("tr");
-        tr.innerHTML = newRowModuleQuotation;
-
-        tr.classList.add('item-quotation');
-        tr.id = i;
-        document.getElementById("quotationModules").appendChild(tr);
-    });
-
+    tableModuleComponent(listModules);
 }
 
-function getRowModuleQuotation(id, name) {
-    return tr = '<tr><td id="quantity' + id + '">1</td><td id="label' + id + '">' + name + '</td><td id="unitPrice' + id + '"></td><td id="totalPrice' + id + '"></td></tr>';
+function getModulesList() {
+    let itemsHTML = document.getElementsByClassName("item-collection");
+
+    let listItems = []
+
+    for (let item of itemsHTML) {
+        let id = item.id;
+
+        let quantity = $("#quantityModule" + id).val();
+
+        for (let i = 0; i < quantity; i++) {
+            let stringParent = $("#parentModule" + id).val();
+            let newModule = {
+                moduleParent: parseInt(stringParent.replace("btnAdd", "")),
+                moduleId: parseInt(id),
+                moduleModel: parseInt($("#selectModule" + id + " option:selected").attr("id")),
+                moduleCollection: parseInt($("#selectCollection" + id + " option:selected").attr("id")),
+                moduleLabel: $("#labelModule" + id).val(),
+                moduleLength: $("#lengthModule" + id).val(),
+                moduleHeight: $("#heightModule" + id).val(),
+                moduleAngle: $("#selectAngle" + id + " option:selected").attr("id")
+            };
+
+            listItems.push(newModule);
+        }
+    }
+
+    //console.log(listItems);
+    return listItems;
+}
+
+function tableModuleComponent(listModules) {
+    DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+        let db = event.target.result;
+        let transaction = db.transaction("components", "readonly");
+        let objectStore = transaction.objectStore("components");
+
+        var request = objectStore.getAll();
+        request.onsuccess = function (event) {
+            let listComponent = event.target.result;
+            writeRow(listModules, 0, 1, listComponent);
+        }
+    }
+}
+
+function writeRow(tabModule, index, id, listComponent) {
+    console.log("ta race ");
+    if (tabModule.length > index) {
+        console.log("tabModule.length : ", tabModule.length);
+        console.log("index:", index);
+        let item = tabModule[index];
+        DBOpenRequest = window.indexedDB.open("maderaDB");
+        DBOpenRequest.onsuccess = function (event) {
+            let db = event.target.result;
+            let transaction = db.transaction("moduleComponents", "readonly");
+            let objectStore = transaction.objectStore("moduleComponents");
+
+            var myIndex = objectStore.index('idModule');
+            var getRequest = myIndex.getAll(item.moduleModel);
+
+            getRequest.onsuccess = function (event) {
+                let result = event.target.result;
+
+                console.log("item : ", item);
+
+                console.log("result : ", result);
+
+                let tr = document.createElement("tr");
+                tr = document.createElement("tr");
+                tr.innerHTML = getRowModuleQuotation(id++, 1, item.moduleLabel, 0, 0);
+
+                tr.classList.add('item-quotation');
+                tr.id = id;
+                document.getElementById("quotationModules").appendChild(tr);
+                console.log("listComponent : ", listComponent);
+                result.forEach(function (component) {
+                    let compo = listComponent.find(cour => cour.idComponent == component.idComponent);
+                    console.log(compo);
+                    let quantity = component.quantity;
+
+                    if (quantity == 0) {
+                        quantity = item.moduleLength * item.moduleHeight;
+                    }
+                    let name = compo.label + " (" + compo.refComposant + ")"
+                    let aComponent = {
+                        quantity: quantity,
+                        name: name,
+                        unitPrice: compo.price
+                    };
+                    console.log(quantity);
+
+                    //console.log("component : ");
+                    //console.log(component);
+
+                    let tr = document.createElement("tr");
+                    tr = document.createElement("tr");
+                    tr.innerHTML = getRowModuleQuotation(id++, aComponent.quantity, aComponent.name, aComponent.unitPrice, aComponent.unitPrice * aComponent.quantity);
+
+                    tr.classList.add('item-quotation');
+                    tr.id = id;
+                    document.getElementById("quotationModules").appendChild(tr);
+                    console.log(index);
+                });
+                writeRow(tabModule, index + 1, id, listComponent);
+            }
+        }
+    }
+}
+
+
+function getRowModuleQuotation(id, quantity = 1, name, unitPrice = 0, totalPrice = 0) {
+    tr = '<tr><td id="quantity' + id + '">' + quantity + '</td><td id="label' + id + '">' + name + '</td><td id="unitPrice' + id + '">' + unitPrice + ' €</td><td id="totalPrice' + id + '">' + totalPrice + ' €</td></tr>';
+    //console.log(tr);
+    return tr;
 }
 
 function generatePDF() {
@@ -418,36 +525,6 @@ function generatePDF() {
     });
 }
 
-function getModulesList() {
-    let itemsHTML = document.getElementsByClassName("item-collection");
-
-    let listItems = []
-
-    for (let item of itemsHTML) {
-        let id = item.id;
-
-        let quantity = $("#quantityModule" + id).val();
-
-        for (let i = 0; i < quantity; i++) {
-            let stringParent = $("#parentModule" + id).val();
-            let newModule = {
-                moduleParent: parseInt(stringParent.replace("btnAdd", "")),
-                moduleId: parseInt(id),
-                moduleModel: parseInt($("#selectModule" + id + " option:selected").attr("id")),
-                moduleCollection: parseInt($("#selectCollection" + id + " option:selected").attr("id")),
-                moduleLabel: $("#labelModule" + id).val(),
-                moduleLength: $("#lengthModule" + id).val(),
-                moduleHeight: $("#heightModule" + id).val(),
-                moduleAngle: $("#selectAngle" + id + " option:selected").attr("id")
-            };
-
-            listItems.push(newModule);
-        }
-    }
-
-    //console.log(listItems);
-    return listItems;
-}
 
 /*-------------------------------------------------DB--------------------------------------------------------------*/
 
@@ -479,6 +556,7 @@ function initQuotationList(db) {
         //}
     };
 }
+
 function initModulesList(db, idTr) {
     let transaction = db.transaction("components", "readwrite");
 
@@ -526,6 +604,7 @@ function initModuleList(db, idTr) {
         }
     };
 }
+
 function initCollectionList(db, idTr) {
     let transaction = db.transaction("collection", "readwrite");
 
@@ -610,13 +689,14 @@ function initExistingQuotation() {
             document.getElementById("quotationName").value = "Devis n°" + idQuotation;
             document.getElementById("quotationReference").value = result.reference;
             document.getElementById("quotationDate").value = result.date;
+
             //document.getElementById("quotationFillType").value = result.fill;
             //document.getElementById("quotationFinishOut").value = result.finishOut;
             //document.getElementById("quotationFinishIn").value = result.finishIn;
             //document.getElementById("quotationCut").value = result.cut;
 
-            optionSelected();
-            initCommercial();
+            //optionSelected();
+            //initCommercial();
         }
 
     }

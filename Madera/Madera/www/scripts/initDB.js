@@ -482,33 +482,6 @@ function initTableUnite(db) {
 }
 function initTableModules(db) {
     let newItems = [
-        {
-            label: "Mur droit Chêne",
-            price: 5000,
-            specific: "Mur extérieur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 1,
-            margin: 15
-        },
-        {
-            label: "Mur droit Hêtre",
-            price: 5625,
-            specific: "Mur extérieur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 2,
-            margin: 15
-        },
-        {
-            label: "Mur droit Ipé",
-            price: 7500,
-            specific: "Mur extérieur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 3,
-            margin: 10
-        },
 
         {
             label: "Porte Chêne",
@@ -534,6 +507,33 @@ function initTableModules(db) {
             specific: "Porte en ipé, 6 points",
             isModel: true,
             cut: "",
+            idCollection: 3,
+            margin: 10
+        },
+        {
+            label: "Mur droit Chêne",
+            price: 5000,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Mur droit Hêtre",
+            price: 5625,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Mur droit Ipé",
+            price: 7500,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
             idCollection: 3,
             margin: 10
         },
@@ -603,7 +603,9 @@ function initTableTypeComponent(db) {
 }
 function initTableComponents(db) {
     let newItems = [
+
         {
+            idComponent : 1,
             refComposant: "HUI-VSL",
             label: "Vis Longue",
             price: 0.5,
@@ -613,6 +615,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 2,
             refComposant: "HUI-VSC",
             label: "Vis courte",
             price: 0.5,
@@ -622,6 +625,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 3,
             refComposant: "HUI-GP",
             label: "Gond porte",
             price: 2,
@@ -631,6 +635,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 4,
             refComposant: "HUI-POI",
             label: "Ensemble poignée",
             price: 15,
@@ -640,6 +645,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 5,
             refComposant: "ISO-LR",
             label: "Laine de roche",
             price: 7,
@@ -649,6 +655,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 6,
             refComposant: "ISO-LV",
             label: "Laine de verre",
             price: 6,
@@ -658,6 +665,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 7,
             refComposant: "MAT-BC",
             label: "Chêne",
             price: 40,
@@ -667,6 +675,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 8,
             refComposant: "MAT-BH",
             label: "Hêtre",
             price: 55,
@@ -676,6 +685,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 9,
             refComposant: "MAT-BI",
             label: "Ipé",
             price: 90,
@@ -747,32 +757,32 @@ function initTableModuleComponents(db) {
         {
             idModule: 4,
             idComponent: 7,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 4,
             idComponent: 6,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 5,
             idComponent: 8,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 5,
             idComponent: 6,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 6,
             idComponent: 9,
-            quantity: 30
+            quantity: 0
         },
         {
             idModule: 6,
             idComponent: 5,
-            quantity: 30
+            quantity: 0
         },
     ]
 
