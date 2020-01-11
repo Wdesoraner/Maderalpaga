@@ -37,7 +37,7 @@ $(document).ready(function () {
     let modulesQuotation = ["idModule", "idQuotation", "label", "length", "height", "section", "angle"];
 
     //let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
-    let quotation = ["idQuotation","state","discount", "reference", "date", "idProject"];
+    let quotation = ["idQuotation", "state", "discount", "reference", "date", "idProject"];
 
     let taxes = ["idTaxe", "amount"];
 
@@ -482,7 +482,6 @@ function initTableUnite(db) {
 }
 function initTableModules(db) {
     let newItems = [
-
         {
             label: "Porte Chêne",
             price: 200,
@@ -563,6 +562,33 @@ function initTableModules(db) {
             cut: "",
             idCollection: 3,
             margin: 15
+        },
+        {
+            label: "Ensemble finition Eco",
+            price: 0,
+            specific: "",
+            isModel: false,
+            cut: "",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Ensemble finition Normal",
+            price: 0,
+            specific: "",
+            isModel: false,
+            cut: "",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Ensemble finition Premium",
+            price: 0,
+            specific: "",
+            isModel: false,
+            cut: "",
+            idCollection: 3,
+            margin: 15
         }]
 
     let transaction = db.transaction("modules", "readwrite");
@@ -605,7 +631,7 @@ function initTableComponents(db) {
     let newItems = [
 
         {
-            idComponent : 1,
+            idComponent: 1,
             refComposant: "HUI-VSL",
             label: "Vis Longue",
             price: 0.5,
@@ -694,7 +720,66 @@ function initTableComponents(db) {
             taxe: 3,
             idUnite: 3
         },
-
+        {
+            idComponent: 10,
+            refComposant: "MAT-PANOS",
+            label: "Panneau à ossature",
+            price: 20,
+            specific: "Remplissage gamme normal",
+            typeComponent: 2,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 11,
+            refComposant: "MAT-PO2",
+            label: "Poteaux-Poutre",
+            price: 40,
+            specific: "Remplissage gamme premium",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 12,
+            refComposant: "MAT-FEB",
+            label: "Finition ext. Bois",
+            price: 100,
+            specific: "Finition ext gamme normal",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 13,
+            refComposant: "MAT-FEC",
+            label: "Finition ext. Crépis",
+            price: 100,
+            specific: "Finition ext gamme premium",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 14,
+            refComposant: "MAT-FIP",
+            label: "Finition int. Platre",
+            price: 90,
+            specific: "Finition int. gamme normal",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 15,
+            refComposant: "MAT-FIB",
+            label: "Finition int. Bois",
+            price: 90,
+            specific: "Finition int. gamme premium",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
     ]
 
     let transaction = db.transaction("components", "readwrite");
@@ -782,6 +867,36 @@ function initTableModuleComponents(db) {
         {
             idModule: 6,
             idComponent: 5,
+            quantity: 0
+        },
+        {
+            idModule: 11,
+            idComponent: 10,
+            quantity: 0
+        },
+        {
+            idModule: 11,
+            idComponent: 12,
+            quantity: 0
+        },
+        {
+            idModule: 11,
+            idComponent: 14,
+            quantity: 0
+        },
+        {
+            idModule: 12,
+            idComponent: 11,
+            quantity: 0
+        },
+        {
+            idModule: 12,
+            idComponent: 13,
+            quantity: 0
+        },
+        {
+            idModule: 12,
+            idComponent: 15,
             quantity: 0
         },
     ]
