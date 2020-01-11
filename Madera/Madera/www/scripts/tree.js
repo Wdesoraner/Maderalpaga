@@ -3,33 +3,16 @@
 }
 
 function makeTree() {
-    let tree = {
-        1: {
-            2: '',
-            3: {
-                6: '',
-                7: '',
-            },
-            4: '',
-            5: ''
-        }
-    };
+    console.log(sessionStorage.getItem("structureTree"));
+    let tree = JSON.parse( sessionStorage.getItem("structureTree"))  ;
+    console.log(tree);
 
-    let treeParams = {
-        1: { trad: 'JavaScript' },
-        2: { trad: 'jQuery' },
-        3: { trad: 'React' },
-        4: { trad: 'Angular' },
-        5: { trad: 'Vue.js' },
-        6: { trad: 'ReactJS' },
-        7: { trad: 'React Native' }
-    };
-
+    let treeParams = JSON.parse('{' + sessionStorage.getItem("dataTree") + '}');
     treeMaker(tree, {
         id: 'tree',
         treeParams: treeParams,
         link_width: '4px',
-        link_color: '#2199e8',
+        link_color: '#649B3F',
         card_click: function (element) {
             console.log(element);
         }

@@ -17,19 +17,15 @@
 </head>
 <body>
 
-    <div class="row">
+    <div class="row mt-3" >
 
         <div class="col-12">
 
             <div class="container wizard-quotation">
 
-                <h3>Formulaire de devis</h3>
-
-                <hr>
-
                 <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3" style="width: 20%;">
-                        Étape 1 sur 3
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 20%;">
+                        Étape 1 sur 4
                     </div>
                 </div>
 
@@ -40,6 +36,7 @@
                             <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Informations Devis</a></li>
                             <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Modules</a></li>
                             <li class="nav-items"><a href="#step3" data-toggle="tab" data-step="3" class="nav-link">Devis</a></li>
+                            <li class="nav-items"><a href="#step4" data-toggle="tab" data-step="4" class="nav-link">Hierarchie des composants</a></li>
                         </ul>
                     </div>
                 </div>
@@ -90,12 +87,12 @@
                                             </div>
                                             <br />
                                             <!--<div class="d-flex">
-                                                <label class="col-5">Modèle gamme* :</label>
-                                                <select class="form-control col-7" id="quotationModelCollection" name="quotationModelCollection" required>
-                                                    <option value="null" selected>Choix modèle</option>
-                                                </select>
-                                            </div>
-                                            <br />-->
+                                <label class="col-5">Modèle gamme* :</label>
+                                <select class="form-control col-7" id="quotationModelCollection" name="quotationModelCollection" required>
+                                    <option value="null" selected>Choix modèle</option>
+                                </select>
+                            </div>
+                            <br />-->
                                             <div class="d-flex">
                                                 <label class="col-5">Remplissage* :</label>
                                                 <select disabled class="form-control col-7" id="quotationFillType" name="quotationFillType" required>
@@ -132,15 +129,15 @@
                                             </div>
                                             <br />
                                             <!--<div class="d-flex">
-                                                <label class="col-5">Coupe* :</label>
-                                                <select class="form-control col-7" id="quotationCut" name="quotationCut" required>
-                                                    <option value="null" selected>Choix coupe de principe</option>
-                                                    <option value="A-A">A-A</option>
-                                                    <option value="B-B">B-B</option>
-                                                    <option value="C-C">C-C</option>
-                                                </select>
-                                            </div>
-                                            <br />-->
+                                <label class="col-5">Coupe* :</label>
+                                <select class="form-control col-7" id="quotationCut" name="quotationCut" required>
+                                    <option value="null" selected>Choix coupe de principe</option>
+                                    <option value="A-A">A-A</option>
+                                    <option value="B-B">B-B</option>
+                                    <option value="C-C">C-C</option>
+                                </select>
+                            </div>
+                            <br />-->
                                         </div>
                                     </div>
                                     <br />
@@ -218,9 +215,9 @@
                                                 <div id="dateQuotationToInsert" class="col-8">: </div>
                                             </li>
                                             <!--<li class="row">
-                                                <div class="col-4">N° Client</div>
-                                                <div id="clientToInsert" class="col-8 wip">: </div>
-                                            </li>-->
+                                <div class="col-4">N° Client</div>
+                                <div id="clientToInsert" class="col-8 wip">: </div>
+                            </li>-->
                                         </ul>
                                     </div>
                                     <div class="col-6">
@@ -298,6 +295,16 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="tab-pane fade" id="step4">
+
+                        <div id="tree">
+                            <object style="width:110%;height:95vh;" type="text/html" data="tree.html"></object>
                         </div>
 
                     </div>
