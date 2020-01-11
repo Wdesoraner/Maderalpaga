@@ -35,8 +35,7 @@ $(document).ready(function () {
     let modules = ["idModule", "label", "price", "specific", "isModel", "cut", "idCollection", "margin", "idParentModule"];
 
     let modulesQuotation = ["idModule", "idQuotation", "label", "length", "height", "section", "angle"];
-
-    //let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
+    
     let quotation = ["idQuotation","state","discount", "reference", "date", "idProject"];
 
     let taxes = ["idTaxe", "amount"];
@@ -351,6 +350,9 @@ function initTableProject(db) {
             commercial: 1,
             date: "2019-12-18",
             refProject: "LBAP191218",
+            addressProject: "14 boulevard Saint-Martin",
+            cityProject: "Lyon",
+            zipCodeProject: "69000",
             customer: 1
         },
         {
@@ -358,6 +360,9 @@ function initTableProject(db) {
             commercial: 3,
             date: "2019-12-17",
             refProject: "AMJM191217",
+            addressProject: "14 boulevard Saint-Martin",
+            cityProject: "Lyon",
+            zipCodeProject: "69000",
             customer: 2
         },
 

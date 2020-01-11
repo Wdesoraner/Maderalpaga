@@ -1,7 +1,7 @@
 ﻿function exportToJsonString(idbDatabase, cb) {
     var exportObject = {};
     if (idbDatabase.objectStoreNames.length === 0)
-        cb(null, JSON.stringify(exportObject));
+        return exportObject;
     else {
         var transaction = idbDatabase.transaction(idbDatabase.objectStoreNames, "readonly");
         transaction.onerror = function (event) {
@@ -16,8 +16,8 @@
                     cursor.continue();
                 } else {
                     exportObject[storeName] = allObjects;
-                    console.log(exportObject);
                     if (idbDatabase.objectStoreNames.length === Object.keys(exportObject).length) {
+                        console.log(JSON.stringify(exportObject));
                         cb(null, JSON.stringify(exportObject));
                     }
                 }
@@ -37,13 +37,16 @@ function exportData() {
                 console.error(err);
             else {
                 console.log("Exported as JSON: " + jsonString);
+                //$.post("http://127.0.0.1/madera_WS/postData.php", jsonString, function () {
+                //    console.log("Passe");
+                //});
             }
         });
     }
 }
 
 function getData() {
-    $.getJSON("http://127.0.0.1/madera_WS/webservice.php", function (data) {
+    $.getJSON("http://127.0.0.1/madera_WS/getData.php", function (data) {
         var dbName = "maderaDB";
         var request = indexedDB.open(dbName);
         request.onsuccess = function (e) {
@@ -51,49 +54,46 @@ function getData() {
             data.forEach(function (row) {
                 switch (Object.keys(row)[0].toLowerCase()) {
                     case "client":
-                        addCustomer(database, row.Client);
+                        addCustomer(database, row.client);
                         break;
                     case "projet":
-                        addProject(database, row.Projet);
+                        addProject(database, row.projet);
                         break;
                     case "devis":
-                        addQuotation(database, row.Devis);
+                        addQuotation(database, row.devis);
                         break;
                     case "devis_module":
-                        addQuotation(database, row.Devis);
-                        break;
-                    case "devis_module":
-                        addModuleQuotation(database, row.Devis);
+                        addQuotation(database, row.devis_module);
                         break;
                     case "etat":
-                        addState(database, row.Etat);
+                        addState(database, row.etat);
                         break;
                     case "utilisateur_projet":
-                        addUserProject(database, row.Utilisateur_Projet);
+                        addUserProject(database, row.utilisateur_projet);
                         break;
                     case "utilisateur":
-                        addUser(database, row.Utilisateur);
+                        addUser(database, row.utilisateur);
                         break;
                     case "magasin":
-                        addDepartment(database, row.Magasin);
+                        addDepartment(database, row.magasin);
                         break;
                     case "module":
-                        addModule(database, row.Module);
+                        addModule(database, row.module);
                         break;
                     case "gamme":
-                        addCollection(database, row.Collection);
+                        addCollection(database, row.collection);
                         break;
                     case "unite":
-                        addUnite(database, row.Unite);
+                        addUnite(database, row.unite);
                         break;
                     case "module_composant":
-                        addModuleComponents(database, row.Module_Composant);
+                        addModuleComponents(database, row.module_composant);
                         break;
                     case "composant":
-                        addComponents(database, row.Composant);
+                        addComponents(database, row.composant);
                         break;
                     case "type_composant":
-                        addTypeComponent(database, row.Type_Composant);
+                        addTypeComponent(database, row.Type_composant);
                         break;
                     case "taxe":
                         addTaxes(database, row.TVA);
@@ -102,7 +102,8 @@ function getData() {
             });
         }
     });
-}
+}
+
 function addCustomer(db, data) {
     console.log(data);
     let newItem = {
@@ -159,7 +160,7 @@ function addQuotation(db, data) {
 function addModuleQuotation(db, data) {
     console.log(data);
     let newItem = {
-        idModule : data.idModule,
+        idModule: data.idModule,
         idQuotation: data.idDevis,
         label: data.libelle,
         length: data.longueur,
@@ -203,7 +204,7 @@ function addUser(db, data) {
         department: data.service,
         shop: data.magasin,
         mail: data.mail,
-        password:data.motDePasse
+        password: data.motDePasse
     };
     let transaction = db.transaction("user", "readwrite");
     let objectStore = transaction.objectStore("user");
@@ -230,11 +231,11 @@ function addModule(db, data) {
         label: data.libelle,
         price: data.prixUnitaire,
         specific: data.caracteristiques,
-        isModel : data.estModele,
-        cut : data.coupePrincipe,
-        idCollection : data.GammeidGamme,
-        margin : data.margeCommerce,
-        idParentModule : data.idModuleidModule
+        isModel: data.estModele,
+        cut: data.coupePrincipe,
+        idCollection: data.GammeidGamme,
+        margin: data.margeCommerce,
+        idParentModule: data.idModuleidModule
     };
     let transaction = db.transaction("modules", "readwrite");
     let objectStore = transaction.objectStore("modules");
@@ -269,7 +270,7 @@ function addModuleComponents(db, data) {
     let newItem = {
         idModule: data.idModule,
         idComponent: data.idComposant,
-        quantity : data.quantite
+        quantity: data.quantite
     };
     let transaction = db.transaction("moduleComponents", "readwrite");
     let objectStore = transaction.objectStore("moduleComponents");
