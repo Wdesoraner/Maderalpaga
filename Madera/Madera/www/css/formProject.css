@@ -4,8 +4,8 @@
     border: solid gray 1px
 }
 
-body{
-    overflow:hidden;
+body {
+    overflow: hidden;
 }
 
 li.active > a.hidden-xs {
@@ -147,8 +147,8 @@ li.active > a.visible-xs {
     overflow-y: auto;
 }
 
-.wip{
-    color:red
+.wip {
+    color: red
 }
 
 /* The Modal (background) */
@@ -188,3 +188,4 @@ li.active > a.visible-xs {
         text-decoration: none;
         cursor: pointer;
     }
+

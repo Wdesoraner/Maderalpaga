@@ -23,7 +23,7 @@ $(document).ready(function () {
     }
     $('[href="#step1"]').tab('show');
 
-
+    makeTree();
 });
 
 
@@ -156,7 +156,11 @@ function newProject() {
                 commercial: document.getElementById("idCommercial").value,
                 refProject: document.getElementById("projectReference").value,
                 date: document.getElementById("projectDate").value,
-                customer: document.getElementById("idCustomer").value
+                customer: document.getElementById("idCustomer").value,
+                addressProject: document.getElementById("customerAddress").value,
+                cityProject: document.getElementById("customerCity").value,
+                zipCodeProject: document.getElementById("customerZipCode").value,
+                amountProject: "0"
             }];
 
             // On crée un magasin d'objet pour la transaction
@@ -280,18 +284,17 @@ function updateProject() {
                 // On indique le succès de l'ajout de l'objet
                 // dans la base de données
                 var data = objectStoreRequest.result;
-
                 data.projectName = document.getElementById("projectName").value;
-                data.date = document.getElementById("dateProject").value;
-                data.commercial = document.getElementById("commercial").value;
+                data.addressProject = document.getElementById("customerAddress").value;
+                data.city = document.getElementById("customerCity").value;
+                data.zipCode = document.getElementById("customerZipCode").value;
 
-                var requestUpdate = objectStore.put(data);
+                var requestUpdate = objectStore.put(data, id);
                 requestUpdate.onerror = function (event) {
                     // Faire quelque chose avec l’erreur
                 };
                 requestUpdate.onsuccess = function (event) {
                     // Succès - la donnée est mise à jour !
-                    objectStore.delete(id);
                     alert("Projet mis à jour !");
                 };
             };
@@ -304,9 +307,9 @@ function updateProject() {
 function refProject() {
     let refProject;
     if (document.getElementById("customerCompany").value != "") {
-        refProject = document.getElementById("initialCommercial").value + '-' + document.getElementById("customerCompany").value.substring(0, 2) + '-' + document.getElementById("projectDate").value.split("-").join(""); 
+        refProject = document.getElementById("initialCommercial").value + '-' + document.getElementById("customerCompany").value.substring(0, 2) + '-' + document.getElementById("projectDate").value.split("-").join("");
     } else {
-        refProject = document.getElementById("initialCommercial").value + '-' + document.getElementById("customerFirstName").value.charAt(0) + document.getElementById("customerName").value.charAt(0) + '-' + document.getElementById("projectDate").value.split("-").join(""); 
+        refProject = document.getElementById("initialCommercial").value + '-' + document.getElementById("customerFirstName").value.charAt(0) + document.getElementById("customerName").value.charAt(0) + '-' + document.getElementById("projectDate").value.split("-").join("");
     }
     document.getElementById("projectReference").value = refProject.toUpperCase();
 }
@@ -349,3 +352,52 @@ function initCommercial() {
         }
     }
 }
+
+function changeSelector() {
+    var input = document.getElementById("pickedCustomer").value;
+    var select = document.getElementById("selectCustomer");
+    for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value == input) {
+            document.getElementById("idCustomer").value = select.options[i].id;
+            console.log(document.getElementById("idCustomer").value);
+            break;
+        }
+    }
+    optionSelected();
+};
+
+function makeTree() {
+    let tree = {
+        1: {
+            2: '',
+            3: {
+                6: '',
+                7: '',
+            },
+            4: '',
+            5: ''
+        }
+    };
+
+    let treeParams = {
+        1: { trad: 'JavaScript' },
+        2: { trad: 'jQuery' },
+        3: { trad: 'React' },
+        4: { trad: 'Angular' },
+        5: { trad: 'Vue.js' },
+        6: { trad: 'ReactJS' },
+        7: { trad: 'React Native' }
+    };
+
+    treeMaker(tree, {
+        id: 'tree',
+        treeParams: treeParams,
+        link_width: '4px',
+        link_color: '#2199e8',
+        card_click: function (element) {
+            console.log(element);
+        }
+        
+    });
+}
+
