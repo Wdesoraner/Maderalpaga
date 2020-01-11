@@ -37,7 +37,7 @@ $(document).ready(function () {
     let modulesQuotation = ["idModule", "idQuotation", "label", "length", "height", "section", "angle"];
 
     //let quotation = ["idQuotation", "name", "reference", "date", "collection", "fill", "finishIn", "finishOut", "cut", "idProject"];
-    let quotation = ["idQuotation","state","discount", "reference", "date", "idProject"];
+    let quotation = ["idQuotation", "state", "discount", "reference", "date", "idProject"];
 
     let taxes = ["idTaxe", "amount"];
 
@@ -483,34 +483,6 @@ function initTableUnite(db) {
 function initTableModules(db) {
     let newItems = [
         {
-            label: "Mur droit Chêne",
-            price: 5000,
-            specific: "Mur extérieur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 1,
-            margin: 15
-        },
-        {
-            label: "Mur droit Hêtre",
-            price: 5625,
-            specific: "Mur extérieur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 2,
-            margin: 15
-        },
-        {
-            label: "Mur droit Ipé",
-            price: 7500,
-            specific: "Mur extérieur",
-            isModel: true,
-            cut: "A-A",
-            idCollection: 3,
-            margin: 10
-        },
-
-        {
             label: "Porte Chêne",
             price: 200,
             specific: "Porte en chêne, 2 points",
@@ -538,6 +510,33 @@ function initTableModules(db) {
             margin: 10
         },
         {
+            label: "Mur droit Chêne",
+            price: 5000,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Mur droit Hêtre",
+            price: 5625,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Mur droit Ipé",
+            price: 7500,
+            specific: "Mur extérieur",
+            isModel: true,
+            cut: "A-A",
+            idCollection: 3,
+            margin: 10
+        },
+        {
             label: "Fenêtre PVC",
             price: 130,
             specific: "100*95",
@@ -560,6 +559,33 @@ function initTableModules(db) {
             price: 400,
             specific: "",
             isModel: true,
+            cut: "",
+            idCollection: 3,
+            margin: 15
+        },
+        {
+            label: "Ensemble finition Eco",
+            price: 0,
+            specific: "",
+            isModel: false,
+            cut: "",
+            idCollection: 1,
+            margin: 15
+        },
+        {
+            label: "Ensemble finition Normal",
+            price: 0,
+            specific: "",
+            isModel: false,
+            cut: "",
+            idCollection: 2,
+            margin: 15
+        },
+        {
+            label: "Ensemble finition Premium",
+            price: 0,
+            specific: "",
+            isModel: false,
             cut: "",
             idCollection: 3,
             margin: 15
@@ -603,7 +629,9 @@ function initTableTypeComponent(db) {
 }
 function initTableComponents(db) {
     let newItems = [
+
         {
+            idComponent: 1,
             refComposant: "HUI-VSL",
             label: "Vis Longue",
             price: 0.5,
@@ -613,6 +641,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 2,
             refComposant: "HUI-VSC",
             label: "Vis courte",
             price: 0.5,
@@ -622,6 +651,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 3,
             refComposant: "HUI-GP",
             label: "Gond porte",
             price: 2,
@@ -631,6 +661,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 4,
             refComposant: "HUI-POI",
             label: "Ensemble poignée",
             price: 15,
@@ -640,6 +671,7 @@ function initTableComponents(db) {
             idUnite: 1
         },
         {
+            idComponent: 5,
             refComposant: "ISO-LR",
             label: "Laine de roche",
             price: 7,
@@ -649,6 +681,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 6,
             refComposant: "ISO-LV",
             label: "Laine de verre",
             price: 6,
@@ -658,6 +691,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 7,
             refComposant: "MAT-BC",
             label: "Chêne",
             price: 40,
@@ -667,6 +701,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 8,
             refComposant: "MAT-BH",
             label: "Hêtre",
             price: 55,
@@ -676,6 +711,7 @@ function initTableComponents(db) {
             idUnite: 3
         },
         {
+            idComponent: 9,
             refComposant: "MAT-BI",
             label: "Ipé",
             price: 90,
@@ -684,7 +720,66 @@ function initTableComponents(db) {
             taxe: 3,
             idUnite: 3
         },
-
+        {
+            idComponent: 10,
+            refComposant: "MAT-PANOS",
+            label: "Panneau à ossature",
+            price: 20,
+            specific: "Remplissage gamme normal",
+            typeComponent: 2,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 11,
+            refComposant: "MAT-PO2",
+            label: "Poteaux-Poutre",
+            price: 40,
+            specific: "Remplissage gamme premium",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 12,
+            refComposant: "MAT-FEB",
+            label: "Finition ext. Bois",
+            price: 100,
+            specific: "Finition ext gamme normal",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 13,
+            refComposant: "MAT-FEC",
+            label: "Finition ext. Crépis",
+            price: 100,
+            specific: "Finition ext gamme premium",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 14,
+            refComposant: "MAT-FIP",
+            label: "Finition int. Platre",
+            price: 90,
+            specific: "Finition int. gamme normal",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
+        {
+            idComponent: 15,
+            refComposant: "MAT-FIB",
+            label: "Finition int. Bois",
+            price: 90,
+            specific: "Finition int. gamme premium",
+            typeComponent: 3,
+            taxe: 3,
+            idUnite: 3
+        },
     ]
 
     let transaction = db.transaction("components", "readwrite");
@@ -747,32 +842,62 @@ function initTableModuleComponents(db) {
         {
             idModule: 4,
             idComponent: 7,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 4,
             idComponent: 6,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 5,
             idComponent: 8,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 5,
             idComponent: 6,
-            quantity: 25
+            quantity: 0
         },
         {
             idModule: 6,
             idComponent: 9,
-            quantity: 30
+            quantity: 0
         },
         {
             idModule: 6,
             idComponent: 5,
-            quantity: 30
+            quantity: 0
+        },
+        {
+            idModule: 11,
+            idComponent: 10,
+            quantity: 0
+        },
+        {
+            idModule: 11,
+            idComponent: 12,
+            quantity: 0
+        },
+        {
+            idModule: 11,
+            idComponent: 14,
+            quantity: 0
+        },
+        {
+            idModule: 12,
+            idComponent: 11,
+            quantity: 0
+        },
+        {
+            idModule: 12,
+            idComponent: 13,
+            quantity: 0
+        },
+        {
+            idModule: 12,
+            idComponent: 15,
+            quantity: 0
         },
     ]
 
