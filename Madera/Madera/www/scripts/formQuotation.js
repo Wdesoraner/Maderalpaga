@@ -153,6 +153,7 @@ function addOptionCollectionQuotation(collectionLabel, idCollection) {
     let list = document.getElementById("quotationCollection");
     let opt = document.createElement("option");
     opt.id = idCollection;
+    opt.value = idCollection;
     opt.appendChild(document.createTextNode(collectionLabel));
     opt.onclick = function () { clickListItem(idCollection) };
     list.appendChild(opt);
@@ -334,8 +335,13 @@ function completeQuotation(listModules) {
                 let label;
                 listModules.forEach(function (module) {
 
-                    let elt = document.getElementById("selectModule" + module.moduleId);
-                    label = elt.options[elt.selectedIndex].text;
+                    try {
+                        let elt = document.getElementById("selectModule" + module.moduleId);
+                        label = elt.options[elt.selectedIndex].text;
+                    } catch (e) {
+                        label = $("#selectModule" + module.moduleId).text();
+                    }
+
 
                     if (label.includes("Mur")) {
                         totalHeight += parseFloat(module.moduleHeight);
@@ -369,7 +375,6 @@ function completeQuotation(listModules) {
 
     tableModuleComponent(listModules);
 }
-
 
 function getModulesList() {
     let itemsHTML = document.getElementsByClassName("item-collection");
@@ -748,7 +753,7 @@ function createNewModule(listModules, index) {
 
 
                 let moduleTemp = [{
-                    label: item.moduleLabel,
+                    label: item.moduleLabel + "(" + result.label + ")",
                     idParentModule: item.moduleParent == 0 ? 0 : item.moduleParent + count.result,
                     idCollection: item.moduleCollection,
                     idModule: item.moduleId + count.result,
@@ -868,10 +873,6 @@ function initExistingQuotation() {
             document.getElementById("quotationDate").value = result.date;
             document.getElementById("quotationDiscount").value = result.discount;
 
-            //document.getElementById("quotationCommercial").value = result.fill;
-            //document.getElementById("quotationFinishIn").value = result.finishIn;
-            //document.getElementById("quotationCut").value = result.cut;
-
             //optionSelected();
             //initCommercial();
 
@@ -888,15 +889,18 @@ function initExistingQuotation() {
             let result = event.target.result;
             console.log("liste des modules", result);
             result.forEach(function (module) {
-                transaction2 = db.transaction("modules", "readonly");
-                objectStore2 = transaction2.objectStore("modules");
 
-                if (module.label.includes("Ensemble finition")) {
 
-                    result.splice(result.indexOf(module), 1);
-                }
+                console.log("ce module : ", module);
+                //if (module.label.includes("Ensemble finition")) {
+
+                //    result.splice(result.indexOf(module), 1);
+                //}
 
                 console.log("liste des modules after", result);
+
+                transaction2 = db.transaction("modules", "readonly");
+                objectStore2 = transaction2.objectStore("modules");
 
                 let myIndex2 = objectStore2.index('idModule');
                 let request2 = myIndex2.getAll(module.idModule);
@@ -906,28 +910,26 @@ function initExistingQuotation() {
                 request2.onsuccess = function (event) {
                     let result2 = event.target.result[0];
                     if (result2.label.includes("Ensemble")) {
-                        idQuotationCollection = result2.idCollection;
-                        $("#quotationCollection option[id='" + result2.idCollection + "']").attr("selected", "selected");
+                        idQuotationCollection = parseInt(module.idCollection);
+                        console.log("idQuotationCollection", idQuotationCollection);
+
+                        $("#quotationCollection option[id='" + idQuotationCollection + "']").attr("selected", "selected");
+
                         result2 = null;
+                    } else {
+
+                        let choice = module.angle == true ? "Oui" : "Non"
+
+                        let tr = document.createElement("tr");
+                        let idTr = result2.idModule;
+
+                        tr.innerHTML = '<tr id="' + idTr + '"><td style="display: none"><input type="text" id="parentModule' + idTr + '" value="' + result2.idParentModule + '"></td><td> <input type="text" class="w-100 h-100 border border-0" id="selectModule' + idTr + '"readonly value="' + result2.label + '" /></td><td><select disabled class="w-100 h-100 border border-0" id="createdModuleCollection' + idTr + '"></select></td><td><input type="text" id="createdModuleLabel' + idTr + '" class="w-100 h-100 border border-0" value="' + result2.label + '"/></td><td><div class="row"><div class="col-6"> L : <input type="number" id="createdModuleLength' + idTr + '" class="w-50 h-100 border border-0" value="' + module.length + '" />m </div><div class="col-6"> H : <input type="number" id="createdModuleHeigth' + idTr + '" class="w-50 h-100 border border-0" value="' + module.height + '" />m </div></div></td> <td><input id="selectAngle' + idTr + '" class="w-100 h-100 border border-0" value="' + choice + '"/></td> <td><input type="number" id="quantityModule' + idTr + '" class="h-100 border border-0" value="1" /></td>';
+
+                        tr.classList.add('item-collection');
+                        tr.id = idTr;
+
+                        document.getElementById("table-collection").appendChild(tr);
                     }
-                    console.log("idQuotationCollection", idQuotationCollection);
-
-
-                    console.log("result2", result2);
-
-                    let choice = module.angle == true ? "Oui" : "Non"
-
-                    let tr = document.createElement("tr");
-                    let idTr = result2.idModule;
-
-                    tr.innerHTML = '<tr id="' + idTr + '"><td style="display: none"><input type="text" id="parentModule' + idTr + '" value="' + result2.idParentModule + '"></td><td> <input type="text" class="w-100 h-100 border border-0" id="createdModule' + idTr + '"readonly value="' + result2.label + '" /></td><td><select disabled class="w-100 h-100 border border-0" id="createdModuleCollection' + idTr + '"></select></td><td><input type="text" id="createdModuleLabel' + idTr + '" class="w-100 h-100 border border-0" value="' + result2.label + '"/></td><td><div class="row"><div class="col-6"> L : <input type="number" id="createdModuleLength' + idTr + '" class="w-50 h-100 border border-0" value="' + module.length + '" />m </div><div class="col-6"> H : <input type="number" id="createdModuleHeigth' + idTr + '" class="w-50 h-100 border border-0" value="' + module.height + '" />m </div></div></td> <td><input id="selectAngle' + idTr + '" class="w-100 h-100 border border-0" value="' + choice + '"/></td> <td><input type="number" id="quantityModule' + idTr + '" class="h-100 border border-0" value="1" /></td>';
-
-                    tr.classList.add('item-collection');
-                    tr.id = idTr;
-
-                    document.getElementById("table-collection").appendChild(tr);
-
-                    $("#selectAngle" + idTr).value = module.angle;
                 }
 
             });
