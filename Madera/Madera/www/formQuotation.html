@@ -33,10 +33,10 @@
                     <div class="navbar-inner">
                         <ul class="nav nav-tabs">
                             <!--<li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Client</a></li>-->
-                            <li class="nav-items"><a href="#step1" data-toggle="tab" data-step="1" class="nav-link">Informations Devis</a></li>
-                            <li class="nav-items"><a href="#step2" data-toggle="tab" data-step="2" class="nav-link">Modules</a></li>
-                            <li class="nav-items"><a href="#step3" data-toggle="tab" data-step="3" class="nav-link">Devis</a></li>
-                            <li class="nav-items"><a href="#step4" data-toggle="tab" data-step="4" class="nav-link">Hierarchie des composants</a></li>
+                            <li class="nav-items"><a href="#step1" data-toggle="tab" style="color:rgba(100, 155, 63, 1)" data-step="1" class="nav-link">Informations Devis</a></li>
+                            <li class="nav-items"><a href="#step2" data-toggle="tab" style="color:rgba(100, 155, 63, 1)" data-step="2" class="nav-link">Modules</a></li>
+                            <li class="nav-items"><a href="#step3" data-toggle="tab" style="color:rgba(100, 155, 63, 1)" data-step="3" class="nav-link">Devis</a></li>
+                            <li class="nav-items"><a href="#step4" data-toggle="tab" style="color:rgba(100, 155, 63, 1)" data-step="4" class="nav-link">Hierarchie des composants</a></li>
                         </ul>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                         <input type="hidden" id="hiddenId">
                         <div class="well">
                             <div class="well text-right">
-                                <button class="btn btn-success rounded rounded-circle" id="add-item-collection"><div class="font-weight-bold">+</div></button>
+                                <button class="btn btn-success rounded-circle" style="width:40px; height:40px; margin-bottom:5px; color:white" id="add-item-collection"><div class="font-weight-bold">+</div></button>
                             </div>
 
                             <table id="table-collection" class="table table-bordered">
@@ -188,10 +188,14 @@
                     <div class="tab-pane fade" id="step3">
                         <div class="well p-5">
 
-                            <div id="previewQuotation">
+                            <div id="previewQuotation" style="margin-left:100px; margin-right:100px">
                                 <div class="row">
-                                    <div class="col-6 text-left font-weight-bold">Madera</div>
-                                    <div class="col-6 text-center font-weight-bolder">DEVIS</div>
+                                   <!-- <div class="col-6 text-left font-weight-bold">Madera</div>-->
+                                    <div>
+                                        <img class="col-6 " crossorigin="anonymous" style="float:left; width:650px; height:auto" src="images/logo.png" alt="Logo madera">
+                                    </div>
+                                    
+                                    <div class="col-6 text-right font-weight-bolder" style="font-size:30px">DEVIS</div>
                                 </div>
 
                                 <div class="pt-3">
@@ -304,7 +308,7 @@
                     <div class="tab-pane fade" id="step4">
 
                         <div id="tree">
-                            <object style="width:110%;height:95vh;" type="text/html" data="tree.html"></object>
+                            <object style="width:100%;height:70vh" type="text/html" data="tree.html"></object>
                         </div>
 
                     </div>

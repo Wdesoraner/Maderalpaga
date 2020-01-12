@@ -421,7 +421,7 @@
     width: 400%;
     height: 310px;
     /* multiple background */
-    background: url(../images/Carousel/maison-modulaire-bois-1.jpg) 0 0 no-repeat, url(../images/Carousel/maison-modulaire-bois-2.jpg) 640px 0 no-repeat, url(../images/Carousel/maison-modulaire-bois-6609.jpg) 1280px 0 no-repeat, url(../images/Carousel/maison-modulaire-bois-6609.jpg) 1920px 0 no-repeat;
+    background: url(../images/Carousel/maison-modulaire-bois-1.jpg) 0 0 no-repeat, url(../images/Carousel/maison-modulaire-bois-2.jpg) 640px 0 no-repeat, url(../images/Carousel/maison-modulaire-bois-6609.jpg) 1280px 0 no-repeat, url(../images/Carousel/maison-modulaire-bois-4.jpg) 1920px 0 no-repeat;
     transition: background 1s;
 }
 

@@ -1,7 +1,7 @@
 ﻿body {
 }
 
-tbody>tr:hover{
-    background-color : lightblue;
-    user-select:none;
+tbody > tr:hover {
+    background-color: rgba(100, 155, 63, .6);
+    user-select: none;
 }

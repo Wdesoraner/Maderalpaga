@@ -55,6 +55,7 @@ function addRow(value, key) {
                 newRow.innerHTML += "<td>" + value.reference + "</td>";
                 newRow.innerHTML += "<td>" + value.date + "</td>";
                 newRow.innerHTML += "<td>" + value.collection + "</td>";
+                newRow.innerHTML += "<td>" + value.state + "</td>";
                 newRow.onclick = function () { clickQuotationRow(newRow.id) };
                 table.appendChild(newRow);
             }
