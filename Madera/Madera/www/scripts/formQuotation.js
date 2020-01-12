@@ -152,7 +152,7 @@ function addOptionCollectionQuotation(collectionLabel, idCollection) {
 }
 
 function getRowModule(idTr, idParent = 0) {
-    return '<tr id="' + idTr + '" class="item-collection"><td style="display:none"><input type="text" id="parentModule' + idTr + '" value="' + idParent + '"></td><td><select class="w-100 h-100 border border-0" id="selectModule' + idTr + '" onchange="onChangeModule(' + idTr + ')"></select></td><td><select disabled class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" id="labelModule' + idTr + '" class="w-100 h-100 border border-0" /></td><td> <div class="row"><div class="col-6"> L : <input type="number" id="lengthModule' + idTr + '" class="w-50 h-100 border border-0" />m </div><div class="col-6"> H : <input type="number" id="heightModule' + idTr + '" class="w-50 h-100 border border-0" />m </div></div></td><td><select id="selectAngle' + idTr + '" class="w-100 h-100 border border-0"><option></option><option value=true>Oui</option><option value=false>Non</option></select></td><td><input type="number" id="quantityModule' + idTr + '" class="h-100 border border-0" value="1"/></td><td><button class="btn btn-success rounded rounded-circle add-child-item" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
+    return '<tr id="' + idTr + '" class="item-collection"><td style="display:none"><input type="text" id="parentModule' + idTr + '" value="' + idParent + '"></td><td><select class="w-100 h-100 border border-0" id="selectModule' + idTr + '" onchange="onChangeModule(' + idTr + ')"></select></td><td><select disabled class="w-100 h-100 border border-0" id="selectCollection' + idTr + '"></select></td > <td><input type="text" id="labelModule' + idTr + '" class="w-100 h-100 border border-0" /></td><td> <div class="row"><div class="col-6"> L : <input type="number" id="lengthModule' + idTr + '" class="w-50 h-100 border border-0" />m </div><div class="col-6"> H : <input type="number" id="heightModule' + idTr + '" class="w-50 h-100 border border-0" />m </div></div></td><td><select id="selectAngle' + idTr + '" class="w-100 h-100 border border-0"><option></option><option value=true>Oui</option><option value=false>Non</option></select></td><td><input type="number" id="quantityModule' + idTr + '" class="h-100 border border-0" value="1"/></td><td><button class="btn btn-success rounded rounded-circle add-child-item"  style="width:40px; height:40px; margin-bottom:5px; color:white" id="btnAdd' + idTr + '""><div class="font-weight-bold">+</div></button><button class="btn btn-danger rounded rounded-circle del-item-collection"  style="width:40px; height:40px; margin-bottom:5px; color:white; margin-left: 5px" id="btnDel' + idTr + '><div class="font-weight-bold">-</div></button></td></tr>'
     // onclick="addChild(' + idTr + ')
     //"onclick="delItem(' + idTr + ')"
 }
@@ -540,7 +540,7 @@ function generatePDF() {
     var HTML_Width = $("#previewQuotation").width();
     var HTML_Height = $("#previewQuotation").height();
 
-    var top_left_margin = 15;
+    var top_left_margin = 50;
     var PDF_Width = HTML_Width + (top_left_margin * 2);
     var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
     var canvas_image_width = HTML_Width;
@@ -548,7 +548,7 @@ function generatePDF() {
 
     var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
 
-    html2canvas($("#previewQuotation")[0], { allowTaint: true }).then(function (canvas) {
+    html2canvas($("#previewQuotation")[0], { allowTaint: true, useCORS: true }).then(function (canvas) {
         canvas.getContext('2d');
 
         //console.log(canvas.height + "" + canvas.width);

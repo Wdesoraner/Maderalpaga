@@ -60,7 +60,6 @@ function addCustomer(db) {
             initCustomerList();
         };
     }
-    //console.log("wallah");
     //let customer = document.getElementById("inputName");
     //addListCustomer(customer.value);
 }
