@@ -50,6 +50,9 @@ var listModules = [];
 
 var currentQuotation;
 
+var count;
+
+
 $(document).ready(function () {
     document.getElementById("hiddenId").value = 0;
 
@@ -319,9 +322,8 @@ function completeQuotation(listModules) {
 
         request.onsuccess = function (event) {
             let idCollection = $("#quotationCollection option:selected").attr("id");
-
+            countWall = 0
             console.log("idCollection : ", idCollection);
-            let count = 0;
 
             if (idCollection != 0) {
 
@@ -338,8 +340,8 @@ function completeQuotation(listModules) {
                     if (label.includes("Mur")) {
                         totalHeight += parseFloat(module.moduleHeight);
                         totalLength += parseFloat(module.moduleLength);
-                        count++;
-                        console.log("count", count);
+                        countWall++;
+                        console.log("countWall", countWall);
                         console.log("totalHeight : ", totalHeight);
                         console.log("totalLength : ", totalLength);
                     }
@@ -475,7 +477,11 @@ function writeRow(tabModule, index, id, listComponent, structureTree, dataTree) 
                     let quantity = component.quantity;
 
                     if (quantity == 0 || isNaN(quantity)) {
-                        quantity = item.moduleLength * item.moduleHeight;
+                        if (compo.specific.includes("gamme")) {
+                            quantity = (item.moduleLength * item.moduleHeight) / countWall;
+                        } else {
+                            quantity = item.moduleLength * item.moduleHeight;
+                        }
                     }
 
                     let name = compo.label + " (" + compo.refComposant + ")"
