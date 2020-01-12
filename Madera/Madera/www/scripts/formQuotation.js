@@ -46,6 +46,9 @@
     }
 }
 
+var listModules = [];
+
+var currentQuotation;
 
 $(document).ready(function () {
     document.getElementById("hiddenId").value = 0;
@@ -68,9 +71,10 @@ $(document).ready(function () {
     })
 
     $('#btnSaveQuotation').click(function () {
-        generatePDF();
+        console.log("liste globale", listModules)
+        //generatePDF();
         if (!sessionStorage.getItem("quotation")) {
-            // addQuotation(db);
+            addQuotation(db);
         }
     })
 
@@ -89,11 +93,11 @@ $(document).ready(function () {
     $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
         var className = $('#step3').attr('class');
         if (className.includes('active')) {
+            console.clear();
             resetQuotation();
 
-            let listModules = getModulesList();
-            console.log("listModules : ", listModules);
-            console.clear();
+            listModules = getModulesList();
+            //console.log("listModules : ", listModules);
             completeQuotation(listModules);
         }
     })
@@ -222,6 +226,8 @@ function resetQuotation() {
     document.getElementById('customerAddressToInsert').innerHTML = "";
     document.getElementById('customerPostalToInsert').innerHTML = "";
     $(".item-quotation").remove();
+    listModules = [];
+    console.log("listModules after reset: ", listModules);
 
 
 }
@@ -311,43 +317,51 @@ function completeQuotation(listModules) {
         };
 
         request.onsuccess = function (event) {
-            var result = event.target.result;
+            let idCollection = $("#quotationCollection option:selected").attr("id");
 
-            let totalHeight = 0;
-            let totalLength = 0;
-
-            listModules.forEach(function (module) {
-                var elt = document.getElementById("selectModule");
-
-                let label = elt.options[module.moduleModel].text;
-
-                console.log("label select : ", label);
+            console.log("idCollection : ", idCollection);
 
 
-                if (true) {
+            if (idCollection != 0) {
 
-                }
-            })
+                let result = event.target.result;
 
-            let newModule = {
-                moduleParent: 0,
-                moduleId: listModules.length + 1,
-                moduleModel: result,
-                moduleCollection: parseInt($("#quotationCollection" + id + " option:selected").attr("id")),
-                moduleLabel: searchedLabel,
-                moduleLength: 0,
-                moduleHeight: 0,
-                moduleAngle: false,
-            };
+                let totalHeight = 0;
+                let totalLength = 0;
+                let label;
+                listModules.forEach(function (module) {
 
-            listModules.push(newModule);
+                    let elt = document.getElementById("selectModule" + module.moduleId);
+                    label = elt.options[elt.selectedIndex].text;
 
+                    if (label.includes("Mur")) {
+                        totalHeight += parseFloat(module.moduleHeight);
+                        totalLength += parseFloat(module.moduleLength);
+
+                        console.log("totalHeight : ", totalHeight);
+                        console.log("totalLength : ", totalLength);
+                    }
+                })
+
+                let newModule = {
+                    moduleParent: 0,
+                    moduleId: listModules.length + 1,
+                    moduleModel: result,
+                    moduleCollection: parseInt(idCollection),
+                    moduleLabel: searchedLabel,
+                    moduleLength: parseFloat(totalHeight),
+                    moduleHeight: parseFloat(totalLength),
+                    moduleAngle: false,
+                };
+
+                listModules.push(newModule);
+            }
             db.close();
         }
     }
 
-    let tableToComplete = $("#quotationModules");
-    let i = 1;
+    //let tableToComplete = $("#quotationModules");
+    //let i = 1;
 
     tableModuleComponent(listModules);
 }
@@ -378,7 +392,7 @@ function getModulesList() {
             listItems.push(newModule);
         }
     }
-    //console.log(listItems);
+    console.log("listItems", listItems);
     return listItems;
 }
 
@@ -404,6 +418,22 @@ function writeRow(tabModule, index, id, listComponent) {
         let item = tabModule[index];
         DBOpenRequest = window.indexedDB.open("maderaDB");
         DBOpenRequest.onsuccess = function (event) {
+            console.log("item consult", item)
+
+            if (isNaN(item.moduleModel)) {
+                item = {
+                    moduleParent: item.moduleParent,
+                    moduleId: item.moduleId,
+                    moduleModel: item.moduleId,
+                    moduleCollection: "",
+                    moduleLabel: $("#createdModuleLabel" + item.moduleId).val(),
+                    moduleLength: parseFloat($("#createdModuleLength" + item.moduleId).val()),
+                    moduleHeight: parseFloat($("#createdModuleHeigth" + item.moduleId).val()),
+                    moduleAngle: $("#selectAngle" + item.moduleId).text() == "Oui" ? true : false,
+                }
+                console.log("item reconstruit", item);
+            }
+
             let searchId = id;
 
             let db = event.target.result;
@@ -430,7 +460,7 @@ function writeRow(tabModule, index, id, listComponent) {
                     console.log("compo : ", compo);
                     let quantity = component.quantity;
 
-                    if (quantity == 0) {
+                    if (quantity == 0 || isNaN(quantity)) {
                         quantity = item.moduleLength * item.moduleHeight;
                     }
                     let name = compo.label + " (" + compo.refComposant + ")"
@@ -491,12 +521,17 @@ function calculatePriceTotal() {
         i++;
 
     }
+    let discount = $("#quotationDiscount").val()
+    let newTotal = total * (1 - discount / 100);
+    let tva = newTotal * 0.2;
 
-    let tva = total * 0.2;
+    console.log("discount :", discount);
+    console.log("total :", total);
+    console.log("newTotal:", newTotal);
 
-    $("#totalHT").text(total.toFixed(2) + "€");
+    $("#totalHT").text(newTotal.toFixed(2) + "€");
     $("#tva20").text(tva.toFixed(2) + "€");
-    $("#totalTTC").text((total + tva).toFixed(2) + "€");
+    $("#totalTTC").text((newTotal + tva).toFixed(2) + "€");
 }
 
 function getRowModuleQuotation(id, quantity = 1, name, unitPrice = 0, totalPrice = 0) {
@@ -569,7 +604,6 @@ function initQuotationList(db) {
     };
 }
 
-
 function initModuleList(db, idTr) {
     let transaction = db.transaction("modules", "readwrite");
 
@@ -592,7 +626,6 @@ function initModuleList(db, idTr) {
         }
     };
 }
-
 
 function initCollectionList(db, idTr) {
     let transaction = db.transaction("collection", "readwrite");
@@ -618,53 +651,194 @@ function initCollectionList(db, idTr) {
 }
 
 function addQuotation(db) {
+    console.clear();
 
-    var newItem = [{
-        idProject: sessionStorage.getItem("idProject"),
-        name: document.getElementById("quotationName").value,
-        reference: document.getElementById("quotationReference").value,
-        date: document.getElementById("quotationDate").value,
-        collection: document.getElementById("quotationCollection").value,
-        fill: document.getElementById("quotationFillType").value,
-        finishOut: document.getElementById("quotationFinishOut").value,
-        finishIn: document.getElementById("quotationFinishIn").value,
-        cut: document.getElementById("quotationCut").value
-    }];
+    console.log("CREATION DEVIS");
 
-    console.log(newItem);
+    DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
 
-    let transaction = db.transaction("quotation", "readwrite");
+        let transactionTemp = db.transaction("quotation", "readwrite");
+        let objectStoreTemp = transactionTemp.objectStore("quotation");
 
-    // On indique le succès de la transaction
-    transaction.oncomplete = function (event) {
-        console.log("Transaction terminée : modification finie");
-    };
+        let count = objectStoreTemp.count();
 
-    transaction.onerror = function (event) {
-        console.log("Transaction non-ouverte à cause d'une erreur.Les doublons ne sont pas autorisés");
-    };
+        count.onsuccess = function (event) {
 
-    // On crée un magasin d'objet pour la transaction
-    let objectStore = transaction.objectStore("quotation");
 
-    // On ajoute l'objet newItem au magasin d'objets
-    let objectStoreRequest = objectStore.add(newItem[0]);
+            let newQuotation = [{
+                idQuotation: count.result + 1,
+                idProject: sessionStorage.getItem("idProject"),
+                reference: document.getElementById("quotationReference").value,
+                date: document.getElementById("quotationDate").value,
+                discount: document.getElementById("quotationDiscount").value
+            }];
 
-    objectStoreRequest.onsuccess = function (event) {
-        // On indique le succès de l'ajout de l'objet
-        // dans la base de données
-        console.log("Un nouvel élément a été ajouté dans la base de données");
-    };
+            currentQuotation = newQuotation[0];
+            console.log("currentQuotation : ", currentQuotation);
 
+            let transaction = db.transaction("quotation", "readwrite");
+
+            // On indique le succès de la transaction
+            transaction.oncomplete = function (event) {
+                console.log("Transaction terminée : modification finie");
+            };
+
+            transaction.onerror = function (event) {
+                console.log("Transaction non-ouverte à cause d'une erreur.Les doublons ne sont pas autorisés");
+            };
+
+            // On crée un magasin d'objet pour la transaction
+            let objectStore = transaction.objectStore("quotation");
+
+            // On ajoute l'objet newItem au magasin d'objets
+
+            let objectStoreRequest = objectStore.add(newQuotation[0]);
+
+            objectStoreRequest.onsuccess = function (event) {
+                // On indique le succès de l'ajout de l'objet
+                // dans la base de données
+                console.log("Un nouvel élément a été ajouté dans la base de données");
+            };
+
+            createNewModule(listModules, 0)
+        }
+    }
+}
+
+function createNewModule(listModules, index) {
+    console.log("CREATION MODULES");
+
+    if (listModules.length > index) {
+        console.log("index:", index);
+        let item = listModules[index];
+        console.log("item:", item);
+        DBOpenRequest = window.indexedDB.open("maderaDB");
+        DBOpenRequest.onsuccess = function (event) {
+
+            let db = event.target.result;
+            let transaction = db.transaction("modules", "readwrite");
+            let objectStore = transaction.objectStore("modules");
+
+            let count = objectStore.count();
+            console.log("count : ", count);
+
+            var getRequest = objectStore.get(item.moduleModel);
+
+            console.log("item.moduleModel : ", item.moduleModel);
+            console.log("getRequest : ", getRequest);
+
+            getRequest.onsuccess = function (event) {
+                let result = event.target.result;
+                console.log("result : ", result);
+
+
+                let moduleTemp = [{
+                    label: item.moduleLabel,
+                    idParentModule: item.moduleParent == 0 ? 0 : item.moduleParent + count.result,
+                    idCollection: item.moduleCollection,
+                    idModule: item.moduleId + count.result,
+                    price: parseFloat($("#totalPrice" + item.moduleId).text().replace(" €", "")),
+                    specific: "",
+                    isModel: false,
+                    margin: result.margin,
+                    cut: result.cut,
+                }]
+                console.log("moduleTemp : ", moduleTemp);
+
+                objectStoreRequest = objectStore.add(moduleTemp[0]);
+
+                createNewLinkModuleComponents(moduleTemp[0], item.moduleModel);
+
+                createNewLinkQuotationModules(moduleTemp[0], item);
+
+                createNewModule(listModules, index + 1);
+            }
+        }
+    }
+}
+
+function createNewLinkModuleComponents(module, model) {
+    console.log("CREATION MODULE/COMPOSANT");
+
+    DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+
+        let db = event.target.result;
+        let transaction = db.transaction("moduleComponents", "readwrite");
+        let objectStore = transaction.objectStore("moduleComponents");
+
+        var myIndex = objectStore.index('idModule');
+        var request = myIndex.getAll(model);
+
+        console.log("request", request);
+
+        request.onsuccess = function (event) {
+            let cursor = event.target.result;
+            console.log('cursor : ', cursor)
+            if (cursor) {
+                cursor.forEach(function (curs) {
+                    let newLink = [{
+                        idModule: module.idModule,
+                        idComponent: curs.idComponent,
+                        quantity: curs.quantity,
+                    }]
+                    console.log("new link compo/mod", newLink[0]);
+                    objectStoreRequest = objectStore.add(newLink[0]);
+                })
+
+            }
+        }
+
+    }
+}
+
+function createNewLinkQuotationModules(module, moduleItem) {
+    console.log("CREATION DEVIS/MODULE");
+
+    DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
+
+        let db = event.target.result;
+        let transaction = db.transaction("modulesQuotation", "readwrite");
+        let objectStore = transaction.objectStore("modulesQuotation");
+
+        //var myIndex = objectStore.index('idModule');
+        //var request = myIndex.getAll(model);
+
+        console.log("module : ", module);
+        console.log("moduleItem : ", moduleItem);
+        console.log("quotation : ", currentQuotation);
+
+
+        let newLink = [{
+            label: module.label,
+            idModule: module.idModule,
+            idQuotation: currentQuotation.idQuotation,
+            length: parseFloat(moduleItem.moduleLength),
+            height: parseFloat(moduleItem.moduleHeight),
+            angle: moduleItem.moduleAngle == "true" ? true : false,
+            section: "",
+        }];
+        console.log("new Link quo : ", newLink);
+        objectStoreRequest = objectStore.add(newLink[0]);
+
+
+
+    }
 }
 
 function initExistingQuotation() {
+    $(".item-collection").remove();
+    $("#add-item-collection").remove();
+
+    let idQuotationCollection;
+
     var idQuotation = parseInt(sessionStorage.getItem("quotation"));
-    let db;
     let DBOpenRequest = window.indexedDB.open("maderaDB");
 
     DBOpenRequest.onsuccess = function (event) {
-        db = event.target.result;
+        let db = event.target.result;
         let transaction = db.transaction("quotation", "readonly");
         let objectStore = transaction.objectStore("quotation");
         let request = objectStore.get(idQuotation);
@@ -678,14 +852,71 @@ function initExistingQuotation() {
             document.getElementById("quotationName").value = "Devis n°" + idQuotation;
             document.getElementById("quotationReference").value = result.reference;
             document.getElementById("quotationDate").value = result.date;
+            document.getElementById("quotationDiscount").value = result.discount;
 
-            //document.getElementById("quotationFillType").value = result.fill;
-            //document.getElementById("quotationFinishOut").value = result.finishOut;
+            //document.getElementById("quotationCommercial").value = result.fill;
             //document.getElementById("quotationFinishIn").value = result.finishIn;
             //document.getElementById("quotationCut").value = result.cut;
 
             //optionSelected();
             //initCommercial();
+
+        }
+
+        transaction = db.transaction("modulesQuotation", "readonly");
+        objectStore = transaction.objectStore("modulesQuotation");
+
+
+        var myIndex = objectStore.index('idQuotation');
+        request = myIndex.getAll(idQuotation);
+
+        request.onsuccess = function (event) {
+            let result = event.target.result;
+            console.log("liste des modules", result);
+            result.forEach(function (module) {
+                transaction2 = db.transaction("modules", "readonly");
+                objectStore2 = transaction2.objectStore("modules");
+
+                if (module.label.includes("Ensemble finition")) {
+
+                    result.splice(result.indexOf(module), 1);
+                }
+
+                console.log("liste des modules after", result);
+
+                let myIndex2 = objectStore2.index('idModule');
+                let request2 = myIndex2.getAll(module.idModule);
+
+                console.log("request2", request2);
+
+                request2.onsuccess = function (event) {
+                    let result2 = event.target.result[0];
+                    if (result2.label.includes("Ensemble")) {
+                        idQuotationCollection = result2.idCollection;
+                        $("#quotationCollection option[id='" + result2.idCollection + "']").attr("selected", "selected");
+                        result2 = null;
+                    }
+                    console.log("idQuotationCollection", idQuotationCollection);
+
+
+                    console.log("result2", result2);
+
+                    let choice = module.angle == true ? "Oui" : "Non"
+
+                    let tr = document.createElement("tr");
+                    let idTr = result2.idModule;
+
+                    tr.innerHTML = '<tr id="' + idTr + '"><td style="display: none"><input type="text" id="parentModule' + idTr + '" value="' + result2.idParentModule + '"></td><td> <input type="text" class="w-100 h-100 border border-0" id="createdModule' + idTr + '"readonly value="' + result2.label + '" /></td><td><select disabled class="w-100 h-100 border border-0" id="createdModuleCollection' + idTr + '"></select></td><td><input type="text" id="createdModuleLabel' + idTr + '" class="w-100 h-100 border border-0" value="' + result2.label + '"/></td><td><div class="row"><div class="col-6"> L : <input type="number" id="createdModuleLength' + idTr + '" class="w-50 h-100 border border-0" value="' + module.length + '" />m </div><div class="col-6"> H : <input type="number" id="createdModuleHeigth' + idTr + '" class="w-50 h-100 border border-0" value="' + module.height + '" />m </div></div></td> <td><input id="selectAngle' + idTr + '" class="w-100 h-100 border border-0" value="' + choice + '"/></td> <td><input type="number" id="quantityModule' + idTr + '" class="h-100 border border-0" value="1" /></td>';
+
+                    tr.classList.add('item-collection');
+                    tr.id = idTr;
+
+                    document.getElementById("table-collection").appendChild(tr);
+
+                    $("#selectAngle" + idTr).value = module.angle;
+                }
+
+            });
         }
 
     }
