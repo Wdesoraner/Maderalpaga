@@ -11,6 +11,7 @@
     <script src="scripts/Bootstrap/jquery-3.0.0.min.js"></script>
     <link href="css/partialView.css" rel="stylesheet" />
     <script src="scripts/Bootstrap/handlebars.min.js"></script>
+    <script src="scripts/dataManager.js"></script>
     <title></title>
 </head>
 <body>
@@ -30,6 +31,7 @@
                 <li><a href="#" disabled="disabled"><span class="fa fa-database"></span>Service des stocks</a></li>
                 <li><a href="#" disabled="disabled"><span class="fa fa-industry"></span>Service des productions</a></li>
             </ul>
+            <a a href="#" id="synchro" class="m-2" onclick="exportData()" style="bottom:40px;position:absolute"><span class="fa fa-undo"></span>Synchroniser</a>
             <a a href="#" id="deconnect" class="m-2" style="bottom:5px;position:absolute"><span class="fa fa-times-circle"></span>Déconnexion</a>
         </div>
         <div class="col-sm-9">

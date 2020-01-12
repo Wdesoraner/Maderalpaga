@@ -81,7 +81,7 @@ function getData() {
                         addModule(database, row.module);
                         break;
                     case "gamme":
-                        addCollection(database, row.collection);
+                        addCollection(database, row.gamme);
                         break;
                     case "unite":
                         addUnite(database, row.unite);
@@ -93,7 +93,7 @@ function getData() {
                         addComponents(database, row.composant);
                         break;
                     case "type_composant":
-                        addTypeComponent(database, row.Type_composant);
+                        addTypeComponent(database, row.type_composant);
                         break;
                     case "taxe":
                         addTaxes(database, row.TVA);
@@ -118,8 +118,10 @@ function addCustomer(db, data) {
         city: data.ville
     };
     let transaction = db.transaction("customer", "readwrite");
+    console.log(transaction);
     let objectStore = transaction.objectStore("customer");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idClient));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idClient));
+    console.log(objectStoreRequest);
 }
 
 function addProject(db, data) {
@@ -138,7 +140,13 @@ function addProject(db, data) {
     };
     let transaction = db.transaction("project", "readwrite");
     let objectStore = transaction.objectStore("project");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idProjet));
+    transaction.onsuccess = function () {
+        console.log("Import réussi !");
+    }
+    transaction.onerror = function (err) {
+        console.log(err);
+    }
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idProjet));
 }
 
 function addQuotation(db, data) {
@@ -148,13 +156,19 @@ function addQuotation(db, data) {
         idQuotation: data.idDevis,
         reference: data.referenceDevis,
         date: data.dateDevis,
-        idProject: date.idProjet,
+        idProject: data.idProjet,
         state: data.etat,
         discount: data.remise
     };
     let transaction = db.transaction("quotation", "readwrite");
     let objectStore = transaction.objectStore("quotation");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idDevis));
+    transaction.onsuccess = function () {
+        console.log("Import réussi !");
+    }
+    transaction.onerror = function (err) {
+        console.log(err);
+    }
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idDevis));
 }
 
 function addModuleQuotation(db, data) {
@@ -170,7 +184,13 @@ function addModuleQuotation(db, data) {
     };
     let transaction = db.transaction("modulesQuotation", "readwrite");
     let objectStore = transaction.objectStore("modulesQuotation");
-    objectStoreRequest = objectStore.add(newItem);
+    transaction.onsuccess = function () {
+        console.log("Import réussi !");
+    }
+    transaction.onerror = function (err) {
+        console.log(err);
+    }
+    let objectStoreRequest = objectStore.put(newItem);
 }
 
 function addState(db, data) {
@@ -179,9 +199,12 @@ function addState(db, data) {
         idState: data.idEtat,
         label: data.libelle
     };
-    let transaction = db.transaction("modulesQuotation", "readwrite");
-    let objectStore = transaction.objectStore("modulesQuotation");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idEtat));
+    let transaction = db.transaction("state", "readwrite");
+    let objectStore = transaction.objectStore("state");
+    transaction.onsuccess = function () {
+        console.log("Import réussi !");
+    }
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idEtat));
 }
 
 function addUserProject(db, data) {
@@ -192,7 +215,10 @@ function addUserProject(db, data) {
     };
     let transaction = db.transaction("userProject", "readwrite");
     let objectStore = transaction.objectStore("userProject");
-    objectStoreRequest = objectStore.add(newItem);
+    transaction.onsuccess = function () {
+        console.log("Import réussi !");
+    }
+    let objectStoreRequest = objectStore.put(newItem);
 }
 
 function addUser(db, data) {
@@ -208,7 +234,7 @@ function addUser(db, data) {
     };
     let transaction = db.transaction("user", "readwrite");
     let objectStore = transaction.objectStore("user");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idUtilisateur));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idUtilisateur));
 }
 
 function addDepartment(db, data) {
@@ -221,7 +247,7 @@ function addDepartment(db, data) {
     };
     let transaction = db.transaction("shop", "readwrite");
     let objectStore = transaction.objectStore("shop");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idMagasin));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idMagasin));
 }
 
 function addModule(db, data) {
@@ -239,7 +265,7 @@ function addModule(db, data) {
     };
     let transaction = db.transaction("modules", "readwrite");
     let objectStore = transaction.objectStore("modules");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idModule));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idModule));
 }
 
 function addCollection(db, data) {
@@ -251,7 +277,7 @@ function addCollection(db, data) {
     };
     let transaction = db.transaction("collection", "readwrite");
     let objectStore = transaction.objectStore("collection");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idGamme));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idGamme));
 }
 
 function addUnite(db, data) {
@@ -262,7 +288,7 @@ function addUnite(db, data) {
     };
     let transaction = db.transaction("unite", "readwrite");
     let objectStore = transaction.objectStore("unite");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idUnite));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idUnite));
 }
 
 function addModuleComponents(db, data) {
@@ -274,7 +300,7 @@ function addModuleComponents(db, data) {
     };
     let transaction = db.transaction("moduleComponents", "readwrite");
     let objectStore = transaction.objectStore("moduleComponents");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idModule));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idModule));
 }
 
 function addComponents(db, data) {
@@ -291,7 +317,7 @@ function addComponents(db, data) {
     };
     let transaction = db.transaction("components", "readwrite");
     let objectStore = transaction.objectStore("components");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idComposant));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idComposant));
 }
 
 function addTypeComponent(db, data) {
@@ -303,7 +329,7 @@ function addTypeComponent(db, data) {
     };
     let transaction = db.transaction("typeComponent", "readwrite");
     let objectStore = transaction.objectStore("typeComponent");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idTypeComposant));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idTypeComposant));
 }
 
 function addTaxes(db, data) {
@@ -314,5 +340,5 @@ function addTaxes(db, data) {
     };
     let transaction = db.transaction("taxes", "readwrite");
     let objectStore = transaction.objectStore("taxes");
-    objectStoreRequest = objectStore.add(newItem, parseInt(data.idTVA));
+    let objectStoreRequest = objectStore.put(newItem, parseInt(data.idTVA));
 }

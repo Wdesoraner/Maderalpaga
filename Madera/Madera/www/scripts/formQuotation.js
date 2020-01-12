@@ -78,10 +78,10 @@ $(document).ready(function () {
 
         //update progress
         var step = $(e.target).data('step');
-        var percent = (parseInt(step) / 3) * 100;
+        var percent = (parseInt(step) / 4) * 100;
 
         $('.progress-bar').css({ width: percent + '%' });
-        $('.progress-bar').text("Étape " + step + " sur 3");
+        $('.progress-bar').text("Étape " + step + " sur 4");
 
 
     })
@@ -112,6 +112,7 @@ $(document).ready(function () {
         $("#quotationFinishIn").val(id);
 
     })
+
 });
 
 function initCollectionListQuotation() {
@@ -290,61 +291,61 @@ function completeQuotation(listModules) {
         }
     }
 
-    DBOpenRequest = window.indexedDB.open("maderaDB");
-    DBOpenRequest.onsuccess = function (event) {
+    //DBOpenRequest = window.indexedDB.open("maderaDB");
+    //DBOpenRequest.onsuccess = function (event) {
 
-        let db = event.target.result;
-        let transaction = db.transaction("modules", "readonly");
-        let objectStore = transaction.objectStore("modules");
+    //    let db = event.target.result;
+    //    let transaction = db.transaction("modules", "readonly");
+    //    let objectStore = transaction.objectStore("modules");
 
-        let searchedLabel = "Ensemble finition " + $("#quotationCollection option:selected").text();
+    //    let searchedLabel = "Ensemble finition " + $("#quotationCollection option:selected").text();
 
-        console.log("searchedLabel : ", searchedLabel);
+    //    console.log("searchedLabel : ", searchedLabel);
 
-        var myIndex = objectStore.index('label');
-        var request = myIndex.getKey(searchedLabel);
+    //    var myIndex = objectStore.index('label');
+    //    var request = myIndex.getKey(searchedLabel);
 
-        console.log("request : ", request);
+    //    console.log("request : ", request);
 
-        request.onerror = function (event) {
-            console.err("error fetching data");
-        };
+    //    request.onerror = function (event) {
+    //        console.err("error fetching data");
+    //    };
 
-        request.onsuccess = function (event) {
-            var result = event.target.result;
+    //    request.onsuccess = function (event) {
+    //        var result = event.target.result;
 
-            let totalHeight = 0;
-            let totalLength = 0;
+    //        let totalHeight = 0;
+    //        let totalLength = 0;
 
-            listModules.forEach(function (module) {
-                var elt = document.getElementById("selectModule");
+    //        listModules.forEach(function (module) {
+    //            var elt = document.getElementById("selectModule");
 
-                let label = elt.options[module.moduleModel].text;
+    //            let label = elt.options[module.moduleModel].text;
 
-                console.log("label select : ", label);
+    //            console.log("label select : ", label);
 
 
-                if (true) {
+    //            if (true) {
 
-                }
-            })
+    //            }
+    //        })
 
-            let newModule = {
-                moduleParent: 0,
-                moduleId: listModules.length + 1,
-                moduleModel: result,
-                moduleCollection: parseInt($("#quotationCollection" + id + " option:selected").attr("id")),
-                moduleLabel: searchedLabel,
-                moduleLength: 0,
-                moduleHeight: 0,
-                moduleAngle: false,
-            };
+    //        let newModule = {
+    //            moduleParent: 0,
+    //            moduleId: listModules.length + 1,
+    //            moduleModel: result,
+    //            moduleCollection: parseInt($("#quotationCollection" + id + " option:selected").attr("id")),
+    //            moduleLabel: searchedLabel,
+    //            moduleLength: 0,
+    //            moduleHeight: 0,
+    //            moduleAngle: false,
+    //        };
 
-            listModules.push(newModule);
+    //        listModules.push(newModule);
 
-            db.close();
-        }
-    }
+    //        db.close();
+    //    }
+    //}
 
     let tableToComplete = $("#quotationModules");
     let i = 1;
@@ -389,15 +390,18 @@ function tableModuleComponent(listModules) {
         let transaction = db.transaction("components", "readonly");
         let objectStore = transaction.objectStore("components");
 
+        let structureTree = '{"1":{';
+        let dataTree = '"1": { "trad": "Base" },';
+
         var request = objectStore.getAll();
         request.onsuccess = function (event) {
             let listComponent = event.target.result;
-            writeRow(listModules, 0, 1, listComponent);
+            writeRow(listModules, 0, 1, listComponent, structureTree, dataTree);
         }
     }
 }
 
-function writeRow(tabModule, index, id, listComponent) {
+function writeRow(tabModule, index, id, listComponent, structureTree, dataTree) {
     if (tabModule.length > index) {
         console.log("tabModule.length : ", tabModule.length);
         console.log("index:", index);
@@ -423,9 +427,17 @@ function writeRow(tabModule, index, id, listComponent) {
                 tr.classList.add('item-quotation');
                 tr.id = id++;
                 document.getElementById("quotationModulesBody").appendChild(tr);
+                if (result.length > 0) {
+                    structureTree +='"'+ id + '":{';
+                } else {
+                    structureTree +='"'+ id + '":" "';
+                }
+                dataTree +='"'+ id + '":{"trad":"' + item.moduleLabel + '"},';
+
                 console.log("listComponent : ", listComponent);
                 let components = [];
-                result.forEach(function (component) {
+
+                result.forEach(function (component, i) {
                     let compo = listComponent.find(cour => cour.idComponent == component.idComponent);
                     console.log("compo : ", compo);
                     let quantity = component.quantity;
@@ -443,6 +455,7 @@ function writeRow(tabModule, index, id, listComponent) {
 
                     components.push(aComponent);
 
+                    console.log("id:", id);
                     let tr = document.createElement("tr");
                     tr = document.createElement("tr");
                     tr.innerHTML = getRowModuleQuotation(id, aComponent.quantity, aComponent.name, aComponent.unitPrice, aComponent.unitPrice * aComponent.quantity);
@@ -450,14 +463,32 @@ function writeRow(tabModule, index, id, listComponent) {
                     tr.classList.add('item-quotation');
                     tr.id = id++;
                     document.getElementById("quotationModulesBody").appendChild(tr);
-                    console.log(index);
+
+                    if (i != result.length - 1) {
+                        structureTree +='"'+ id + '":"",';
+                        dataTree +='"'+ id + '":{"trad":"' + aComponent.name + '"},';
+                    } else {
+                        if (index == tabModule.length - 1) {
+                            structureTree += '"' + id + '":""}}}';
+                            dataTree += '"' + id + '":{"trad":"' + aComponent.name + '"}';
+                        } else {
+                            structureTree += '"' + id + '":""},';
+                            dataTree += '"' + id + '":{"trad":"' + aComponent.name + '"},';
+                        }
+                    }
+                    
+
                 });
                 calculatePriceModule(searchId, components)
-                writeRow(tabModule, index + 1, id, listComponent);
+                writeRow(tabModule, index + 1, id, listComponent, structureTree, dataTree);
             }
         }
     }
     calculatePriceTotal();
+    console.log("tabStruc:", structureTree);
+    console.log("tabData:", dataTree);
+    sessionStorage.setItem('structureTree', structureTree);
+    sessionStorage.setItem('dataTree', dataTree);
 }
 
 function calculatePriceModule(searchId, components) {
