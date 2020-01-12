@@ -297,31 +297,31 @@ function completeQuotation(listModules) {
         }
     }
 
-    //DBOpenRequest = window.indexedDB.open("maderaDB");
-    //DBOpenRequest.onsuccess = function (event) {
+    DBOpenRequest = window.indexedDB.open("maderaDB");
+    DBOpenRequest.onsuccess = function (event) {
 
-    //    let db = event.target.result;
-    //    let transaction = db.transaction("modules", "readonly");
-    //    let objectStore = transaction.objectStore("modules");
+        let db = event.target.result;
+        let transaction = db.transaction("modules", "readonly");
+        let objectStore = transaction.objectStore("modules");
 
-    //    let searchedLabel = "Ensemble finition " + $("#quotationCollection option:selected").text();
+        let searchedLabel = "Ensemble finition " + $("#quotationCollection option:selected").text();
 
-    //    console.log("searchedLabel : ", searchedLabel);
+        console.log("searchedLabel : ", searchedLabel);
 
-    //    var myIndex = objectStore.index('label');
-    //    var request = myIndex.getKey(searchedLabel);
+        var myIndex = objectStore.index('label');
+        var request = myIndex.getKey(searchedLabel);
 
-    //    console.log("request : ", request);
+        console.log("request : ", request);
 
-    //    request.onerror = function (event) {
-    //        console.err("error fetching data");
-    //    };
+        request.onerror = function (event) {
+            console.err("error fetching data");
+        };
 
         request.onsuccess = function (event) {
             let idCollection = $("#quotationCollection option:selected").attr("id");
 
             console.log("idCollection : ", idCollection);
-
+            let count = 0;
 
             if (idCollection != 0) {
 
@@ -338,7 +338,8 @@ function completeQuotation(listModules) {
                     if (label.includes("Mur")) {
                         totalHeight += parseFloat(module.moduleHeight);
                         totalLength += parseFloat(module.moduleLength);
-
+                        count++;
+                        console.log("count", count);
                         console.log("totalHeight : ", totalHeight);
                         console.log("totalLength : ", totalLength);
                     }
@@ -366,6 +367,7 @@ function completeQuotation(listModules) {
 
     tableModuleComponent(listModules);
 }
+
 
 function getModulesList() {
     let itemsHTML = document.getElementsByClassName("item-collection");
@@ -458,11 +460,11 @@ function writeRow(tabModule, index, id, listComponent, structureTree, dataTree) 
                 tr.id = id++;
                 document.getElementById("quotationModulesBody").appendChild(tr);
                 if (result.length > 0) {
-                    structureTree +='"'+ id + '":{';
+                    structureTree += '"' + id + '":{';
                 } else {
-                    structureTree +='"'+ id + '":" "';
+                    structureTree += '"' + id + '":" "';
                 }
-                dataTree +='"'+ id + '":{"trad":"' + item.moduleLabel + '"},';
+                dataTree += '"' + id + '":{"trad":"' + item.moduleLabel + '"},';
 
                 console.log("listComponent : ", listComponent);
                 let components = [];
@@ -475,6 +477,7 @@ function writeRow(tabModule, index, id, listComponent, structureTree, dataTree) 
                     if (quantity == 0 || isNaN(quantity)) {
                         quantity = item.moduleLength * item.moduleHeight;
                     }
+
                     let name = compo.label + " (" + compo.refComposant + ")"
                     let aComponent = {
                         quantity: quantity,
@@ -495,8 +498,8 @@ function writeRow(tabModule, index, id, listComponent, structureTree, dataTree) 
                     document.getElementById("quotationModulesBody").appendChild(tr);
 
                     if (i != result.length - 1) {
-                        structureTree +='"'+ id + '":"",';
-                        dataTree +='"'+ id + '":{"trad":"' + aComponent.name + '"},';
+                        structureTree += '"' + id + '":"",';
+                        dataTree += '"' + id + '":{"trad":"' + aComponent.name + '"},';
                     } else {
                         if (index == tabModule.length - 1) {
                             structureTree += '"' + id + '":""}}}';
@@ -506,7 +509,7 @@ function writeRow(tabModule, index, id, listComponent, structureTree, dataTree) 
                             dataTree += '"' + id + '":{"trad":"' + aComponent.name + '"},';
                         }
                     }
-                    
+
 
                 });
                 calculatePriceModule(searchId, components)
@@ -608,32 +611,6 @@ function generatePDF() {
 
 let db;
 let DBOpenRequest = indexedDB.open("maderaDB");
-
-function initQuotationList(db) {
-    let transaction = db.transaction("quotation", "readwrite");
-
-    let objectStore = transaction.objectStore("quotation");
-    let request = objectStore.openCursor();
-
-    request.onerror = function (event) {
-        console.err("error fetching data");
-    };
-
-    request.onsuccess = function (event) {
-        let cursor = event.target.result;
-        //if (cursor) {
-        //let key = cursor.primaryKey;
-        //let value = cursor.value;
-        ////console.log(key, value);
-        //if (value.company != "") {
-        //addListCustomer(value.company, key);
-        //} else {
-        //addListCustomer(value.firstName + " " + value.name, key)
-        //}
-        //cursor.continue();
-        //}
-    };
-}
 
 function initModuleList(db, idTr) {
     let transaction = db.transaction("modules", "readwrite");
